@@ -33,7 +33,9 @@
     "lint": "tslint --project .",
     "compile": "tsc",
     "prebuild": "yarn clean && yarn lint && yarn compile",
-    "build": "node ./dist/bin/build.js"
+    "build": "node ./dist/bin/build.js",
+    "prebuild:noclean": "yarn lint && yarn compile",
+    "build:noclean": "node ./dist/bin/build.js"
   },
   "volta": {
     "node": "12.8.1",

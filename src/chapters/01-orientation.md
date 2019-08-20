@@ -4,6 +4,21 @@
 ember new super-rentals -b @ember/octane-app-blueprint
 ```
 
+<!-- TODO: see https://github.com/ember-cli/ember-cli/pull/8774/files -->
+
+```run:file:patch hidden=true cwd=super-rentals filename=testem.js
+--- a/testem.js
++++ b/testem.js
+@@ -16,3 +16,2 @@
+         '--headless',
+-        '--disable-gpu',
+         '--disable-dev-shm-usage',
+```
+
+```run:command hidden=true cwd=super-rentals
+git add testem.js
+```
+
 <!-- TODO: explain ember server, etc. -->
 
 When you are done experimenting, go ahead and delete the `app/templates/application.hbs` file. We won't be needing this for a while, and can start afresh and add it back later when there we have a need for it.
