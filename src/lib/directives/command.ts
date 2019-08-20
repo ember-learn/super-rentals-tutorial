@@ -35,7 +35,7 @@ export default async function command(meta: string, commands: string, options: O
   for (let cmd of parseCommands(commands)) {
     console.log(`Running command \`${cmd}\``);
 
-    output.push(`> ${cmd}`);
+    output.push(`$ ${cmd}`);
 
     let { cwd } = options;
 
@@ -55,6 +55,7 @@ export default async function command(meta: string, commands: string, options: O
   } else {
     return {
       type: 'code',
+      lang: 'shell',
       value: output.join('\n').trimRight()
     };
   }
