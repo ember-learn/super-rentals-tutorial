@@ -9,7 +9,7 @@ The place to manage what pages are available is the *[router](TODO: link to rout
 +++ b/app/router.js
 @@ -9,2 +9,3 @@
  Router.map(function() {
-+  this.router('about');
++  this.route('about');
  });
 ```
 
@@ -51,7 +51,7 @@ We want to keep the existing URLs for the new website, but `getting-in-touch` is
 --- a/app/router.js
 +++ b/app/router.js
 @@ -10,2 +10,3 @@
-   this.router('about');
+   this.route('about');
 +  this.route('contact', { path: '/getting-in-touch' });
  });
 ```
