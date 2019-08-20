@@ -34,11 +34,11 @@ async function generateDiff(filename: string, cwd: string): Promise<{ content: s
     line.startsWith('--- ') ||
     line.startsWith('+++ ') ||
     line.startsWith('@@ ')
-  )).map((line, lineno) => {
+  )).map((line, index) => {
     if (line.startsWith('+')) {
-      diff.push(`+${lineno}`);
+      diff.push(`+${index + 1}`);
     } else if (line.startsWith('-')) {
-      diff.push(`-${lineno}`);
+      diff.push(`-${index + 1}`);
     } else {
       assert(line.startsWith(' '), `diff lines should start with \`[ -+]\`, found ${JSON.stringify(line)}`);
     }
