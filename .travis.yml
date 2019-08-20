@@ -1,0 +1,24 @@
+language: minimal
+
+addons:
+  chrome: stable
+
+cache:
+  directories:
+    - /home/travis/.volta/
+    - /home/travis/.yarn/
+
+env:
+  global:
+    - VOLTA_HOME=/home/travis/.volta/
+    - PATH=$VOLTA_HOME/bin:$PATH
+
+before_install:
+  - curl https://get.volta.sh | bash
+  - source /home/travis/.volta/load.sh
+
+install:
+  - yarn
+
+script:
+  - yarn build

@@ -1,5 +1,7 @@
 # Runnable super-rentals tutorial
 
+[![Build Status](https://travis-ci.org/ember-learn/super-rentals-tutorial.svg?branch=master)](https://travis-ci.org/ember-learn/super-rentals-tutorial)
+
 ## What?
 
 This allows you to create a runnable tutorial by embedding special runnable
