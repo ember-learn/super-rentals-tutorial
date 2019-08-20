@@ -431,7 +431,7 @@ Example:
     ```
 
 The content of the source code block will be printed to the command line
-prompt.
+prompt. This directive does not produce any output.
 
 ## How?
 

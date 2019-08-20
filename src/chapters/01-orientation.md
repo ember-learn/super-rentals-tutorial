@@ -81,10 +81,6 @@ When you are ready, save the CSS changes in the file; our trusty development ser
 git add app/styles/app.css
 ```
 
-```run:pause
-Yo I'm paused!
-```
-
 To match mockup from our designer, we will also need to download the `teaching-tomster.png` image, which was referenced from our CSS file:
 
 ```css { data-filename=app/styles/app.css }
