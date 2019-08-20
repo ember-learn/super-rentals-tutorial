@@ -5,7 +5,7 @@ import {
 import _glob from 'glob';
 import _mkdirp from 'mkdirp';
 import { ncp as _ncp } from 'ncp';
-import { join } from 'path';
+import { basename, join } from 'path';
 import markdown from 'remark-parse';
 import stringify from 'remark-stringify';
 import _rmrf from 'rimraf'
@@ -27,33 +27,29 @@ async function main() {
   let outDir = join(project, 'dist', 'chapters');
   let codeDir = join(project, 'dist', 'code');
 
-  await rmrf(assetsDir);
   await ncp(join(project, 'src', 'assets'), assetsDir);
-
   await mkdirp(outDir);
-  await rmrf(join(outDir, '*'));
-
   await mkdirp(codeDir);
-  await rmrf(join(codeDir, '*'));
 
-  let chapters = await glob('*.md', {
-    cwd: join(project, 'src', 'chapters')
-  });
+  let pattern = process.argv[2] || join('src', 'chapters', '*.md');
+
+  let chapters = await glob(pattern);
 
   const processor = unified()
     .use(markdown)
     .use(runCodeBlocks, { cwd: codeDir })
     .use(stringify, { fences: true });
 
-  for (let path of chapters) {
-    console.log(`Processing ${path}`);
+  for (let inputPath of chapters) {
+    let filename = basename(inputPath);
 
-    let inputPath = join(project, 'src', 'chapters', path);
-    let outputPath = join(project, 'dist', 'chapters', path);
+    console.log(`Processing ${filename}`);
+
+    let outputPath = join(project, 'dist', 'chapters', filename);
 
     let contents = await readFile(inputPath, { encoding: 'utf8' });
 
-    let result = await processor.process({ path, contents });
+    let result = await processor.process({ path: filename, contents });
 
     await writeFile(outputPath, result, { encoding: 'utf8' });
   }
