@@ -3,7 +3,7 @@ import { Code } from 'mdast';
 import _mkdirp from 'mkdirp';
 import { ncp as _ncp } from 'ncp';
 import { basename, dirname, join } from 'path';
-import { Option, assert } from 'ts-std';
+import { Option } from 'ts-std';
 import { promisify } from 'util';
 import Options from '../../options';
 import parseArgs, { ToBool, optional, required } from '../../parse-args';

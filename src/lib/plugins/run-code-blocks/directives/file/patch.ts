@@ -15,6 +15,19 @@ interface Args {
   filename?: string;
 }
 
+function formatPatch(patch: string, filename?: string): string {
+  if (!patch.startsWith('--- ')) {
+    assert(!!filename, `\`filename\` is required, unless it is already included in the patch`);
+    patch = `--- a/${filename}\n+++ b/${filename}\n${patch}`;
+  }
+
+  if (!patch.endsWith('\n')) {
+    patch = `${patch}\n`;
+  }
+
+  return patch;
+}
+
 async function applyPatch(patch: string, cwd: string): Promise<void> {
   let promise = exec('git  apply', { cwd });
   promise.child.stdin!.end(patch, 'utf-8');
@@ -70,7 +83,7 @@ export default async function patchFile(meta: string, patch: string, options: Op
     cwd = join(cwd, args.cwd);
   }
 
-  await applyPatch(patch + '\n', cwd);
+  await applyPatch(formatPatch(patch, args.filename), cwd);
 
   if (args.hidden) {
     return null;

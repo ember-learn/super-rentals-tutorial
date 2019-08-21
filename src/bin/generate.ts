@@ -8,16 +8,14 @@ import { ncp as _ncp } from 'ncp';
 import { basename, join } from 'path';
 import markdown from 'remark-parse';
 import stringify from 'remark-stringify';
-import _rmrf from 'rimraf'
 import unified from 'unified';
 import { promisify } from 'util';
 
-import runCodeBlocks from '../lib/plugin';
+import runCodeBlocks from '../lib/plugins/run-code-blocks/index';
 
 const glob = promisify(_glob);
 const readFile = promisify(_readFile);
 const writeFile = promisify(_writeFile);
-const rmrf = promisify(_rmrf);
 const mkdirp = promisify(_mkdirp);
 const ncp = promisify(_ncp);
 

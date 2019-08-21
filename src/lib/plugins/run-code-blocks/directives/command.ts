@@ -1,7 +1,7 @@
 import { exec as _exec } from 'child_process';
 import { Code } from 'mdast';
 import { join } from 'path';
-import { Option, assert } from 'ts-std';
+import { Option } from 'ts-std';
 import { promisify } from 'util';
 import Options from '../options';
 import parseArgs, { ToBool, optional } from '../parse-args';

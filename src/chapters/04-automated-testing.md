@@ -32,8 +32,6 @@ Acceptance tests are one of a few types of automated testing at our disposal in 
 Let's open the generated test file and replace the boilerplate test with our own:
 
 ```run:file:patch lang=js cwd=super-rentals filename=tests/acceptance/super-rentals-test.js
---- a/tests/acceptance/super-rentals-test.js
-+++ b/tests/acceptance/super-rentals-test.js
 @@ -1,3 +1,3 @@
  import { module, test } from 'qunit';
 -import { visit, currentURL } from '@ember/test-helpers';
@@ -101,8 +99,6 @@ Don't forget to put that line back in when you are done!
 Let's practice what we learned by adding tests for the remaining pages:
 
 ```run:file:patch lang=js cwd=super-rentals filename=tests/acceptance/super-rentals-test.js
---- a/tests/acceptance/super-rentals-test.js
-+++ b/tests/acceptance/super-rentals-test.js
 @@ -18,2 +18,26 @@
    });
 +

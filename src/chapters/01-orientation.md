@@ -23,8 +23,6 @@ ember new super-rentals -b @ember/octane-app-blueprint
 <!-- TODO: see https://github.com/ember-cli/ember-cli/pull/8774/files -->
 
 ```run:file:patch hidden=true cwd=super-rentals filename=testem.js
---- a/testem.js
-+++ b/testem.js
 @@ -16,3 +16,2 @@
          '--headless',
 -        '--disable-gpu',

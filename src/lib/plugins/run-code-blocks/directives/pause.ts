@@ -1,5 +1,4 @@
 import readline from 'readline';
-import { promisify } from 'util';
 import Options from '../options';
 
 async function prompt(message: string): Promise<void> {
