@@ -250,7 +250,7 @@ Example:
     +++ b/app/router.js
     @@ -9,2 +9,3 @@
      Router.map(function() {
-    +  this.router('about');
+    +  this.route('about');
      });
     ```
 
