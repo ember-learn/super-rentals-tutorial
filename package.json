@@ -31,11 +31,12 @@
   "scripts": {
     "clean": "rm -rf dist",
     "lint": "tslint --project .",
+    "precompile": "yarn lint",
     "compile": "tsc",
-    "prebuild": "yarn clean && yarn lint && yarn compile",
-    "build": "node ./dist/bin/build.js",
-    "prebuild:noclean": "yarn lint && yarn compile",
-    "build:noclean": "node ./dist/bin/build.js"
+    "pregenerate": "yarn compile",
+    "generate": "node ./dist/bin/generate.js",
+    "prebuild": "yarn clean",
+    "build": "yarn generate"
   },
   "volta": {
     "node": "12.8.1",
