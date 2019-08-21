@@ -1,11 +1,17 @@
+dist: trusty
 language: minimal
 
 addons:
+  apt:
+    packages:
+      # This is required to run new chrome on old trusty
+      - libnss3
   chrome: stable
 
 cache:
   directories:
     - /home/travis/.volta/
+    - /home/travis/.npm/
     - /home/travis/.yarn/
 
 env:

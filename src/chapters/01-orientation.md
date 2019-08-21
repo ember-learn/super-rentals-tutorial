@@ -1,5 +1,21 @@
 <!-- TODO: fill this in -->
 
+Install Ember using npm:
+
+```run:command captureOutput=false
+npm install -g ember-cli
+```
+
+To verify that your installation was successful, run:
+
+```run:command
+ember --version
+```
+
+If a version number is shown, you're ready to go.
+
+<!-- TODO: fill this in -->
+
 ```run:command
 ember new super-rentals -b @ember/octane-app-blueprint
 ```
