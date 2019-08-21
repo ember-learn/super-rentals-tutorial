@@ -5,15 +5,10 @@ import Walker from './walker';
 
 function attacher(options: Options): Transformer {
   async function transform(node: Node): Promise<Node> {
-    let walker = new Walker(options);
-    return walker.walk(node);
+    return new Walker(options).walk(node);
   }
 
   return transform;
-}
-
-function walk(node: Node): Node {
-  return node;
 }
 
 const plugin: Plugin<[Options]> = attacher;

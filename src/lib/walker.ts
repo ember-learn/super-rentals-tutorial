@@ -1,17 +1,15 @@
-import { Code, Root } from 'mdast';
+import { Root } from 'mdast';
 import { Option, assert } from 'ts-std';
 import { Node, Parent } from 'unist';
-import Options from './options';
-import run from './run';
 
-type Handler = (this: Walker, node: Node) => Option<Node>;
+type Handler<Options> = (this: Walker<Options>, node: Node) => Option<Node>;
 
 function isParent(node: Node): node is Parent {
   return Array.isArray(node.children);
 }
 
-export default class Walker {
-  constructor(private options: Options) {}
+export default class Walker<Options> {
+  constructor(protected options: Options) {}
 
   [key: string]: unknown;
 
@@ -31,11 +29,11 @@ export default class Walker {
     }
   }
 
-  private async handle(node: Node): Promise<Option<Node>> {
+  protected async handle(node: Node): Promise<Option<Node>> {
     let maybeHandler = this[node.type];
 
     if (typeof maybeHandler === 'function') {
-      let handler = maybeHandler as Handler;
+      let handler = maybeHandler as Handler<Options>;
       return handler.call(this, node);
     } else if (isParent(node)) {
       return this.visit(node);
@@ -44,7 +42,7 @@ export default class Walker {
     }
   }
 
-  private async visit<Type extends Parent>(node: Type): Promise<Type> {
+  protected async visit<Type extends Parent>(node: Type): Promise<Type> {
     let children = [];
 
     for (let child of node.children) {
@@ -56,13 +54,5 @@ export default class Walker {
     }
 
     return { ...node, children };
-  }
-
-  private async code(node: Code): Promise<Option<Node>> {
-    if (node.lang && node.lang.startsWith('run:')) {
-      return run(node, this.options);
-    } else {
-      return node;
-    }
   }
 }

@@ -1,4 +1,4 @@
-import { Dict, assert, dict } from 'ts-std';
+import { assert, dict } from 'ts-std';
 
 export type Transform<From, To> = (input: From) => To;
 
