@@ -2,8 +2,8 @@
 
 Install Ember using npm:
 
-```run:command captureOutput=false
-npm install -g ember-cli
+```shell
+$ npm install -g ember-cli
 ```
 
 To verify that your installation was successful, run:

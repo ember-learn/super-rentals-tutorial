@@ -437,7 +437,7 @@ prompt. This directive does not produce any output.
 
 ## How?
 
-* Requires [volta](https://volta.sh), `git`, global `ember-cli`
+* Requires [volta](https://volta.sh), `git`
 * Probably only works on unix/bash for now (PRs welcome)
   * Should probably run the build in a docker container anyway
 * `yarn install`
