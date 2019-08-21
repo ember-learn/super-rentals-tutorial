@@ -5,8 +5,6 @@ Since Ember offers great support for URLs out-of-the-box, we _could_ just link o
 With Ember, we can do better than that! Instead of the plain-old `<a>` tag, Ember provides an alternative called `<LinkTo>`. For example, here is how you would use it on the pages we just created:
 
 ```run:file:patch lang=handlebars cwd=super-rentals filename=app/templates/index.hbs
---- a/app/templates/index.hbs
-+++ b/app/templates/index.hbs
 @@ -4,2 +4,3 @@
    <p>We hope you find exactly what you're looking for in a place to stay.</p>
 +  <LinkTo @route="about" class="button">About Us</LinkTo>
@@ -14,8 +12,6 @@ With Ember, we can do better than that! Instead of the plain-old `<a>` tag, Embe
 ```
 
 ```run:file:patch lang=handlebars cwd=super-rentals filename=app/templates/about.hbs
---- a/app/templates/about.hbs
-+++ b/app/templates/about.hbs
 @@ -8,2 +8,3 @@
    </p>
 +  <LinkTo @route="contact" class="button">Contact Us</LinkTo>
@@ -23,8 +19,6 @@ With Ember, we can do better than that! Instead of the plain-old `<a>` tag, Embe
 ```
 
 ```run:file:patch lang=handlebars cwd=super-rentals filename=app/templates/contact.hbs
---- a/app/templates/contact.hbs
-+++ b/app/templates/contact.hbs
 @@ -16,2 +16,3 @@
    </address>
 +  <LinkTo @route="about" class="button">About</LinkTo>

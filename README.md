@@ -246,8 +246,6 @@ Edit a file by applying a git patch.
 Example:
 
     ```run:file:patch lang=js cwd=super-rentals filename=app/router.js
-    --- a/app/router.js
-    +++ b/app/router.js
     @@ -9,2 +9,3 @@
      Router.map(function() {
     +  this.route('about');
@@ -284,7 +282,9 @@ keep a useful amount of context for the task at hand.
 
 It appears that the `diff ...` header line as well as the `index ...` line, as
 well as the "hunk context" (the text after the `@@ ... @@`) can be safely
-ommitted.
+omitted. The `--- filename` and `+++ filename` lines are required by git, but
+can be omitted in the block; the directive will prepend them for you based on
+the `filename` argument if they are not already included in the patch.
 
 A good workflow for generating patches:
 
@@ -352,9 +352,9 @@ Options:
   The filename (the path relative to `cwd`) used for creating the file. Also
   sets the `data-filename` metadata field in the resulting code block.
 
-  This is only required when the block is not set to `hidden`. The patch itself
-  has the filename information, so this is only really used to render the final
-  diff output.
+  This is also used to format the patch before sending it to `git apply`, so
+  it is required unless they are already included in the patch and the block is
+  set to `hidden`.
 
 ### `run:checkpoint`
 
