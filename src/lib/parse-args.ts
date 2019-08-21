@@ -6,19 +6,23 @@ export type KeyTransform<From, To> = [string, Transform<From, To>];
 
 export function optional<From, To>(key: string, transform: Transform<From, To>, defaultValue?: To): KeyTransform<From | undefined, To | undefined> {
   return [key, input => {
-    if (input) {
-      return transform(input);
-    } else {
+    if (input === undefined) {
       return defaultValue;
+    } else {
+      return transform(input);
     }
   }];
 }
 
 export function required<From, To>(key: string, transform: Transform<From, To>): KeyTransform<From | undefined, To> {
   return [key, input => {
-    assert(!!input, `${key} is required`);
+    assert(input !== undefined, `${key} is required`);
     return transform(input!);
   }];
+}
+
+export function ToBool(input: string): boolean {
+  return input === 'true';
 }
 
 export type KeyTransforms = Array<KeyTransform<string | undefined, unknown>>;

@@ -5,7 +5,7 @@ import { basename, dirname, join } from 'path';
 import { Option } from 'ts-std';
 import { promisify } from 'util';
 import Options from '../../options';
-import parseArgs, { optional, required } from '../../parse-args';
+import parseArgs, { ToBool, optional, required } from '../../parse-args';
 
 const mkdirp = promisify(_mkdirp);
 const writeFile = promisify(_writeFile);
@@ -20,7 +20,7 @@ interface Args {
 export default async function createFile(meta: string, content: string, options: Options): Promise<Option<Code>> {
   let args = parseArgs<Args>('file:create', meta, [
     optional('lang', String),
-    optional('hidden', Boolean),
+    optional('hidden', ToBool),
     optional('cwd', String),
     required('filename', String)
   ]);

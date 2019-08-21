@@ -4,7 +4,7 @@ import { join } from 'path';
 import { Option, assert } from 'ts-std';
 import { promisify } from 'util';
 import Options from '../options';
-import parseArgs, { optional } from '../parse-args';
+import parseArgs, { ToBool, optional } from '../parse-args';
 
 const exec = promisify(_exec);
 
@@ -21,9 +21,9 @@ function parseCommands(commands: string): string[] {
 
 export default async function command(meta: string, commands: string, options: Options): Promise<Option<Code>> {
   let args = parseArgs<Args>('command', meta, [
-    optional('hidden', Boolean),
+    optional('hidden', ToBool),
     optional('cwd', String),
-    optional('captureOutput', Boolean, true)
+    optional('captureOutput', ToBool, true)
   ]);
 
   if (args.hidden) {
