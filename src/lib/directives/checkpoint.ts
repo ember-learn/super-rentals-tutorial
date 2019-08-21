@@ -4,7 +4,7 @@ import { join } from 'path';
 import { Option, assert } from 'ts-std';
 import { promisify } from 'util';
 import Options from '../options';
-import parseArgs, { optional } from '../parse-args';
+import parseArgs, { ToBool, optional } from '../parse-args';
 
 const exec = promisify(_exec);
 
@@ -16,7 +16,7 @@ interface Args {
 export default async function checkpoint(meta: string, message: string, options: Options): Promise<null> {
   let args = parseArgs<Args>('checkpoint', meta, [
     optional('cwd', String),
-    optional('commit', Boolean, true)
+    optional('commit', ToBool, true)
   ]);
 
   let output = [];

@@ -6,7 +6,7 @@ import { basename, dirname, join } from 'path';
 import { Option, assert } from 'ts-std';
 import { promisify } from 'util';
 import Options from '../../options';
-import parseArgs, { optional, required } from '../../parse-args';
+import parseArgs, { ToBool, optional, required } from '../../parse-args';
 
 const readFile = promisify(_readFile);
 const mkdirp = promisify(_mkdirp);
@@ -23,7 +23,7 @@ interface Args {
 export default async function copyFile(meta: string, content: string, options: Options): Promise<Option<Code>> {
   let args = parseArgs<Args>('file:copy', meta, [
     optional('lang', String),
-    optional('hidden', Boolean),
+    optional('hidden', ToBool),
     optional('cwd', String),
     required('src', String),
     required('filename', String)

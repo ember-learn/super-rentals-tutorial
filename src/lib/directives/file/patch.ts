@@ -4,7 +4,7 @@ import { join } from 'path';
 import { Option, assert } from 'ts-std';
 import { promisify } from 'util';
 import Options from '../../options';
-import parseArgs, { optional, required } from '../../parse-args';
+import parseArgs, { ToBool, optional } from '../../parse-args';
 
 const exec = promisify(_exec);
 
@@ -55,7 +55,7 @@ async function generateDiff(filename: string, cwd: string): Promise<{ content: s
 export default async function patchFile(meta: string, patch: string, options: Options): Promise<Option<Code>> {
   let args = parseArgs<Args>('file:create', meta, [
     optional('lang', String),
-    optional('hidden', Boolean),
+    optional('hidden', ToBool),
     optional('cwd', String),
     optional('filename', String)
   ]);
