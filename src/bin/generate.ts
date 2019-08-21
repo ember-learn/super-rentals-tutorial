@@ -11,7 +11,7 @@ import stringify from 'remark-stringify';
 import unified from 'unified';
 import { promisify } from 'util';
 
-import runCodeBlocks from '../lib/plugins/run-code-blocks/index';
+import { runCodeBlocks, zoeySays } from '../lib';
 
 const glob = promisify(_glob);
 const readFile = promisify(_readFile);
@@ -36,6 +36,7 @@ async function main() {
   const processor = unified()
     .use(markdown)
     .use(runCodeBlocks, { cwd: codeDir })
+    .use(zoeySays)
     .use(stringify, { fences: true });
 
   for (let inputPath of chapters) {
