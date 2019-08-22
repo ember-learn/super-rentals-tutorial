@@ -77,7 +77,7 @@ export default async function patchFile(meta: string, patch: string, options: Op
 
   let formatted = formatPatch(patch, args.filename);
 
-  console.log(`$ git apply -\n${formatted}`);
+  console.log(`$ git apply -\n${formatted.trimRight()}`);
 
   let cwd = options.cwd;
 
