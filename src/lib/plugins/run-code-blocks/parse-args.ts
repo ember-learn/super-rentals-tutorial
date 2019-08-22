@@ -1,3 +1,4 @@
+import { Code } from 'mdast';
 import { assert, dict } from 'ts-std';
 
 export type Transform<From, To> = (input: From) => To;
@@ -27,20 +28,21 @@ export function ToBool(input: string): boolean {
 
 export type KeyTransforms = Array<KeyTransform<string | undefined, unknown>>;
 
-export default function parse<Args extends object>(directive: string, input: string, transforms: KeyTransforms): Args {
+export default function parseArgs<Args extends object>(node: Code, transforms: KeyTransforms): Args {
+  let { lang, meta } = node;
   let parsed = dict<string>();
   let validKeys = transforms.map(([key]) => key);
 
-  if (input) {
-    let pairs = input.split(' ');
+  if (meta) {
+    let pairs = meta.split(' ');
 
     for (let pair of pairs) {
       let [key, value, ...extra] = pair.split('=');
 
       assert(!!key, 'bug: no key?');
-      assert(validKeys.includes(key), `\`${key}\` is not a valid argument for \`${directive}\``);
-      assert(!!value, `\`${key}\` must have a value (in \`${directive}\`)`);
-      assert(extra.length === 0, `\`${key}\` has too many values (in \`${directive}\`)`);
+      assert(validKeys.includes(key), `\`${key}\` is not a valid argument for \`${lang}\``);
+      assert(!!value, `\`${key}\` must have a value (in \`${lang}\`)`);
+      assert(extra.length === 0, `\`${key}\` has too many values (in \`${lang}\`)`);
 
       parsed[key] = value;
     }
