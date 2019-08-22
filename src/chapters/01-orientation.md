@@ -32,7 +32,7 @@ rm package.json
 
 <!-- TODO: explain ember server, etc. -->
 
-When you are done experimenting, go ahead and delete the `app/templates/application.hbs` file. We won't be needing this for a while, and can start afresh and add it back later when there we have a need for it.
+When you are done experimenting, go ahead and delete the `app/templates/application.hbs` file. We won't be needing this for a while, so let's start afresh. We can add it back later when we have a need for it.
 
 ```run:command hidden=true cwd=super-rentals
 git rm app/templates/application.hbs
@@ -62,7 +62,7 @@ git add app/templates/index.hbs
 
 Before we do anything else, let's add some styling to our app. We spend enough time staring at the computer screen as it is, we must protect our eyesight against unstyled markup!
 
-Fortunately, our designer sent us some CSS for us to use, so we can just go ahead <a href="TODO: link to stylesheet" download="app.css">download the stylesheet file</a> and copy it into `app/styles/app.css`. This file has all the styles we need for building the rest of the app.
+Fortunately, our designer sent us some CSS for us to use, so we can just go ahead <a href="/downloads/style.css" download="app.css">download the stylesheet file</a> and copy it into `app/styles/app.css`. This file has all the styles we need for building the rest of the app.
 
 ```run:file:copy lang=css src=downloads/style.css cwd=super-rentals filename=app/styles/app.css
 @import url(https://fonts.googleapis.com/css?family=Lato:300,300italic,400,700,700italic);
@@ -101,7 +101,9 @@ body {
 
 If you are familiar with CSS, feel free to customize them to your liking! Just keep in mind that you may see some visual differences going forward, if you choose to do so.
 
-When you are ready, save the CSS changes in the file; our trusty development server should pick it up and refresh our page right away. No more unstyled content!
+When you are ready, save the CSS file; our trusty development server should pick it up and refresh our page right away. No more unstyled content!
+
+<!-- TODO: screenshot -->
 
 ```run:command hidden=true cwd=super-rentals
 git add app/styles/app.css
@@ -116,7 +118,7 @@ To match mockup from our designer, we will also need to download the `teaching-t
 }
 ```
 
-As we learned earlier, the Ember convention is to place your source code in the `app` folder. For other assets like images and fonts, the convention is to put them in the `public` folder. We will follow this convention by <a href="TODO: link to image" download="teaching-tomster.png">downloading the image file</a> and saving it in the appropriate directory like so: `public/assets/images/teaching-tomster.png`.
+As we learned earlier, the Ember convention is to place your source code in the `app` folder. For other assets like images and fonts, the convention is to put them in the `public` folder. We will follow this convention by <a href="/downloads/teaching-tomster.png" download="teaching-tomster.png">downloading the image file</a> and saving it into `public/assets/images/teaching-tomster.png`.
 
 ```run:file:copy hidden=true src=downloads/teaching-tomster.png cwd=super-rentals filename=public/assets/images/teaching-tomster.png
 ```
