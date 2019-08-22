@@ -8,7 +8,7 @@ mkdir -p ~/.ssh
 chmod 700 ~/.ssh
 
 tar -xvzf deploy-keys.tar.gz -C ~/.ssh
-chmod 500 ~/.ssh/deploy-keys
+chmod 700 ~/.ssh/deploy-keys
 chmod 400 ~/.ssh/deploy-keys/*
 
 touch ~/.ssh/config
