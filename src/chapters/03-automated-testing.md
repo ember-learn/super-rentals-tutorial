@@ -84,8 +84,6 @@ git add tests/acceptance/super-rentals-test.js
 
 We can put our automated test into motion by running the *[test server](TODO: link to test server)* using the `ember test --server` command, or `ember t -s` for short. This server behaves much like the development server, but it is explicitly running for our tests. It may automatically open a browser window and take you to the test UI, or you can open `http://localhost:7357/` yourself.
 
-<!-- TODO: screenshot? -->
-
 If you watch really carefully, you can see our test robot roam around our app and clicking links:
 
 <!-- TODO: animated gif -->
@@ -142,5 +140,5 @@ For the rest of the tutorial, we will continue to add more automated tests as we
 If you are in a hurry, you can skip over the testing sections in this tutorial and still be able to follow along with everything else. But don't you find it super satisfying &mdash; _oddly satisfying_ &mdash; to watch a robot click on things really, really fast?
 
 ```run:checkpoint cwd=super-rentals
-Chapter 4
+Chapter 3
 ```
