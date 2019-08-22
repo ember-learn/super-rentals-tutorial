@@ -36,8 +36,8 @@ async function render(nodes: BlockContent[]): Promise<HTML> {
         ${content.join('        \n')}
       </div>
     </div>
+    <img src="/images/mascots/zoey.png" role="presentation" alt="Ember Mascot">
   </div>
-  <img src="/images/mascots/zoey.png" role="presentation" alt="Ember Mascot">
 </div>`;
 
   return { type: 'html', value };
