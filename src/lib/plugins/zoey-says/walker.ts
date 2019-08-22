@@ -1,4 +1,5 @@
 import { BlockContent, Blockquote, HTML } from 'mdast';
+import { Position } from 'unist';
 import BaseWalker from '../../walker';
 import html from './markdown-to-html';
 
@@ -21,7 +22,7 @@ function isZoeySays({ children }: Blockquote): boolean {
     firstParagraph.value === ZOEY_SAYS;
 }
 
-async function render(nodes: BlockContent[]): Promise<HTML> {
+async function render(nodes: BlockContent[], position?: Position): Promise<HTML> {
   let content = [];
 
   for (let node of nodes) {
@@ -40,7 +41,7 @@ async function render(nodes: BlockContent[]): Promise<HTML> {
   <img src="/images/mascots/zoey.png" role="presentation" alt="Ember Mascot">
 </div>`;
 
-  return { type: 'html', value };
+  return { type: 'html', value, position };
 }
 
 export default class Walker extends BaseWalker<null> {
@@ -50,7 +51,7 @@ export default class Walker extends BaseWalker<null> {
 
   protected async blockquote(node: Blockquote): Promise<Blockquote | HTML> {
     if (isZoeySays(node)) {
-      return render(node.children.slice(1));
+      return render(node.children.slice(1), node.position);
     } else {
       return node;
     }
