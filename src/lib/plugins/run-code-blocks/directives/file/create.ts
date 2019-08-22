@@ -25,7 +25,7 @@ export default async function createFile(meta: string, content: string, options:
     required('filename', String)
   ]);
 
-  console.log(`Creating file \`${args.filename}\``);
+  console.log(`$ cat - > ${args.filename}\n${content}`);
 
   let dir = options.cwd;
 

@@ -20,28 +20,26 @@ export default async function checkpoint(meta: string, message: string, options:
 
   let [title] = message.split('\n');
 
-  console.log(`Checkpoint: ${title}`);
-
   let { cwd } = options;
 
   if (args.cwd) {
     cwd = join(cwd, args.cwd);
   }
 
-  console.log(`Linting: hbs`);
+  console.log(`$ npm run lint:hbs`);
 
   await exec('npm run lint:hbs', { cwd });
 
-  console.log(`Linting: js`);
+  console.log(`$ npm run lint:js`);
 
   await exec('npm run lint:js', { cwd });
 
-  console.log(`Running tests`);
+  console.log(`$ npm run test`);
 
   await exec('npm run test', { cwd });
 
   if (args.commit) {
-    console.log('Committing');
+    console.log(`$ git commit -m ${JSON.stringify(title)}`);
 
     let promise = exec('git commit -F -', { cwd });
 

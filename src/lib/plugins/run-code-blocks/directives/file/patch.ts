@@ -29,7 +29,7 @@ function formatPatch(patch: string, filename?: string): string {
 }
 
 async function applyPatch(patch: string, cwd: string): Promise<void> {
-  let promise = exec('git  apply', { cwd });
+  let promise = exec('git apply', { cwd });
   promise.child.stdin!.end(patch, 'utf-8');
   await promise;
 }
@@ -75,7 +75,9 @@ export default async function patchFile(meta: string, patch: string, options: Op
 
   assert(args.hidden || !!args.filename, `\`filename\` is required, unless \`hidden\` is true`);
 
-  console.log(`Patching file \`${args.filename}\``);
+  let formatted = formatPatch(patch, args.filename);
+
+  console.log(`$ git apply -\n${formatted}`);
 
   let cwd = options.cwd;
 
@@ -83,7 +85,7 @@ export default async function patchFile(meta: string, patch: string, options: Op
     cwd = join(cwd, args.cwd);
   }
 
-  await applyPatch(formatPatch(patch, args.filename), cwd);
+  await applyPatch(formatted, cwd);
 
   if (args.hidden) {
     return null;
