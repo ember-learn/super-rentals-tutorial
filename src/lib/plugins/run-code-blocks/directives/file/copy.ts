@@ -29,7 +29,7 @@ export default async function copyFile(meta: string, content: string, options: O
     required('filename', String)
   ]);
 
-  console.log(`Copying file \`${args.src}\` to \`${args.filename}\``);
+  console.log(`$ cp ${join('src', 'assets', args.src)} ${ args.filename }`);
 
   let src = join(options.cwd, '..', 'assets', args.src);
 

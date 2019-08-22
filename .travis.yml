@@ -4,8 +4,11 @@ language: minimal
 addons:
   apt:
     packages:
-      # This is required to run new chrome on old trusty
+      # These are required to run new chrome on old trusty
+      - fonts-liberation
+      - libappindicator3-1
       - libnss3
+      - xdg-utils
   chrome: stable
 
 cache:
@@ -25,6 +28,7 @@ before_install:
 
 install:
   - yarn
+  - yarn upgrade ember-cli
 
 script:
   - yarn build
