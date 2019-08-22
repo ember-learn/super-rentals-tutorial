@@ -53,7 +53,7 @@ export default async function copyFile(node: Code, options: Options): Promise<Op
     let value = node.value || await readFile(destPath, { encoding: 'utf8' });
 
     return {
-      type: 'code',
+      ...node,
       lang: args.lang,
       meta: `{ data-filename="${args.filename}" }`,
       value: value.trimRight()

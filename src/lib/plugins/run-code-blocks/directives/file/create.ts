@@ -51,7 +51,7 @@ export default async function createFile(node: Code, options: Options): Promise<
     return null;
   } else {
     return {
-      type: 'code',
+      ...node,
       lang: args.lang,
       meta: `{ data-filename="${args.filename}" }`,
       value: content.trimRight()

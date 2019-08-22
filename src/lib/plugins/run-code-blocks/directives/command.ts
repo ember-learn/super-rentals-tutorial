@@ -54,8 +54,9 @@ export default async function command(node: Code, options: Options): Promise<Opt
     return null;
   } else {
     return {
-      type: 'code',
+      ...node,
       lang: 'shell',
+      meta: undefined,
       value: output.join('\n').trimRight()
     };
   }

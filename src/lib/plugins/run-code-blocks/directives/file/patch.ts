@@ -93,7 +93,7 @@ export default async function patchFile(node: Code, options: Options): Promise<O
     let { content, diff } = await generateDiff(args.filename!, cwd);
 
     return {
-      type: 'code',
+      ...node,
       lang: args.lang,
       meta: `{ data-filename="${args.filename}" data-diff="${diff}" }`,
       value: content
