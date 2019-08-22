@@ -16,8 +16,18 @@ If a version number is shown, you're ready to go.
 
 <!-- TODO: fill this in -->
 
+```run:command hidden=true
+# Hack: convince ember-cli we are really not in a project. Otherwise, we will get the "You cannot use the new command inside an ember-cli project." error when running `ember new`.
+echo "{}" > package.json
+```
+
 ```run:command
 ember new super-rentals -b @ember/octane-app-blueprint
+```
+
+```run:command hidden=true
+# Clean up the hack above
+rm package.json
 ```
 
 <!-- TODO: explain ember server, etc. -->
