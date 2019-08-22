@@ -17,13 +17,15 @@ interface Args {
   filename: string;
 }
 
-export default async function createFile(meta: string, content: string, options: Options): Promise<Option<Code>> {
-  let args = parseArgs<Args>('file:create', meta, [
+export default async function createFile(node: Code, options: Options): Promise<Option<Code>> {
+  let args = parseArgs<Args>(node, [
     optional('lang', String),
     optional('hidden', ToBool),
     optional('cwd', String),
     required('filename', String)
   ]);
+
+  let content = node.value;
 
   console.log(`$ cat - > ${args.filename}\n${content}`);
 

@@ -65,8 +65,8 @@ async function generateDiff(filename: string, cwd: string): Promise<{ content: s
   };
 }
 
-export default async function patchFile(meta: string, patch: string, options: Options): Promise<Option<Code>> {
-  let args = parseArgs<Args>('file:create', meta, [
+export default async function patchFile(node: Code, options: Options): Promise<Option<Code>> {
+  let args = parseArgs<Args>(node, [
     optional('lang', String),
     optional('hidden', ToBool),
     optional('cwd', String),
@@ -75,7 +75,7 @@ export default async function patchFile(meta: string, patch: string, options: Op
 
   assert(args.hidden || !!args.filename, `\`filename\` is required, unless \`hidden\` is true`);
 
-  let formatted = formatPatch(patch, args.filename);
+  let formatted = formatPatch(node.value, args.filename);
 
   console.log(`$ git apply -\n${formatted.trimRight()}`);
 

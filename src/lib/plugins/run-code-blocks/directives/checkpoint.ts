@@ -1,4 +1,5 @@
 import { exec as _exec } from 'child_process';
+import { Code } from 'mdast';
 import { join } from 'path';
 import { assert } from 'ts-std';
 import { promisify } from 'util';
@@ -12,12 +13,13 @@ interface Args {
   commit?: boolean;
 }
 
-export default async function checkpoint(meta: string, message: string, options: Options): Promise<null> {
-  let args = parseArgs<Args>('checkpoint', meta, [
+export default async function checkpoint(node: Code, options: Options): Promise<null> {
+  let args = parseArgs<Args>(node, [
     optional('cwd', String),
     optional('commit', ToBool, true)
   ]);
 
+  let message = node.value;
   let [title] = message.split('\n');
 
   let { cwd } = options;

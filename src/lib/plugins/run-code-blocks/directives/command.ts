@@ -19,8 +19,8 @@ function parseCommands(commands: string): string[] {
     .filter(line => line && !line.startsWith('#'));
 }
 
-export default async function command(meta: string, commands: string, options: Options): Promise<Option<Code>> {
-  let args = parseArgs<Args>('command', meta, [
+export default async function command(node: Code, options: Options): Promise<Option<Code>> {
+  let args = parseArgs<Args>(node, [
     optional('hidden', ToBool),
     optional('cwd', String),
     optional('captureOutput', ToBool, true)
@@ -32,7 +32,7 @@ export default async function command(meta: string, commands: string, options: O
 
   let output = [];
 
-  for (let cmd of parseCommands(commands)) {
+  for (let cmd of parseCommands(node.value)) {
     console.log(`$ ${cmd}`);
 
     output.push(`$ ${cmd}`);

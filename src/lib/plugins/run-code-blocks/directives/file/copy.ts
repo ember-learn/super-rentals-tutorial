@@ -20,8 +20,8 @@ interface Args {
   filename: string;
 }
 
-export default async function copyFile(meta: string, content: string, options: Options): Promise<Option<Code>> {
-  let args = parseArgs<Args>('file:copy', meta, [
+export default async function copyFile(node: Code, options: Options): Promise<Option<Code>> {
+  let args = parseArgs<Args>(node, [
     optional('lang', String),
     optional('hidden', ToBool),
     optional('cwd', String),
@@ -50,7 +50,7 @@ export default async function copyFile(meta: string, content: string, options: O
   if (args.hidden) {
     return null
   } else {
-    let value = content || await readFile(destPath, { encoding: 'utf8' });
+    let value = node.value || await readFile(destPath, { encoding: 'utf8' });
 
     return {
       type: 'code',
