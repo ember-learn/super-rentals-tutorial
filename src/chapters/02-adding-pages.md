@@ -1,6 +1,6 @@
-With our first page down, let's add another one!
+With our [first page](../01-orientation) down, let's add another one!
 
-This time, we would like the page to be served on the `/about` URL. In order to do this, we will need to tell Ember our plan to add a page at that location, otherwise Ember will think we have visited an invalid URL!
+This time, we would like the page to be served on the `/about` URL. In order to do this, we will need to tell Ember about our plan to add a page at that location. Otherwise, Ember will think we have visited an invalid URL!
 
 The place to manage what pages are available is the *[router](TODO: link to router)*. Go ahead and open `app/router.js` and make the following change:
 
@@ -52,7 +52,7 @@ We want to keep the existing URLs for the new website, but `getting-in-touch` is
  });
 ```
 
-Here, we add the `contact` route, but explicitly specify a path for the route. This allows us to keep the legacy URL, but use the new, shorter name for the route as well as the template filename.
+Here, we added the `contact` route, but explicitly specified a path for the route. This allows us to keep the legacy URL, but use the new, shorter name for the route, as well as the template filename.
 
 ```run:command hidden=true cwd=super-rentals
 git add app/router.js
