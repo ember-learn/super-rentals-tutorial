@@ -41,6 +41,7 @@ before_deploy:
 deploy:
   provider: script
   script: scripts/deploy.sh
+  skip_cleanup: true
   on:
     repo: ember-learn/super-rentals-tutorial
     branch: master
