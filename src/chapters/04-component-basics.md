@@ -1,4 +1,4 @@
-In a [previous chapter](../02-building-pages), we got a light introduction to *[components](TODO: link to components)* when using `<LinkTo>` to connect our pages. To recap, we said that components are Ember's way of creating *[custom tags](TODO: link to custom tags)* to supplement the built-in HTML tags from the browser. Now, we are going to create our own components!
+In a [previous chapter](../02-building-pages), we got a light introduction to *[components][TODO: link to components]* when using `<LinkTo>` to connect our pages. To recap, we said that components are Ember's way of creating *[custom tags][TODO: link to custom tags]* to supplement the built-in HTML tags from the browser. Now, we are going to create our own components!
 
 During the course of developing an app, it is pretty common to reuse the same UI element across different parts of the app. For example, we have been using the same "jumbo" header in all three pages so far. On every page we worked to follow the same basic structure:
 
@@ -24,13 +24,13 @@ Components are the perfect solution to this. In its most basic form, a component
 git add app/components/jumbo.hbs
 ```
 
-That's it, we have created our first component! We can now *[invoke](TODO: link to invoke)* this component anywhere in our app, using `<Jumbo>` as the tag name.
+That's it, we have created our first component! We can now *[invoke][TODO: link to invoke]* this component anywhere in our app, using `<Jumbo>` as the tag name.
 
 > Zoey says...
 >
 > Remember, when invoking components, we need to capitalize their names so Ember can tell them apart from regular HTML elements. The `jumbo.hbs` template corresponds to the `<Jumbo>` tag, just like `super-awesome.hbs` corresponds to `<SuperAwesome>`.
 
-When invoking a component, Ember will replace the component tag with the content found in the component's template. Just like regular HTML tags, it is common to pass *[content](TODO: link to content)* to components, like `<Jumbo>some content</Jumbo>`. We can enable this using the `{{yield}}` keyword, which will be replaced with the content that was passed to the component.
+When invoking a component, Ember will replace the component tag with the content found in the component's template. Just like regular HTML tags, it is common to pass *[content][TODO: link to content]* to components, like `<Jumbo>some content</Jumbo>`. We can enable this using the `{{yield}}` keyword, which will be replaced with the content that was passed to the component.
 
 Let's try it out by editing the index template:
 
@@ -46,7 +46,7 @@ Let's try it out by editing the index template:
 +</Jumbo>
 ```
 
-After saving the changes, your page should automatically reload, and, _voilà_... nothing changed? Well, that's exactly what we wanted to happen this time! We successfully *[refactored](TODO: link to refactored)* our index template to use the `<Jumbo>` component, and everything still works as expected. And the tests still pass!
+After saving the changes, your page should automatically reload, and, _voilà_... nothing changed? Well, that's exactly what we wanted to happen this time! We successfully *[refactored][TODO: link to refactored]* our index template to use the `<Jumbo>` component, and everything still works as expected. And the tests still pass!
 
 <!-- TODO: screenshot of running tests? -->
 
@@ -92,7 +92,7 @@ git add app/templates/contact.hbs
 
 After saving, everything should look exactly the same as before, and all the tests should still pass. Very nice!
 
-While it may not save you a lot of characters in this case, [encapsulating](TODO: link to encapsulating)* the implementation of the "jumbo" header into its own component makes the template slightly easier to read, as it allows the reader to focus on things that are unique to just that page. Further, if we need to make a change to the header, we can make it in a single place. Feel free to give that a try!
+While it may not save you a lot of characters in this case, [encapsulating][TODO: link to encapsulating]* the implementation of the "jumbo" header into its own component makes the template slightly easier to read, as it allows the reader to focus on things that are unique to just that page. Further, if we need to make a change to the header, we can make it in a single place. Feel free to give that a try!
 
 Before we move on to the next component, let's write an automated test for our `<Jumbo>` component. Run this command in your terminal:
 
@@ -104,7 +104,7 @@ ember generate component-test jumbo
 git add tests/integration/components/jumbo-test.js
 ```
 
-Here, we used the generator to generate a *[component test](TODO: link to component test)*. These are used to render and test a single component at a time. This is in contrast to the acceptance tests that we wrote earlier, which have to navigate and render entire pages worth of content.
+Here, we used the generator to generate a *[component test][TODO: link to component test]*. These are used to render and test a single component at a time. This is in contrast to the acceptance tests that we wrote earlier, which have to navigate and render entire pages worth of content.
 
 Let's replace the boilerplate code that was generated for us with our own test:
 
