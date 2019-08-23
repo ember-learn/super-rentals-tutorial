@@ -44,7 +44,7 @@ async function render(nodes: BlockContent[], position?: Position): Promise<HTML>
   return { type: 'html', value, position };
 }
 
-export default class Walker extends BaseWalker<null> {
+export default class ZoeySaysWalker extends BaseWalker<null> {
   constructor() {
     super(null);
   }
