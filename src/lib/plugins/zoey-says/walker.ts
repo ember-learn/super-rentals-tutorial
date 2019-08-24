@@ -1,5 +1,6 @@
 import { BlockContent, Blockquote, HTML } from 'mdast';
 import { Position } from 'unist';
+import { VFile } from 'vfile';
 import BaseWalker from '../../walker';
 import html from './markdown-to-html';
 
@@ -45,8 +46,8 @@ async function render(nodes: BlockContent[], position?: Position): Promise<HTML>
 }
 
 export default class ZoeySaysWalker extends BaseWalker<null> {
-  constructor() {
-    super(null);
+  constructor(file: VFile) {
+    super(null, file);
   }
 
   protected async blockquote(node: Blockquote): Promise<Blockquote | HTML> {

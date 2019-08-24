@@ -1,4 +1,5 @@
 import { Association, LinkReference, StaticPhrasingContent } from 'mdast';
+import { VFile } from 'vfile';
 import BaseWalker from '../../walker';
 
 const TODO_PREFIX = 'TODO:';
@@ -12,8 +13,8 @@ function isTodoLink(node: LinkReference): boolean {
 }
 
 export default class TodoLinksWalker extends BaseWalker<null> {
-  constructor() {
-    super(null);
+  constructor(file: VFile) {
+    super(null, file);
   }
 
   protected async linkReference(node: LinkReference): Promise<LinkReference | StaticPhrasingContent[]> {

@@ -8,7 +8,9 @@
       "type": "node",
       "request": "launch",
       "name": "Launch Program",
-      "program": "${workspaceFolder}/dist/bin/build.js"
+      "program": "${workspaceFolder}/dist/bin/generate.js",
+      "console": "integratedTerminal",
+      "preLaunchTask": "compile"
     }
   ]
 }
