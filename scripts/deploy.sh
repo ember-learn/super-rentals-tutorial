@@ -31,13 +31,16 @@ pushd tmp
 
 # Setup commit message
 
-if echo -n "$TRAVIS_COMMIT_MESSAGE" | head -n 1 | grep -E "^Merge pull request #"; then
-  COMMIT_MESSAGE="Merge pull request $TRAVIS_REPO_SLUG#${TRAVIS_COMMIT_MESSAGE:20}"
-else
-  COMMIT_MESSAGE="$TRAVIS_COMMIT_MESSAGE"
-fi
+COMMIT_MESSAGE="$(
+  echo -n "$TRAVIS_COMMIT_MESSAGE" | \
+  sed -E "s|^Merge pull request #(.+) from .+$|Merge $TRAVIS_REPO_SLUG#\1|"
+)
 
-COMMIT_MESSAGE="$COMMIT_MESSAGE\n\nCommit: $TRAVIS_REPO_SLUG@$TRAVIS_COMMIT\n\nLogs: $TRAVIS_JOB_WEB_URL"
+---
+
+Commit:  $TRAVIS_REPO_SLUG@$TRAVIS_COMMIT
+Script:  https://github.com/$TRAVIS_REPO_SLUG/blob/$TRAVIS_COMMIT/$0
+Logs:    $TRAVIS_JOB_WEB_URL"
 
 # Guides
 
