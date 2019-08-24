@@ -29,6 +29,16 @@ CONFIG
 mkdir -p tmp
 pushd tmp
 
+# Setup commit message
+
+if echo -n "$TRAVIS_COMMIT_MESSAGE" | head -n 1 | grep -E "^Merge pull request #"; then
+  COMMIT_MESSAGE="Merge pull request $TRAVIS_REPO_SLUG#${TRAVIS_COMMIT_MESSAGE:20}"
+else
+  COMMIT_MESSAGE="$TRAVIS_COMMIT_MESSAGE"
+fi
+
+COMMIT_MESSAGE="$COMMIT_MESSAGE\n\nCommit: $TRAVIS_REPO_SLUG@$TRAVIS_COMMIT\n\nLogs: $TRAVIS_JOB_WEB_URL"
+
 # Guides
 
 git clone guides-source:ember-learn/guides-source --depth 1 -b super-rentals-tutorial
@@ -39,23 +49,19 @@ cp -r ../../dist/chapters/* guides/release/tutorial/
 git add guides/release/tutorial
 cp -r ../../dist/assets/* public/
 git add public
-cat <<COMMIT | git commit --allow-empty -F -
-Built from ember-learn/super-rentals-tutorial@$TRAVIS_COMMIT
-
-$TRAVIS_COMMIT_MESSAGE
-COMMIT
-git push
+if git diff --cached --exit-code; then
+  echo "Nothing to push"
+else
+  git commit -m "$COMMIT_MESSAGE"
+  git push
+fi
 popd
 
 # Code (with history)
 
 pushd ../dist/code/super-rentals
 git clean -dfx
-cat <<COMMIT | git commit --allow-empty -F -
-Built from ember-learn/super-rentals-tutorial@$TRAVIS_COMMIT
-
-$TRAVIS_COMMIT_MESSAGE
-COMMIT
+git commit --allow-empty -m "$COMMIT_MESSAGE"
 git remote add super-rentals super-rentals:ember-learn/super-rentals
 git push -f super-rentals master:super-rentals-tutorial-output
 popd
@@ -65,16 +71,16 @@ popd
 git clone super-rentals:ember-learn/super-rentals --depth 1 -b super-rentals-tutorial
 pushd super-rentals
 git rm -rf '*'
-cat <<COMMIT | git commit --allow-empty -F -
-Built from ember-learn/super-rentals-tutorial@$TRAVIS_COMMIT
-
-$TRAVIS_COMMIT_MESSAGE
-COMMIT
+git commit --allow-empty -m "$COMMIT_MESSAGE"
 git remote add dist ../../dist/code/super-rentals
 git fetch dist
 git merge --squash --no-commit --allow-unrelated-histories dist/master
 git commit --allow-empty --amend --no-edit
-git push
+if git diff --exit-code origin/super-rentals-tutorial; then
+  echo "Nothing to push"
+else
+  git push
+fi
 popd
 
 # Cleanup
