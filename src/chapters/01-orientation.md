@@ -34,6 +34,10 @@ rm package.json
 ember server
 ```
 
+```run:screenshot width=1024 height=620 retina=true filename=welcome.png alt="Welcome to Ember!"
+visit http://localhost:4200/
+```
+
 <!-- TODO: explain ember server, etc. -->
 
 When you are done experimenting, go ahead and delete the `app/templates/application.hbs` file. We won't be needing this for a while, so let's start afresh. We can add it back later when we have a need for it.
@@ -59,6 +63,10 @@ If you are thinking, "Hey, that looks like HTML!", then you would be right! In t
 Of course, unlike HTML, Ember templates can do a lot more than just displaying static content. We will see that in action soon.
 
 After saving the file, your browser tab should automatically refresh, showing us the welcome message we just worked on.
+
+```run:screenshot width=1024 height=256 retina=true filename=unstyled.png alt="Welcome to Super Rentals! (unstyled)"
+visit http://localhost:4200/
+```
 
 ```run:command hidden=true cwd=super-rentals
 git add app/templates/index.hbs
@@ -107,7 +115,9 @@ If you are familiar with CSS, feel free to customize them to your liking! Just k
 
 When you are ready, save the CSS file; our trusty development server should pick it up and refresh our page right away. No more unstyled content!
 
-<!-- TODO: screenshot -->
+```run:screenshot width=1024 height=256 retina=true filename=styled.png alt="Welcome to Super Rentals! (styled)"
+visit http://localhost:4200/
+```
 
 ```run:command hidden=true cwd=super-rentals
 git add app/styles/app.css
@@ -136,7 +146,9 @@ You can confirm this by navigating to
 git add public/assets/images/teaching-tomster.png
 ```
 
-<!-- TODO: screenshot? -->
+```run:screenshot width=1024 height=256 retina=true filename=styled-with-tomster.png alt="Welcome to Super Rentals! (with Tomster)"
+visit http://localhost:4200/
+```
 
 ```run:server:stop
 ember server

@@ -31,7 +31,7 @@ export default async function copyFile(node: Code, options: Options): Promise<Op
 
   console.log(`$ cp ${join('src', 'assets', args.src)} ${ args.filename }`);
 
-  let src = join(options.cwd, '..', 'assets', args.src);
+  let src = join(options.assets, args.src);
 
   let destDir = options.cwd;
 

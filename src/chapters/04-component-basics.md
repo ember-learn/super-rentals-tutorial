@@ -52,7 +52,13 @@ Let's try it out by editing the index template:
 
 After saving the changes, your page should automatically reload, and, _voilà_... nothing changed? Well, that's exactly what we wanted to happen this time! We successfully *[refactored][TODO: link to refactored]* our index template to use the `<Jumbo>` component, and everything still works as expected. And the tests still pass!
 
-<!-- TODO: screenshot of running tests? -->
+```run:screenshot width=1024 height=512 retina=true filename=index.png alt="Index page – nothing changed"
+visit http://localhost:4200/
+```
+
+```run:screenshot width=1024 height=512 retina=true filename=pass.png alt="Tests still passing after the refactor"
+visit http://localhost:4200/tests?hidecontainer
+```
 
 Let's do the same for our other two pages as well.
 
@@ -88,13 +94,26 @@ Let's do the same for our other two pages as well.
 +</Jumbo>
 ```
 
+After saving, everything should look exactly the same as before, and all the tests should still pass. Very nice!
+
 ```run:command hidden=true cwd=super-rentals
+yarn test
 git add app/templates/index.hbs
 git add app/templates/about.hbs
 git add app/templates/contact.hbs
 ```
 
-After saving, everything should look exactly the same as before, and all the tests should still pass. Very nice!
+```run:screenshot width=1024 height=512 retina=true filename=about.png alt="About page – nothing changed"
+visit http://localhost:4200/about
+```
+
+```run:screenshot width=1024 height=512 retina=true filename=contact.png alt="Contact page – nothing changed"
+visit http://localhost:4200/getting-in-touch
+```
+
+```run:screenshot width=1024 height=512 retina=true filename=pass-2.png alt="Tests still passing another round of refactor"
+visit http://localhost:4200/tests?hidecontainer
+```
 
 While it may not save you a lot of characters in this case, [encapsulating][TODO: link to encapsulating]* the implementation of the "jumbo" header into its own component makes the template slightly easier to read, as it allows the reader to focus on things that are unique to just that page. Further, if we need to make a change to the header, we can make it in a single place. Feel free to give that a try!
 
@@ -140,16 +159,18 @@ Let's replace the boilerplate code that was generated for us with our own test:
    });
 ```
 
+Instead of navigating to a URL, we start the test by rendering our `<Jumbo>` component on the test page. This is useful because it may otherwise require a lot of setup and interaction just to get to a page where your component is used. Component tests allows us to skip all of that and focus exclusively on testing the component in isolation.
+
+Just like visit and click, which we used earlier, render is also an async step, so we need to pair it with the `await` keyword. Other than that, the rest of the test is very similar to the acceptance tests we wrote we in the previous chapter. Make sure the test is passing by checking the tests UI in the browser.
+
 ```run:command hidden=true cwd=super-rentals
 yarn test
 git add tests/integration/components/jumbo-test.js
 ```
 
-Instead of navigating to a URL, we start the test by rendering our `<Jumbo>` component on the test page. This is useful because it may otherwise require a lot of setup and interaction just to get to a page where your component is used. Component tests allows us to skip all of that and focus exclusively on testing the component in isolation.
-
-Just like visit and click, which we used earlier, render is also an async step, so we need to pair it with the `await` keyword. Other than that, the rest of the test is very similar to the acceptance tests we wrote we in the previous chapter. Make sure the test is passing by checking the tests UI in the browser.
-
-<!-- TODO: screenshot of the tests? -->
+```run:screenshot width=1024 height=512 retina=true filename=pass-3.png alt="Tests still passing with our component test"
+visit http://localhost:4200/tests?hidecontainer
+```
 
 We've been refactoring our existing code for a while, so let's change gears and implement a new feature: the site-wide navigation bar.
 
@@ -196,6 +217,10 @@ Next, we will add our `<NavBar>` component to the top of each page:
 ```
 
 Voilà, we made another component!
+
+```run:screenshot width=1024 height=512 retina=true filename=index-with-nav.png alt="Index page with nav"
+visit http://localhost:4200/
+```
 
 ```run:command hidden=true cwd=super-rentals
 git add app/templates/about.hbs
@@ -252,12 +277,16 @@ But what kind of test? We _could_ write a component test for the `<NavBar>` by i
 
 We updated the existing tests to assert that a `<nav>` element exists on each page. This is important for accessibility since screen readers will use that element to provide navigation. Then, we added a new test that verifies the behavior of the `<NavBar>` links.
 
+All tests should pass at this point!
+
 ```run:command hidden=true cwd=super-rentals
 yarn test
 git add tests/acceptance/super-rentals-test.js
 ```
 
-All tests should pass at this point!
+```run:screenshot width=1024 height=512 retina=true filename=pass-4.png alt="Tests still passing with our <NavBar> tests"
+visit http://localhost:4200/tests?hidecontainer
+```
 
 Before we move on to the next feature, there is one more thing we could clean up. Since the `<NavBar>` is used for site-wide navigation, it really needs to be displayed on _every_ page in the app. So far, we have been adding the component on each page manually. This is a bit error-prone, as we could easily forget to do this the next time that we add a new page.
 
@@ -305,6 +334,10 @@ git add app/templates/application.hbs
 git add app/templates/index.hbs
 git add app/templates/contact.hbs
 git add app/templates/about.hbs
+```
+
+```run:screenshot width=1024 height=512 retina=true filename=pass-5.png alt="Tests still passing with {{outlet}}"
+visit http://localhost:4200/tests?hidecontainer
 ```
 
 ```run:server:stop

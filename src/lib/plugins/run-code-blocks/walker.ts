@@ -11,6 +11,7 @@ import createFile from './directives/file/create';
 import patchFile from './directives/file/patch';
 import ignore from './directives/ignore';
 import pause from './directives/pause';
+import screenshot from './directives/screenshot';
 import startServer from './directives/server/start';
 import stopServer from './directives/server/stop';
 
@@ -69,6 +70,9 @@ export default class Walker extends BaseWalker<Options> {
 
       case 'run:pause':
           return pause(node, options, this.file);
+
+      case 'run:screenshot':
+          return screenshot(node, options, this.file);
 
       case 'run:server:start':
           assert(this.servers !== null, 'servers must not be null');
