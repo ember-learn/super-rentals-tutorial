@@ -44,7 +44,7 @@ export default class Walker extends BaseWalker<Options> {
           return ignore(node, options);
 
       case 'run:pause':
-          return pause(node, options);
+          return pause(node, options, this.file);
 
       default:
         if (lang.startsWith('run:ignore:')) {

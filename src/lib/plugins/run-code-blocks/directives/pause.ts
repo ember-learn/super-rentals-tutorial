@@ -1,5 +1,6 @@
 import { Code } from 'mdast';
 import readline from 'readline';
+import { VFile } from 'vfile';
 import Options from '../options';
 
 async function prompt(message: string): Promise<void> {
@@ -11,22 +12,31 @@ async function prompt(message: string): Promise<void> {
       output: process.stdout
     });
 
-    rl.question('Press ENTER when ready to resume', resolve);
+    rl.question('Press ENTER when ready to resume', () => {
+      rl.close();
+      resolve();
+    });
   });
 
-  console.log('\nResuming');
+  console.log('\nResuming\n');
 }
 
-export default async function pause({ value, position }: Code, _options: Options): Promise<null> {
+export default async function pause({ value, position }: Code, _options: Options, { path }: VFile): Promise<null> {
   if (value) {
     console.log(value);
   }
 
-  if (position) {
-    await prompt(`Build paused on line ${position.start.line}...`);
-  } else {
-    await prompt('Build paused...');
+  let location = '';
+
+  if (path) {
+    location = `${location} at ${path}`
   }
+
+  if (position) {
+    location = `${location} on line ${position.start.line}`;
+  }
+
+  await prompt(`Build paused${location}...`);
 
   return null;
 }

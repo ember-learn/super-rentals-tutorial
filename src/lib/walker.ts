@@ -1,6 +1,7 @@
 import { Root } from 'mdast';
 import { Option, assert } from 'ts-std';
 import { Node, Parent } from 'unist';
+import { VFile } from 'vfile';
 
 type Handler<Options> = (this: Walker<Options>, node: Node) => Option<Node> | Promise<Option<Node>>;
 
@@ -9,7 +10,7 @@ function isParent(node: Node): node is Parent {
 }
 
 export default class Walker<Options> {
-  constructor(protected options: Options) {}
+  constructor(protected options: Options, protected file: VFile) {}
 
   [key: string]: unknown;
 

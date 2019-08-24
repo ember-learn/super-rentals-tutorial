@@ -5,13 +5,13 @@ import {
 import _glob from 'glob';
 import _mkdirp from 'mkdirp';
 import { ncp as _ncp } from 'ncp';
-import { basename, join } from 'path';
+import { basename, join, relative } from 'path';
 import markdown from 'remark-parse';
 import stringify from 'remark-stringify';
 import unified from 'unified';
 import { promisify } from 'util';
 
-import { runCodeBlocks, todoLinks, zoeySays } from '../lib';
+import { doNotEdit, runCodeBlocks, todoLinks, zoeySays } from '../lib';
 
 const glob = promisify(_glob);
 const readFile = promisify(_readFile);
@@ -38,9 +38,11 @@ async function main() {
     .use(runCodeBlocks, { cwd: codeDir })
     .use(todoLinks)
     .use(zoeySays)
+    .use(doNotEdit, { repo: 'ember-learn/super-rentals-tutorial' })
     .use(stringify, { fences: true });
 
   for (let inputPath of chapters) {
+    let relativePath = relative(project, inputPath);
     let filename = basename(inputPath);
 
     console.log(`Processing ${filename}`);
@@ -49,7 +51,7 @@ async function main() {
 
     let contents = await readFile(inputPath, { encoding: 'utf8' });
 
-    let result = await processor.process({ path: filename, contents });
+    let result = await processor.process({ path: relativePath, contents });
 
     await writeFile(outputPath, result, { encoding: 'utf8' });
   }
