@@ -10,7 +10,7 @@ function comment(repo: string, branch?: string, path?: string): HTML {
     url = `${url}/blob/${branch}/${path}`;
   }
 
-  let message = `Headsup! This is a generated file, do not edit directly. You can find the source at ${url}`;
+  let message = `Heads up! This is a generated file, do not edit directly. You can find the source at ${url}`;
 
   return {
     type: 'html',
