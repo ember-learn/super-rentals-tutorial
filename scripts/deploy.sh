@@ -39,12 +39,16 @@ cp -r ../../dist/chapters/* guides/release/tutorial/
 git add guides/release/tutorial
 cp -r ../../dist/assets/* public/
 git add public
-cat <<COMMIT | git commit --allow-empty -F -
+if git diff --cached --exit-code; then
+  echo "Nothing to push"
+else
+  cat <<-COMMIT | git commit -F -
 Built from ember-learn/super-rentals-tutorial@$TRAVIS_COMMIT
 
 $TRAVIS_COMMIT_MESSAGE
 COMMIT
-git push
+  git push
+fi
 popd
 
 # Code (with history)
@@ -74,7 +78,11 @@ git remote add dist ../../dist/code/super-rentals
 git fetch dist
 git merge --squash --no-commit --allow-unrelated-histories dist/master
 git commit --allow-empty --amend --no-edit
-git push
+if git diff --exit-code origin/super-rentals-tutorial; then
+  echo "Nothing to push"
+else
+  git push
+fi
 popd
 
 # Cleanup
