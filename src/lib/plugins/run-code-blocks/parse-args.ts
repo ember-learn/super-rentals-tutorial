@@ -34,15 +34,17 @@ export default function parseArgs<Args extends object>(node: Code, transforms: K
   let validKeys = transforms.map(([key]) => key);
 
   if (meta) {
-    let pairs = meta.split(' ');
+    let pattern = /(?:^|\s+)(\w+)=(?:([^'"\s]\S*)|(?:"([^"]*)")|(?:'([^']*)'))/g;
 
-    for (let pair of pairs) {
-      let [key, value, ...extra] = pair.split('=');
+    while (pattern.lastIndex < meta.length) {
+      let match = pattern.exec(meta);
 
-      assert(!!key, 'bug: no key?');
+      assert(match !== null, `Invalid arguments for \`${lang}\`: ${meta}`);
+
+      let [, key, v1, v2, v3] = match!;
+      let value = v1 || v2 || v3;
+
       assert(validKeys.includes(key), `\`${key}\` is not a valid argument for \`${lang}\``);
-      assert(!!value, `\`${key}\` must have a value (in \`${lang}\`)`);
-      assert(extra.length === 0, `\`${key}\` has too many values (in \`${lang}\`)`);
 
       parsed[key] = value;
     }

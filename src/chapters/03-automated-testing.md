@@ -1,3 +1,7 @@
+```run:server:start hidden=true cwd=super-rentals expect="Serving on http://localhost:4200/"
+ember server
+```
+
 We accomplished a lot in the last few chapters! Let's recap &mdash; we started with a blank canvas, added a few pages of content, styled everything to look pretty, dropped in a picture of Tomster, added links between our pages and amazingly, everything worked together flawlessly!
 
 But do we _really_ know that everything is actually working? Sure, we clicked around a bit to confirm that things look as expected. But do we feel confident that we checked _every_ page after the most recent change that we made?
@@ -138,6 +142,10 @@ git add tests/acceptance/super-rentals-test.js
 For the rest of the tutorial, we will continue to add more automated tests as we develop new features. Testing is optional; tests don't affect the functionality your app, they just protect it from *[regressions][TODO: link to regressions]*, which is just a fancy way of saying "accidental breakages."
 
 If you are in a hurry, you can skip over the testing sections in this tutorial and still be able to follow along with everything else. But don't you find it super satisfying &mdash; _oddly satisfying_ &mdash; to watch a robot click on things really, really fast?
+
+```run:server:stop
+ember server
+```
 
 ```run:checkpoint cwd=super-rentals
 Chapter 3

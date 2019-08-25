@@ -68,7 +68,7 @@ async function generateDiff(filename: string, cwd: string): Promise<{ content: s
 export default async function patchFile(node: Code, options: Options): Promise<Option<Code>> {
   let args = parseArgs<Args>(node, [
     optional('lang', String),
-    optional('hidden', ToBool),
+    optional('hidden', ToBool, false),
     optional('cwd', String),
     optional('filename', String)
   ]);

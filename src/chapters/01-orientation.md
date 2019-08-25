@@ -30,6 +30,10 @@ ember new super-rentals -b @ember/octane-app-blueprint
 rm package.json
 ```
 
+```run:server:start cwd=super-rentals expect="Serving on http://localhost:4200/"
+ember server
+```
+
 <!-- TODO: explain ember server, etc. -->
 
 When you are done experimenting, go ahead and delete the `app/templates/application.hbs` file. We won't be needing this for a while, so let's start afresh. We can add it back later when we have a need for it.
@@ -134,6 +138,10 @@ git add public/assets/images/teaching-tomster.png
 
 <!-- TODO: screenshot? -->
 
-```run:checkpoint cwd=super-rentals
+```run:server:stop
+ember server
+```
+
+```run:ignore:checkpoint cwd=super-rentals
 Chapter 1
 ```
