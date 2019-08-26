@@ -2,7 +2,15 @@
 
 TODO: add more info here!
 
-## Formatting & Styleguide
+### Adding and modifying chapters
+
+Chapters are located in `/src/chapters`, and any modifications/additions should occur there. Do not modify the  `/dist/chapters` directory, as `/dist` is not committed to the repository, and only contains generated content!
+
+## Prose workflow
+
+If you are modifying or adding new prose to the tutorial, please be sure to follow the formatting styleguide below! Following these conventions will make it easier to review your contribution. 😊
+
+### Formatting styleguide
 
 * When naming chapters, be sure that they are prefixed with two digits before the chapter name to ensure that they are ordered correctly.
     * For example: `01-orientation.md`.
@@ -21,3 +29,12 @@ TODO: add more info here!
         >
         > Here's a very helpful comment!
         ```
+
+## Code workflow
+
+The workflow for updating the Super Rentals tutorial involves a few different steps.
+
+
+## Screenshot + gif workflow
+
+TODO: add content!
