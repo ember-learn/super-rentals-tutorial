@@ -1,16 +1,16 @@
-# Contributing to the super-rentals-tutorial
+# Contributing
 
-TODO: add more info here!
+Thank you for your interest in improving the Super Rentals Tutorial! This repository contains the logic to generate the prose markdown for our tutorial, as well as the code for the tutorial _app_ itself.
 
-### Adding and modifying chapters
+Please note that all of the content to generate markdown and code are located in individual chapter files in `/src/chapters`. Any modifications/additions should occur there.
 
-Chapters are located in `/src/chapters`, and any modifications/additions should occur there. Do not modify the  `/dist/chapters` directory, as `/dist` is not committed to the repository, and only contains generated content!
+When building this tutorial you may notice that you have a `/dist/chapters` generated locally. Please note that this directory is _not_ committed, and contains the output of your locally-generated tutorial content. Please be mindful not to modify anything in the `/dist` directory as it is git ignored and any changes there will not impact what is generate! Instead, make your changes inside of the `/src` directory only.
 
-## Prose workflow
+## Making changes to the tutorial prose
 
-If you are modifying or adding new prose to the tutorial, please be sure to follow the formatting styleguide below! Following these conventions will make it easier to review your contribution. 😊
+If you are modifying or adding new prose to the tutorial, please be sure to follow the formatting style guide below! Following these conventions will make it easier to review your contribution. 😊
 
-### Formatting styleguide
+### Formatting style guide
 
 * When naming chapters, be sure that they are prefixed with two digits before the chapter name to ensure that they are ordered correctly.
     * For example: `01-orientation.md`.
@@ -30,11 +30,118 @@ If you are modifying or adding new prose to the tutorial, please be sure to foll
         > Here's a very helpful comment!
         ```
 
-## Code workflow
+## Making changes to the tutorial code
 
-The workflow for updating the Super Rentals tutorial involves a few different steps.
+The workflow for updating the Super Rentals Tutorial involves working within two directories of this project: `/src/chapters` and `/dist`. The editable prose lives in `src/chapters`; any changes that are made to the prose should be done there. The tutorial uses the content in `/src/chapters` to generate the prose markdown that is output into `/dist/chapters`. Interspersed with the prose are commands that are used to generate the code for the _actual_ tutorial app, which is outputted at `/dist/code/super-rentals`.
 
+Once you have made your changes in the tutorial prose or code, you can run a few different commands to verify that your changes render as expected.
 
-## Screenshot + gif workflow
+    * To regenerate all of the chapters (and rebuild the app), run `yarn build`. This will `rm -rf` anything previously generated in the `/dist` directory.
+    * To generate a single chapter without removing all the previously generated content, run `yarn generate src/chapters/00-your-chapter-to-edit-here.md`. This will rebuild _just_ the chapter that is specified without deleting everything else in the `/dist` directory.
+
+### Code changes
+
+To make code changes, you will first need to locate the chapter you wish to edit in `/src/chapters`. Depending on the type of code change you'd like to make, you will need to use different commands.
+
+#### Running commands
+
+If you'd like to run a command, you will need to use the `run: command`. Be sure to include `cwd=super-rentals` so that the file is generated in the app's directory.
+
+For example:
+    ```run:command hidden=true cwd=super-rentals
+    ember generate component rental
+    ```
+
+#### Creating files
+
+To create a file, you will need to use the `run:file:create` command. Be sure to specify the language, the filename, as well as the `cwd` directory.
+
+For example:
+    ```run:file:create lang=handlebars cwd=super-rentals filename=app/templates/about.hbs
+    <h2>About Super Rentals</h2>
+    ```
+
+After creating a file, you should be sure to _add_ it shortly afterwards so that it is tracked by git, and will be committed in the process of generating the tutorial app. This can be a `hidden` command, since it is not part of the prose of the tutorial.
+
+For example:
+    ```run:command hidden=true cwd=super-rentals
+    git add app/templates/about.hbs
+    ```
+
+If you are adding a _test_ file, be sure to run `yarn test` before adding the test file. This way, the generator will run the tests before adding them, and will subsequently fail in generating broken code if the tests themselves fail.
+
+#### Using `run:pause`
+
+When running commands, generating new files, or making changes to preexisting ones, you may want to see the current state of the generated app. The `run: pause` command is useful in this case. Use this command inside of your existing chapter, inserting it at points where you want the generator to stop. This is similar to running something like `pauseTest()`; it will pause the generator and allow you to see the current state of the code you have generated (located in `/dist/code/super-rentals`).
+
+For example:
+    ```run:pause
+    Note to self: check that `application.hbs` has the correct markup and remember to git add it!
+    ```
+
+Any content inside of the code blocks will be printed in your command line.
+
+#### Generating diffs
+
+In the case of generating diffs to render inside of the tutorial prose, you will want to use the `run: pause` command, described above.
+
+_⚠️ Please note: you may find it easier to generate diffs and make edits to the tutorial by opening `/dist/code/super-rentals/code` in a separate code editor window._
+
+Once you have put a `run: pause` at the spot in your prose where the diff needs to be captured, you can navigate to `/dist/code/super-rentals/code` in the terminal. First, check that the diff is included in the current changes:
+
+    ```
+    ➜  code git:(your-branch-name) ✗ git diff
+    ```
+
+Next, save your diff to some temporary file that you will open in a code editor in a moment (`my_awesome_patch` in the example below). You want to be sure to generate the diff specifically with only 1 line of context. You can do this by specifying `git diff --unified=1` or `git diff -U1`.
+
+    ```
+    ➜  code git:(your-branch-name) ✗ git diff -U1 > my_awesome_patch
+    ➜  code git:(your-branch-name) ✗ code my_awesome_patch
+    ```
+
+Once you have opened your temporary file containing your diff, edit it so that the only thing surrounding the diff is the line number additions subtractions.
+
+    ```
+    @@ -9,2 +9,3 @@
+    Router.map(function() {
+    +  this.route('about');
+    });
+    ```
+
+Finally, wrap the newly-modified diff content in the `run:file:patch` command. Be sure to specify the language of the file, the filename, and the `cwd=super-rentals` option so that the patch is applied in the app's directory.
+
+For example:
+    ```run:file:patch lang=js cwd=super-rentals filename=app/router.js
+    @@ -9,2 +9,3 @@
+    Router.map(function() {
+    +  this.route('about');
+    });
+    ```
+
+Once you have added the diff to the prose using the `run:file:patch` command, you can remove the `run:pause` command. In order to test that your patch was successfully applied, be sure to:
+    1. Run `git checkout` any changes in the workoing directory of `/dist/code/super-rentals/code`.
+    2. Regenerate your modified chapter (`yarn generate src/chapters/00-your-chapter-to-edit-here.md`).
+
+Finally, you can look at your modified chapter in `/dist/chapters` and make sure that your patch renders as you expect in the markdown!
+
+#### Adding screenshots
 
 TODO: add content!
+
+#### Adding gifs
+
+TODO: add content!
+
+#### Saving a chapter
+
+Once a chapter is ready to be published and files, diffs, and screenshots have all been added as necessary, the last step is to commit the code changes at the end of the chapter. This is done usiing the `run:checkpoint` command.
+
+For example:
+    ```run:checkpoint cwd=super-rentals
+    Chapter 3
+    ```
+
+This should always be the last thing at the end of every chapter, as it will lint and run tests against the code generated in the chapter. The commit message will be whatever content is in the code block. We prefer the chapter title as the content of the commit.
+
+Before opening a pull request, be sure to check the `/dist/chapters` to make sure that the markdown generated by your changes to a chapter still looks correct.
