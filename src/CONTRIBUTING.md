@@ -19,7 +19,7 @@ If you are modifying or adding new prose to the tutorial, please be sure to foll
 * When referring to other chapters, link to the chapter using its relative path in the tutorial.
     * For example: `We learned about this in a [previous chapter](../02-building-pages/)`.
 * When referring to important key terms, be sure to *italicize* the term and link to a definition for it.
-    * For example: `*[route][http://a-great-link-to-the-definition-of-a-route-goes-here]*`.
+    * For example: `*[route](http://a-great-link-to-the-definition-of-a-route-goes-here)*`.
 * When referring to component names, keywords, helpers, or HTML elements, be sure to use code markup.
     * For example: *"Inside of this file, we have the `<NavBar>` component and the `{{outlet}}` keyword."*
 * When using the "Zoey says" callouts, be sure to use the blockquote formatting, ensuring that an extra `>` is included between the "Zoey says..." text and the actual note content. This is required in order to properly convert the markdown into HTML.
@@ -36,8 +36,8 @@ The workflow for updating the Super Rentals Tutorial involves working within two
 
 Once you have made your changes in the tutorial prose or code, you can run a few different commands to verify that your changes render as expected.
 
-    * To regenerate all of the chapters (and rebuild the app), run `yarn build`. This will `rm -rf` anything previously generated in the `/dist` directory.
-    * To generate a single chapter without removing all the previously generated content, run `yarn generate src/chapters/00-your-chapter-to-edit-here.md`. This will rebuild _just_ the chapter that is specified without deleting everything else in the `/dist` directory.
+* To regenerate all of the chapters (and rebuild the app), run `yarn build`. This will `rm -rf` anything previously generated in the `/dist` directory.
+* To generate a single chapter without removing all the previously generated content, run `yarn generate src/chapters/00-your-chapter-to-edit-here.md`. This will rebuild _just_ the chapter that is specified without deleting everything else in the `/dist` directory.
 
 ### Code changes
 
@@ -48,6 +48,7 @@ To make code changes, you will first need to locate the chapter you wish to edit
 If you'd like to run a command, you will need to use the `run: command`. Be sure to include `cwd=super-rentals` so that the file is generated in the app's directory.
 
 For example:
+
     ```run:command hidden=true cwd=super-rentals
     ember generate component rental
     ```
@@ -57,6 +58,7 @@ For example:
 To create a file, you will need to use the `run:file:create` command. Be sure to specify the language, the filename, as well as the `cwd` directory.
 
 For example:
+
     ```run:file:create lang=handlebars cwd=super-rentals filename=app/templates/about.hbs
     <h2>About Super Rentals</h2>
     ```
@@ -64,6 +66,7 @@ For example:
 After creating a file, you should be sure to _add_ it shortly afterwards so that it is tracked by git, and will be committed in the process of generating the tutorial app. This can be a `hidden` command, since it is not part of the prose of the tutorial.
 
 For example:
+
     ```run:command hidden=true cwd=super-rentals
     git add app/templates/about.hbs
     ```
@@ -75,6 +78,7 @@ If you are adding a _test_ file, be sure to run `yarn test` before adding the te
 When running commands, generating new files, or making changes to preexisting ones, you may want to see the current state of the generated app. The `run: pause` command is useful in this case. Use this command inside of your existing chapter, inserting it at points where you want the generator to stop. This is similar to running something like `pauseTest()`; it will pause the generator and allow you to see the current state of the code you have generated (located in `/dist/code/super-rentals`).
 
 For example:
+
     ```run:pause
     Note to self: check that `application.hbs` has the correct markup and remember to git add it!
     ```
@@ -89,16 +93,16 @@ _⚠️ Please note: you may find it easier to generate diffs and make edits to 
 
 Once you have put a `run: pause` at the spot in your prose where the diff needs to be captured, you can navigate to `/dist/code/super-rentals/code` in the terminal. First, check that the diff is included in the current changes:
 
-    ```
-    ➜  code git:(your-branch-name) ✗ git diff
-    ```
+```
+➜  code git:(your-branch-name) ✗ git diff
+```
 
 Next, save your diff to some temporary file that you will open in a code editor in a moment (`my_awesome_patch` in the example below). You want to be sure to generate the diff specifically with only 1 line of context. You can do this by specifying `git diff --unified=1` or `git diff -U1`.
 
-    ```
-    ➜  code git:(your-branch-name) ✗ git diff -U1 > my_awesome_patch
-    ➜  code git:(your-branch-name) ✗ code my_awesome_patch
-    ```
+```
+➜  code git:(your-branch-name) ✗ git diff -U1 > my_awesome_patch
+➜  code git:(your-branch-name) ✗ code my_awesome_patch
+```
 
 Once you have opened your temporary file containing your diff, edit it so that the only thing surrounding the diff is the line number additions subtractions.
 
@@ -112,6 +116,7 @@ Once you have opened your temporary file containing your diff, edit it so that t
 Finally, wrap the newly-modified diff content in the `run:file:patch` command. Be sure to specify the language of the file, the filename, and the `cwd=super-rentals` option so that the patch is applied in the app's directory.
 
 For example:
+
     ```run:file:patch lang=js cwd=super-rentals filename=app/router.js
     @@ -9,2 +9,3 @@
     Router.map(function() {
@@ -120,8 +125,9 @@ For example:
     ```
 
 Once you have added the diff to the prose using the `run:file:patch` command, you can remove the `run:pause` command. In order to test that your patch was successfully applied, be sure to:
-    1. Run `git checkout` any changes in the workoing directory of `/dist/code/super-rentals/code`.
-    2. Regenerate your modified chapter (`yarn generate src/chapters/00-your-chapter-to-edit-here.md`).
+
+1. Run `git checkout` any changes in the workoing directory of `/dist/code/super-rentals/code`.
+2. Regenerate your modified chapter (`yarn generate src/chapters/00-your-chapter-to-edit-here.md`).
 
 Finally, you can look at your modified chapter in `/dist/chapters` and make sure that your patch renders as you expect in the markdown!
 
@@ -138,6 +144,7 @@ TODO: add content!
 Once a chapter is ready to be published and files, diffs, and screenshots have all been added as necessary, the last step is to commit the code changes at the end of the chapter. This is done usiing the `run:checkpoint` command.
 
 For example:
+
     ```run:checkpoint cwd=super-rentals
     Chapter 3
     ```
