@@ -1,3 +1,7 @@
+```run:server:start hidden=true cwd=super-rentals expect="Serving on http://localhost:4200/"
+ember server
+```
+
 In a [previous chapter](../02-building-pages/), we got a light introduction to *[components][TODO: link to components]* when using `<LinkTo>` to connect our pages. To recap, we said that components are Ember's way of creating *[custom tags][TODO: link to custom tags]* to supplement the built-in HTML tags from the browser. Now, we are going to create our own components!
 
 During the course of developing an app, it is pretty common to reuse the same UI element across different parts of the app. For example, we have been using the same "jumbo" header in all three pages so far. On every page we worked to follow the same basic structure:
@@ -301,6 +305,10 @@ git add app/templates/application.hbs
 git add app/templates/index.hbs
 git add app/templates/contact.hbs
 git add app/templates/about.hbs
+```
+
+```run:server:stop
+ember server
 ```
 
 ```run:checkpoint cwd=super-rentals

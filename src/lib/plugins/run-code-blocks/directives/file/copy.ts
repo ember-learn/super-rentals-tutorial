@@ -23,7 +23,7 @@ interface Args {
 export default async function copyFile(node: Code, options: Options): Promise<Option<Code>> {
   let args = parseArgs<Args>(node, [
     optional('lang', String),
-    optional('hidden', ToBool),
+    optional('hidden', ToBool, false),
     optional('cwd', String),
     required('src', String),
     required('filename', String)

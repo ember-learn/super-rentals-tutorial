@@ -1,3 +1,7 @@
+```run:server:start hidden=true cwd=super-rentals expect="Serving on http://localhost:4200/"
+ember server
+```
+
 With our [first page](../01-orientation/) down, let's add another one!
 
 This time, we would like the page to be served on the `/about` URL. In order to do this, we will need to tell Ember about our plan to add a page at that location. Otherwise, Ember will think we have visited an invalid URL!
@@ -140,6 +144,10 @@ git add app/templates/contact.hbs
 We will learn more about how all of this works soon. In the meantime, go ahead and click on the link in the browser. Did you notice how snappy that was?
 
 Congratulations, you have completed your training as a master page-crafter!
+
+```run:server:stop
+ember server
+```
 
 ```run:checkpoint cwd=super-rentals
 Chapter 2

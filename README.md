@@ -435,6 +435,94 @@ Example:
 The content of the source code block will be printed to the command line
 prompt. This directive does not produce any output.
 
+### `run:server:start`
+
+Start a server (background task).
+
+Example:
+
+    ```run:server:start cwd=super-rentals expect="Serving on http://localhost:4200/"
+    ember server
+    ```
+
+Result:
+
+    ```shell
+    $ ember server
+    Build successful (9006ms) – Serving on http://localhost:4200/
+    ```
+
+The content of the source code block is the command for starting the server.
+Unlike `run:command`, you can only pass a single command, thought the command
+may span multiple lines if needed, using `\` at the end of each line to signal
+line-continuation.
+
+Lines starting with `#` and empty lines are ignored.
+
+All servers started with this directive must be explicitly shut down with the
+`run:server:stop` directive before the end of the file, otherwise the build
+will fail.
+
+Options:
+
+* `id`
+
+  A unique identifier to reference this server process, which is needed when
+  shutting it down later. This is optional; by default, the command to start
+  the server is used as the id, but this allows you to specify a shorter name
+  if desired.
+
+* `hidden=true`
+
+  Start the server, but omit the code block from the final markdown file
+  entirely.
+
+* `cwd`
+
+  Specify a CWD (relative to `dist/code`) for the command. This defaults to
+  `.` (i.e. `dist/code`), but most of the time you probably want to set it to
+  `super-rentals` (i.e. `dist/code/super-rentals`). Unfortunately, we cannot
+  just make that the default, because at the beginning of the tutorial, the
+  folder does not exists yet. (Generating the app is part of the tutorial.)
+
+* `expect`
+
+  Wait for a particular string to appear on STDOUT to ensure the server has
+  started successfully, before moving on to the next step.
+
+* `timeout`
+
+  Wait for some time to pass (specified in seconds) before moving on to the
+  next step.
+
+  If used in conjunction with the `expect` option, it will fail the step if the
+  checks are not completed before the deadline.
+
+* `captureOutput=false`
+
+  Run the command, but omit the output from the command(s) in the resulting
+  code block.
+
+### `run:server:stop`
+
+Stop a server (background task) previously started with `run:server:start`.
+
+Example:
+
+    ```run:server:stop
+    ember server
+    ```
+
+The content of the source code block is the command used to start the server.
+This directive does not produce any output.
+
+Options:
+
+* `id`
+
+  A unique identifier to reference the server process (see `run:server:start`).
+  If this option is passed, the content block is ignored.
+
 ## How?
 
 * Requires [volta](https://volta.sh), `git`

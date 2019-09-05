@@ -14,14 +14,14 @@ interface Args {
   captureOutput?: boolean;
 }
 
-function parseCommands(commands: string): string[] {
+export function parseCommands(commands: string): string[] {
   return commands.split(/(?<!\\)\n/)
     .filter(line => line && !line.startsWith('#'));
 }
 
 export default async function command(node: Code, options: Options): Promise<Option<Code>> {
   let args = parseArgs<Args>(node, [
-    optional('hidden', ToBool),
+    optional('hidden', ToBool, false),
     optional('cwd', String),
     optional('captureOutput', ToBool, true)
   ]);
@@ -30,18 +30,17 @@ export default async function command(node: Code, options: Options): Promise<Opt
     args.captureOutput = false;
   }
 
+  let { cwd } = options;
+
+  if (args.cwd) {
+    cwd = join(cwd, args.cwd);
+  }
+
   let output = [];
 
   for (let cmd of parseCommands(node.value)) {
     console.log(`$ ${cmd}`);
-
     output.push(`$ ${cmd}`);
-
-    let { cwd } = options;
-
-    if (args.cwd) {
-      cwd = join(cwd, args.cwd);
-    }
 
     let { stdout } = await exec(cmd, { cwd });
 
