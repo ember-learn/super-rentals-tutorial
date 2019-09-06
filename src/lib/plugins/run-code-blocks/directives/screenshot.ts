@@ -46,28 +46,6 @@ function attr(v: unknown): string {
 }
 
 function compile(steps: string, path: string, args: Args): string {
-  let script = [
-`const puppeteer = require('puppeteer');
-
-async function steps(page) {`
-  ];
-
-  for (let step of steps.split('\n')) {
-    if (step === '') {
-      continue;
-    }
-
-    let [action, arg] = step.split(' ', 2);
-
-    switch (action) {
-      case 'visit':
-        script.push(`  await page.goto(${js(arg)})`);
-        break;
-      default:
-        throw new Error(`Unknown action: ${action}`);
-    }
-  }
-
   let { width, height, x, y, retina } = args;
 
   let viewport: Viewport & JSONObject = {
@@ -96,14 +74,35 @@ async function steps(page) {`
     };
   }
 
-  script.push(
-`}
+  let script = [
+`const puppeteer = require('puppeteer');
 
 async function main() {
   let browser = await puppeteer.launch();
   let page = await browser.newPage();
   await page.setViewport(${js(viewport)});
-  await steps(page);
+`
+  ];
+
+  for (let step of steps.split('\n')) {
+    if (step === '') {
+      continue;
+    }
+
+    let [action, arg] = step.split(' ', 2);
+
+    switch (action) {
+      case 'visit':
+        script.push(`  await page.goto(${js(arg)}, { waitUtil: 'networkidle0' })`);
+        break;
+      default:
+        throw new Error(`Unknown action: ${action}`);
+    }
+  }
+
+
+  script.push(
+`
   await page.screenshot(${js(options)});
   await browser.close();
 }
@@ -134,7 +133,8 @@ export default async function screenshot(node: Code, options: Options, vfile: VF
   assert(args.width > 0, `width must be positive`);
   assert(args.height !== 0 || (args.x === 0 && args.y === 0), `cannot specify x and y for fullscreen screenshots (height=0)`);
 
-  let dir = join('screenshots', basename(vfile.basename!, '.md'));
+  let namespace = basename(vfile.basename!, '.md');
+  let dir = join(options.assets, 'screenshots', namespace);
 
   let { filename } = args;
 
@@ -142,9 +142,9 @@ export default async function screenshot(node: Code, options: Options, vfile: VF
     filename = `${basename(filename, '.png')}@2x.png`;
   }
 
-  await mkdirp(join(options.assets, dir));
+  await mkdirp(dir);
 
-  let path = join(options.assets, dir, filename);
+  let path = join(dir, filename);
 
   let script = compile(node.value, path, args);
 
@@ -157,7 +157,7 @@ export default async function screenshot(node: Code, options: Options, vfile: VF
 
   await p;
 
-  let src = join(dir, filename);
+  let src = `/screenshots/${namespace}/${filename}`;
   let { alt } = args;
   let { position, data } = node;
 
