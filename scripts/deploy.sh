@@ -31,10 +31,16 @@ pushd tmp
 
 # Setup commit message
 
-COMMIT_MESSAGE="$(
-  echo -n "$TRAVIS_COMMIT_MESSAGE" | \
-  sed -E "s|^Merge pull request #(.+) from .+$|Merge $TRAVIS_REPO_SLUG#\1|"
-)
+if [[ "$TRAVIS_EVENT_TYPE" == "cron" ]]; then
+  COMMIT_TITLE="[CRON] $(date +"%A %b %d, %Y")"
+else
+  COMMIT_TITLE="$(
+    echo -n "$TRAVIS_COMMIT_MESSAGE" | \
+    sed -E "s|^Merge pull request #(.+) from .+$|Merge $TRAVIS_REPO_SLUG#\1|"
+  )"
+fi
+
+COMMIT_MESSAGE="$COMMIT_TITLE
 
 ---
 
