@@ -89,11 +89,14 @@ async function main() {
       continue;
     }
 
-    let [action, arg] = step.split(' ', 2);
+    let [action, arg] = step.split(/\s+/, 2);
 
     switch (action) {
       case 'visit':
         script.push(`  await page.goto(${js(arg)}, { waitUtil: 'networkidle0' })`);
+        break;
+      case 'wait':
+        script.push(`  await page.waitForSelector(${js(arg)})`);
         break;
       default:
         throw new Error(`Unknown action: ${action}`);
@@ -152,8 +155,8 @@ export default async function screenshot(node: Code, options: Options, vfile: VF
 
   let p = exec(`node -`);
 
-  p.child!.stdin!.write(script, 'utf8');
-  p.child!.stdin!.end();
+  p.child.stdin!.write(script, 'utf8');
+  p.child.stdin!.end();
 
   await p;
 
