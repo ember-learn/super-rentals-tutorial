@@ -57,7 +57,8 @@ visit http://localhost:4200/
 ```
 
 ```run:screenshot width=1024 height=512 retina=true filename=pass.png alt="Tests still passing after the refactor"
-visit http://localhost:4200/tests?hidecontainer
+visit http://localhost:4200/tests?nocontainer
+wait  #qunit-banner.qunit-pass
 ```
 
 Let's do the same for our other two pages as well.
@@ -112,7 +113,8 @@ visit http://localhost:4200/getting-in-touch
 ```
 
 ```run:screenshot width=1024 height=512 retina=true filename=pass-2.png alt="Tests still passing another round of refactor"
-visit http://localhost:4200/tests?hidecontainer
+visit http://localhost:4200/tests?nocontainer
+wait  #qunit-banner.qunit-pass
 ```
 
 While it may not save you a lot of characters in this case, [encapsulating][TODO: link to encapsulating]* the implementation of the "jumbo" header into its own component makes the template slightly easier to read, as it allows the reader to focus on things that are unique to just that page. Further, if we need to make a change to the header, we can make it in a single place. Feel free to give that a try!
@@ -169,7 +171,8 @@ git add tests/integration/components/jumbo-test.js
 ```
 
 ```run:screenshot width=1024 height=512 retina=true filename=pass-3.png alt="Tests still passing with our component test"
-visit http://localhost:4200/tests?hidecontainer
+visit http://localhost:4200/tests?nocontainer
+wait  #qunit-banner.qunit-pass
 ```
 
 We've been refactoring our existing code for a while, so let's change gears and implement a new feature: the site-wide navigation bar.
@@ -285,7 +288,8 @@ git add tests/acceptance/super-rentals-test.js
 ```
 
 ```run:screenshot width=1024 height=512 retina=true filename=pass-4.png alt="Tests still passing with our <NavBar> tests"
-visit http://localhost:4200/tests?hidecontainer
+visit http://localhost:4200/tests?nocontainer
+wait  #qunit-banner.qunit-pass
 ```
 
 Before we move on to the next feature, there is one more thing we could clean up. Since the `<NavBar>` is used for site-wide navigation, it really needs to be displayed on _every_ page in the app. So far, we have been adding the component on each page manually. This is a bit error-prone, as we could easily forget to do this the next time that we add a new page.
@@ -337,7 +341,8 @@ git add app/templates/about.hbs
 ```
 
 ```run:screenshot width=1024 height=512 retina=true filename=pass-5.png alt="Tests still passing with {{outlet}}"
-visit http://localhost:4200/tests?hidecontainer
+visit http://localhost:4200/tests?nocontainer
+wait  #qunit-banner.qunit-pass
 ```
 
 ```run:server:stop
