@@ -34,7 +34,7 @@ rm package.json
 ember server
 ```
 
-```run:screenshot width=1024 height=620 retina=true filename=welcome.png alt="Welcome to Ember!"
+```run:screenshot width=1024 retina=true filename=welcome.png alt="Welcome to Ember!"
 visit http://localhost:4200/
 ```
 
@@ -64,7 +64,7 @@ Of course, unlike HTML, Ember templates can do a lot more than just displaying s
 
 After saving the file, your browser tab should automatically refresh, showing us the welcome message we just worked on.
 
-```run:screenshot width=1024 height=256 retina=true filename=unstyled.png alt="Welcome to Super Rentals! (unstyled)"
+```run:screenshot width=1024 height=250 retina=true filename=unstyled.png alt="Welcome to Super Rentals! (unstyled)"
 visit http://localhost:4200/
 ```
 
@@ -115,7 +115,7 @@ If you are familiar with CSS, feel free to customize them to your liking! Just k
 
 When you are ready, save the CSS file; our trusty development server should pick it up and refresh our page right away. No more unstyled content!
 
-```run:screenshot width=1024 height=256 retina=true filename=styled.png alt="Welcome to Super Rentals! (styled)"
+```run:screenshot width=1024 retina=true filename=styled.png alt="Welcome to Super Rentals! (styled)"
 visit http://localhost:4200/
 ```
 
@@ -146,7 +146,7 @@ You can confirm this by navigating to
 git add public/assets/images/teaching-tomster.png
 ```
 
-```run:screenshot width=1024 height=256 retina=true filename=styled-with-tomster.png alt="Welcome to Super Rentals! (with Tomster)"
+```run:screenshot width=1024 retina=true filename=styled-with-tomster.png alt="Welcome to Super Rentals! (with Tomster)"
 visit http://localhost:4200/
 ```
 

@@ -59,7 +59,8 @@ function compile(steps: string, path: string, args: Args): string {
   if (height === 0) {
     options = {
       path,
-      type: 'png'
+      type: 'png',
+      fullPage: true
     };
   } else {
     options = {
