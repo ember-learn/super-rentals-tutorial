@@ -1,6 +1,8 @@
 import { ChildProcess, spawn } from 'child_process';
 import { Option, assert } from 'ts-std';
 
+const WINDOWS = process.platform === 'win32';
+
 export enum Status {
   Starting = 'STARTING',
   Started = 'STARTED',
@@ -58,7 +60,12 @@ export default class Server {
 
     let { id, cmd, cwd } = this;
 
-    let process = this.process = spawn(cmd, { cwd, shell: true, detached: true });
+    let process = this.process = spawn(cmd, {
+      cwd,
+      shell: true,
+      // On Windows, if we set this to true, the stdio pipes do not work
+      detached: !WINDOWS
+    });
 
     return new Promise<Option<string>>((resolveStart, rejectStart) => {
       let settled = false;
@@ -133,7 +140,8 @@ export default class Server {
 
         let { status } = this;
 
-        if (status === Status.Stopping && (code === 0 || signal === 'SIGTERM')) {
+        // On Windows, we can only forcefully terminate at the moment
+        if (status === Status.Stopping && (WINDOWS || code === 0 || signal === 'SIGTERM')) {
           assert(didComplete !== null, 'didComplete must not be null');
           didComplete!();
         } else {
@@ -204,7 +212,7 @@ ${this.stderr || '(No output)'}
     assert(this.pid !== null, `Unknown pid for server \`${this.id}\``);
 
     this.status = Status.Stopping;
-    process.kill(-this.pid!);
+    this.sendKill();
 
     await this.promise;
   }
@@ -214,7 +222,7 @@ ${this.stderr || '(No output)'}
 
     if (pid) {
       this.status = Status.Stopping;
-      process.kill(-pid, 'SIGKILL');
+      this.sendKill(true);
 
       if (promise) {
         try {
@@ -223,6 +231,19 @@ ${this.stderr || '(No output)'}
           // ignore
         }
       }
+    }
+  }
+
+  private sendKill(force = false) {
+    assert(this.pid !== null, 'pid cannot be null');
+
+    let pid = this.pid!;
+
+    if (WINDOWS) {
+      // On Windows, we can only forcefully terminate at the moment
+      spawn('taskkill', ['/pid', `${pid}`, '/t', '/f']);
+    } else {
+      process.kill(-pid, force ? 'SIGKILL' : 'SIGTERM');
     }
   }
 }
