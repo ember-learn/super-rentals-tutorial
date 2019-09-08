@@ -112,7 +112,7 @@ visit http://localhost:4200/about
 visit http://localhost:4200/getting-in-touch
 ```
 
-```run:screenshot width=1024 retina=true filename=pass-2.png alt="Tests still passing another round of refactor"
+```run:screenshot width=1024 height=512 retina=true filename=pass-2.png alt="Tests still passing another round of refactor"
 visit http://localhost:4200/tests?nocontainer
 wait  #qunit-banner.qunit-pass
 ```
