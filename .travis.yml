@@ -40,8 +40,8 @@ script:
 
 before_deploy:
   - openssl aes-256-cbc -K $encrypted_abcbee76306e_key -iv $encrypted_abcbee76306e_iv -in deploy-keys.tar.gz.enc -out deploy-keys.tar.gz -d
-  - optipng -q -o5 dist/assets/screenshots/**/*.png
-  - advpng -z -q -4 dist/assets/screenshots/**/*.png
+  - find dist/assets/screenshots -type f -name "*.png" | xargs -t -P 2 -n 1 optipng -q -o5
+  - find dist/assets/screenshots -type f -name "*.png" | xargs -t -P 2 -n 1 advpng -z -q -4
 
 deploy:
   provider: script
