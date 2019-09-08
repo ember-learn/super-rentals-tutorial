@@ -27,10 +27,65 @@ ember new super-rentals -b @ember/octane-app-blueprint
 
 ```run:command hidden=true
 # Clean up the hack above
+
+#[cfg(unix)]
 rm package.json
+
+#[cfg(windows)]
+del package.json
+```
+
+```run:file:patch hidden=true cwd=super-rentals filename=tests/index.html
+@@ -28,2 +28,31 @@
+     <script src="{{rootURL}}assets/tests.js"></script>
++    <script>
++      if (QUnit.urlParams.deterministic) {
++        let totalRuntime = 0;
++
++        // https://stackoverflow.com/a/19303725
++        let seed = 41937;
++
++        let seededRandomish = () => {
++          let x = Math.sin(seed++) * 10000;
++          return x - Math.floor(x);
++        };
++
++        let randomishRuntime = () => {
++          let runtime = Math.round(10 + seededRandomish() * 150);
++          totalRuntime += runtime;
++          return runtime;
++        };
++
++        // HAX: ensure our callbacks runs before the reporter UI
++
++        QUnit.config.callbacks.testDone.unshift(details => {
++          details.runtime = randomishRuntime();
++        });
++
++        QUnit.config.callbacks.done.unshift(details => {
++          details.runtime = totalRuntime;
++        });
++      }
++    </script>
+
+```
+
+```run:command hidden=true cwd=super-rentals
+yarn test
+git add tests/index.html
+git commit --amend --no-edit
 ```
 
 ```run:server:start cwd=super-rentals expect="Serving on http://localhost:4200/"
+#[cfg(all(ci, unix))]
+#[display(ember server)]
+ember server | awk '{ \
+  gsub("Build successful \\([0-9]+ms\\)", "Build successful (9761ms)"); \
+  print; \
+  system("") # https://unix.stackexchange.com/a/83853 \
+}'
+
+#[cfg(not(all(ci, unix)))]
 ember server
 ```
 

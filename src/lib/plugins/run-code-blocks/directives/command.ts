@@ -3,6 +3,7 @@ import { Code } from 'mdast';
 import { join } from 'path';
 import { Option } from 'ts-std';
 import { promisify } from 'util';
+import { parseCommands } from '../commands';
 import Options from '../options';
 import parseArgs, { ToBool, optional } from '../parse-args';
 
@@ -12,11 +13,6 @@ interface Args {
   hidden?: boolean;
   cwd?: string;
   captureOutput?: boolean;
-}
-
-export function parseCommands(commands: string): string[] {
-  return commands.split(/(?<!\\)\n/)
-    .filter(line => line && !line.startsWith('#'));
 }
 
 export default async function command(node: Code, options: Options): Promise<Option<Code>> {
@@ -38,9 +34,9 @@ export default async function command(node: Code, options: Options): Promise<Opt
 
   let output = [];
 
-  for (let cmd of parseCommands(node.value)) {
+  for (let { command: cmd, display } of parseCommands(node.value, options.cfg, node)) {
     console.log(`$ ${cmd}`);
-    output.push(`$ ${cmd}`);
+    output.push(`$ ${display}`);
 
     let { stdout } = await exec(cmd, { cwd });
 

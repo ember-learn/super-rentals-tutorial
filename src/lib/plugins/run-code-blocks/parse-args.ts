@@ -1,5 +1,6 @@
 import { Code } from 'mdast';
 import { assert, dict } from 'ts-std';
+import ParseError from './parse-error';
 
 export type Transform<From, To> = (input: From) => To;
 
@@ -39,12 +40,16 @@ export default function parseArgs<Args extends object>(node: Code, transforms: K
     while (pattern.lastIndex < meta.length) {
       let match = pattern.exec(meta);
 
-      assert(match !== null, `Invalid arguments for \`${lang}\`: ${meta}`);
+      if (match === null) {
+        throw new ParseError(`invalid arguments for \`${lang}\`: ${meta}`, node);
+      }
 
-      let [, key, v1, v2, v3] = match!;
+      let [, key, v1, v2, v3] = match;
       let value = v1 || v2 || v3;
 
-      assert(validKeys.includes(key), `\`${key}\` is not a valid argument for \`${lang}\``);
+      if (!validKeys.includes(key)) {
+        throw new ParseError(`\`${key}\` is not a valid argument for \`${lang}\``, node);
+      }
 
       parsed[key] = value;
     }

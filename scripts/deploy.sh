@@ -62,6 +62,8 @@ rm -rf guides/release/tutorial/*
 cp -r ../../dist/chapters/* guides/release/tutorial/
 git add guides/release/tutorial
 cp -r ../../dist/assets/* public/
+rm -rf public/screenshots
+find ../../dist/assets/screenshots -type f -name "*.png" | xargs -n 1 ../../scripts/optimize-screenshot.sh
 git add public
 if git diff --cached --exit-code; then
   echo "Nothing to push"
