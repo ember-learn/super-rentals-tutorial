@@ -21,11 +21,7 @@ function formatPatch(patch: string, filename?: string): string {
     patch = `--- a/${filename}\n+++ b/${filename}\n${patch}`;
   }
 
-  if (!patch.endsWith('\n')) {
-    patch = `${patch}\n`;
-  }
-
-  return patch;
+  return `${patch}\n`;
 }
 
 async function applyPatch(patch: string, cwd: string): Promise<void> {

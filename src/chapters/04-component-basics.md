@@ -57,7 +57,7 @@ visit http://localhost:4200/
 ```
 
 ```run:screenshot width=1024 height=512 retina=true filename=pass.png alt="Tests still passing after the refactor"
-visit http://localhost:4200/tests?nocontainer
+visit http://localhost:4200/tests?nocontainer&deterministic
 wait  #qunit-banner.qunit-pass
 ```
 
@@ -113,7 +113,7 @@ visit http://localhost:4200/getting-in-touch
 ```
 
 ```run:screenshot width=1024 height=512 retina=true filename=pass-2.png alt="Tests still passing another round of refactor"
-visit http://localhost:4200/tests?nocontainer
+visit http://localhost:4200/tests?nocontainer&deterministic
 wait  #qunit-banner.qunit-pass
 ```
 
@@ -171,7 +171,7 @@ git add tests/integration/components/jumbo-test.js
 ```
 
 ```run:screenshot width=1024 height=512 retina=true filename=pass-3.png alt="Tests still passing with our component test"
-visit http://localhost:4200/tests?nocontainer
+visit http://localhost:4200/tests?nocontainer&deterministic
 wait  #qunit-banner.qunit-pass
 ```
 
@@ -288,7 +288,7 @@ git add tests/acceptance/super-rentals-test.js
 ```
 
 ```run:screenshot width=1024 height=512 retina=true filename=pass-4.png alt="Tests still passing with our <NavBar> tests"
-visit http://localhost:4200/tests?nocontainer
+visit http://localhost:4200/tests?nocontainer&deterministic
 wait  #qunit-banner.qunit-pass
 ```
 
@@ -341,7 +341,7 @@ git add app/templates/about.hbs
 ```
 
 ```run:screenshot width=1024 height=512 retina=true filename=pass-5.png alt="Tests still passing with {{outlet}}"
-visit http://localhost:4200/tests?nocontainer
+visit http://localhost:4200/tests?nocontainer&deterministic
 wait  #qunit-banner.qunit-pass
 ```
 

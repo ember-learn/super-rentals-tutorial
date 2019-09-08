@@ -1,10 +1,10 @@
 import { Code } from 'mdast';
 import { join } from 'path';
 import { Option, assert } from 'ts-std';
+import { parseCommand } from '../../commands';
 import Options from '../../options';
 import parseArgs, { ToBool, optional } from '../../parse-args';
 import Servers from '../../servers';
-import { parseCommands } from '../command';
 
 interface Args {
   id?: string;
@@ -13,14 +13,6 @@ interface Args {
   expect?: string;
   timeout?: number;
   captureOutput?: boolean;
-}
-
-export function parseCommand(command: string): string {
-  let commands = parseCommands(command);
-
-  assert(commands.length === 1, `cannot pass multiple commands to \`run:server:start\``);
-
-  return commands[0];
 }
 
 export default async function startServer(node: Code, options: Options, servers: Servers): Promise<Option<Code>> {
@@ -51,25 +43,25 @@ export default async function startServer(node: Code, options: Options, servers:
     );
   }
 
-  let cmd = parseCommand(node.value);
-  let id = args.id || cmd;
+  let { command, display } = parseCommand(node.value, options.cfg, node);
+  let id = args.id || display;
   let { cwd } = options;
 
   if (args.cwd) {
     cwd = join(cwd, args.cwd);
   }
 
-  let server = servers.add(id, cmd, cwd);
+  let server = servers.add(id, command, cwd);
 
-  console.log(`$ ${cmd}`);
+  console.log(`$ ${command}`);
 
   let output = await server.start(args.expect);
   let value;
 
   if (args.captureOutput && output) {
-    value = `$ ${cmd}\n${output}`;
+    value = `$ ${display}\n${output}`;
   } else {
-    value = `$ ${cmd}`;
+    value = `$ ${display}`;
   }
 
   if (args.hidden) {

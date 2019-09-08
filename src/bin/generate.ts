@@ -35,7 +35,7 @@ async function main() {
 
   const processor = unified()
     .use(markdown)
-    .use(runCodeBlocks, { cwd: codeDir, assets: assetsDir })
+    .use(runCodeBlocks, { cfg: process.env.CI ? ['ci'] : [], cwd: codeDir, assets: assetsDir })
     .use(todoLinks)
     .use(zoeySays)
     .use(doNotEdit, { repo: 'ember-learn/super-rentals-tutorial' })
