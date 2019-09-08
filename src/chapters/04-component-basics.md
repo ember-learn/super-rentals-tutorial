@@ -52,7 +52,7 @@ Let's try it out by editing the index template:
 
 After saving the changes, your page should automatically reload, and, _voilà_... nothing changed? Well, that's exactly what we wanted to happen this time! We successfully *[refactored][TODO: link to refactored]* our index template to use the `<Jumbo>` component, and everything still works as expected. And the tests still pass!
 
-```run:screenshot width=1024 height=512 retina=true filename=index.png alt="Index page – nothing changed"
+```run:screenshot width=1024 retina=true filename=index.png alt="Index page – nothing changed"
 visit http://localhost:4200/
 ```
 
@@ -104,15 +104,15 @@ git add app/templates/about.hbs
 git add app/templates/contact.hbs
 ```
 
-```run:screenshot width=1024 height=512 retina=true filename=about.png alt="About page – nothing changed"
+```run:screenshot width=1024 retina=true filename=about.png alt="About page – nothing changed"
 visit http://localhost:4200/about
 ```
 
-```run:screenshot width=1024 height=512 retina=true filename=contact.png alt="Contact page – nothing changed"
+```run:screenshot width=1024 retina=true filename=contact.png alt="Contact page – nothing changed"
 visit http://localhost:4200/getting-in-touch
 ```
 
-```run:screenshot width=1024 height=512 retina=true filename=pass-2.png alt="Tests still passing another round of refactor"
+```run:screenshot width=1024 retina=true filename=pass-2.png alt="Tests still passing another round of refactor"
 visit http://localhost:4200/tests?nocontainer
 wait  #qunit-banner.qunit-pass
 ```
@@ -221,7 +221,7 @@ Next, we will add our `<NavBar>` component to the top of each page:
 
 Voilà, we made another component!
 
-```run:screenshot width=1024 height=512 retina=true filename=index-with-nav.png alt="Index page with nav"
+```run:screenshot width=1024 retina=true filename=index-with-nav.png alt="Index page with nav"
 visit http://localhost:4200/
 ```
 

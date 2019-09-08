@@ -113,11 +113,6 @@ visit http://localhost:4200/tests?nocontainer
 wait  #qunit-banner.qunit-fail
 ```
 
-```run:command hidden=true cwd=super-rentals
-git checkout app/templates/index.hbs
-yarn test
-```
-
 Don't forget to put that line back in when you are done!
 
 ```run:command hidden=true cwd=super-rentals

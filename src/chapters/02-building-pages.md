@@ -37,7 +37,7 @@ With that in place, we can create a new `app/templates/about.hbs` template with 
 
 To see this in action, navigate to `http://localhost:4200/about`.
 
-```run:screenshot width=1024 height=512 retina=true filename=about.png alt="About page"
+```run:screenshot width=1024 retina=true filename=about.png alt="About page"
 visit http://localhost:4200/about
 ```
 
@@ -90,7 +90,7 @@ Ember comes with strong *[conventions][TODO: link to conventions]* and sensible 
 
 Once you have added the route and the template above, we should have the new page available to us at `http://localhost:4200/getting-in-touch`.
 
-```run:screenshot width=1024 height=512 retina=true filename=contact.png alt="Contact page"
+```run:screenshot width=1024 retina=true filename=contact.png alt="Contact page"
 visit http://localhost:4200/getting-in-touch
 ```
 
@@ -141,15 +141,15 @@ However, when clicking on one of these special links, Ember will intercept the c
 
 <!-- TODO: make this a gif instead -->
 
-```run:screenshot width=1024 height=512 retina=true filename=index-with-link.png alt="Index page after adding the link"
+```run:screenshot width=1024 retina=true filename=index-with-link.png alt="Index page after adding the link"
 visit http://localhost:4200/
 ```
 
-```run:screenshot width=1024 height=512 retina=true filename=about-with-link.png alt="About page after adding the link"
+```run:screenshot width=1024 retina=true filename=about-with-link.png alt="About page after adding the link"
 visit http://localhost:4200/about
 ```
 
-```run:screenshot width=1024 height=512 retina=true filename=contact-with-link.png alt="Contact page after adding the link"
+```run:screenshot width=1024 retina=true filename=contact-with-link.png alt="Contact page after adding the link"
 visit http://localhost:4200/getting-in-touch
 ```
 
