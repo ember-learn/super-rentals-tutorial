@@ -8,8 +8,10 @@ addons:
       - fonts-liberation
       - libappindicator3-1
       - libnss3
-      - optipng
       - xdg-utils
+      # These are for optimizing screenshots
+      - advancecomp
+      - optipng
   chrome: stable
 
 cache:
@@ -38,7 +40,8 @@ script:
 
 before_deploy:
   - openssl aes-256-cbc -K $encrypted_abcbee76306e_key -iv $encrypted_abcbee76306e_iv -in deploy-keys.tar.gz.enc -out deploy-keys.tar.gz -d
-  - optipng -o5 dist/assets/screenshots/**/*.png
+  - optipng -q -o5 dist/assets/screenshots/**/*.png
+  - advpng -z -q -4 dist/assets/screenshots/**/*.png
 
 deploy:
   provider: script
