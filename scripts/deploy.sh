@@ -50,8 +50,13 @@ Logs:    $TRAVIS_JOB_WEB_URL"
 
 # Guides
 
-git clone guides-source:ember-learn/guides-source --depth 1 -b super-rentals-tutorial
-pushd guides-source
+if git clone guides-source:ember-learn/guides-source --depth 1 -b super-rentals-tutorial; then
+  pushd guides-source
+else
+  git clone guides-source:ember-learn/guides-source --depth 1 -b octane
+  pushd guides-source
+  git checkout -b super-rentals-tutorial
+fi
 mkdir -p guides/release/tutorial/
 rm -rf guides/release/tutorial/*
 cp -r ../../dist/chapters/* guides/release/tutorial/
@@ -62,7 +67,7 @@ if git diff --cached --exit-code; then
   echo "Nothing to push"
 else
   git commit -m "$COMMIT_MESSAGE"
-  git push
+  git push -u origin super-rentals-tutorial
 fi
 popd
 
