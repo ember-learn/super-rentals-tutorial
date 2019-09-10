@@ -6,10 +6,11 @@ export type ServersCallback<T = void> = (servers: Servers) => T | Promise<T>;
 export default class Servers {
   static async run<T>(callback: ServersCallback<T>): Promise<T> {
     let servers = new Servers();
+    let result: T;
     let error;
 
     try {
-      return await callback(servers);
+      result = await callback(servers);
     } catch (e) {
       error = e;
     } finally {
@@ -17,16 +18,18 @@ export default class Servers {
 
       if (unstopped.length > 0) {
         error = error || new Error(
-          'The following servers were not shutdown properly.\n' +
+          'The following server(s) were not shutdown properly.\n\n' +
           unstopped.map(({ id }) => `- ${id}`).join('\n') + '\n\n' +
           'Did you forget to include a `run:server:stop`?'
         );
       }
     }
 
-    assert(!!error, 'error should be set at this point');
-
-    throw error;
+    if (error) {
+      throw error;
+    } else {
+      return result!;
+    }
   }
 
   private storage: Dict<Server> = dict();
