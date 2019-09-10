@@ -22,7 +22,8 @@ echo "{}" > package.json
 ```
 
 ```run:command
-ember new super-rentals -b @ember/octane-app-blueprint
+#[display(ember new super-rentals -b @ember/octane-app-blueprint)]
+ember new super-rentals --yarn -b @ember/octane-app-blueprint
 ```
 
 ```run:command hidden=true
