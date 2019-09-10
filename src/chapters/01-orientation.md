@@ -22,7 +22,16 @@ echo "{}" > package.json
 ```
 
 ```run:command
+# We are supposed to (?) use NPM for the guides, but yarn works better
+# for our setup, so we pass the `--yarn` flag but change the output to
+# pretend we are running NPM.
+
+#[cfg(all(ci, unix))]
 #[display(ember new super-rentals -b @ember/octane-app-blueprint)]
+ember new super-rentals --yarn -b @ember/octane-app-blueprint \
+  | awk '{ gsub("Yarn", "npm"); print }'
+
+#[cfg(not(all(ci, unix)))]
 ember new super-rentals --yarn -b @ember/octane-app-blueprint
 ```
 
