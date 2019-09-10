@@ -33,13 +33,13 @@ async function main() {
 
   let chapters = await glob(pattern);
 
-  const processor = unified()
+  let processor = unified()
     .use(markdown)
     .use(runCodeBlocks, { cfg: process.env.CI ? ['ci'] : [], cwd: codeDir, assets: assetsDir })
     .use(todoLinks)
     .use(zoeySays)
     .use(doNotEdit, { repo: 'ember-learn/super-rentals-tutorial' })
-    .use(stringify, { fences: true, listItemIndent: "1" });
+    .use(stringify, { fences: true, listItemIndent: '1' });
 
   for (let inputPath of chapters) {
     let relativePath = relative(project, inputPath);
