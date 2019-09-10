@@ -6,11 +6,11 @@ So far, all the components we have written are purely *[presentational][TODO: li
 
 Sometimes, you want to associate some *[behavior][TODO: link to behavior]* with your components so that they can do more interesting things. For example, `<LinkTo>` can respond to clicks by changing the URL and navigating us to a different page.
 
-Here, we are going to do just that! We are going to implementing the "View Larger" and "View Smaller" functionality. Specifically, we want to give our users the ability to view a larger version of the property's image by clicking on it, and when they are done, they can click on it again to go back to the smaller version.
+Here, we are going to do just that! We are going to implement the "View Larger" and "View Smaller" functionality, which will allow our users to click on a property's image to view a larger version, and click on it again to return to the smaller version.
 
-In other words, we want a way to _toggle_ the image between one of the two *[states][TODO: link to states]*. In order to do that, we need a way for the component to store two potential states, and to also be aware which of the two possible states it is currently in.
+In other words, we want a way to _toggle_ the image between one of the two *[states][TODO: link to states]*. In order to do that, we need a way for the component to store two possible states, and to be aware which states it is currently in.
 
-Ember allows us to optionally associate JavaScript code with a component for exactly this purpose. We can add a JavaScript file for our `<Rental::Image>` component by [~~running the `component-class` generator~~](https://github.com/emberjs/ember.js/pull/18359) running the `component` generator again with the `-gc` flag:
+Ember optionally allows us to associate JavaScript code with a component for exactly this purpose. We can add a JavaScript file for our `<Rental::Image>` component by [~~running the `component-class` generator~~](https://github.com/emberjs/ember.js/pull/18359) running the `component` generator again with the `-gc` flag:
 
 <!-- TODO: https://github.com/emberjs/ember.js/pull/18359 -->
 
@@ -24,15 +24,15 @@ yarn test
 git add app/components/rental/image.js
 ```
 
-This generated a JavaScript file with the same name as our component's template at `app/components/rentals/image.js`. It contains a *[JavaScript class][TODO: link to JavaScript class]*, subclassing from `@glimmer/component`.
+This generated a JavaScript file with the same name as our component's template at `app/components/rentals/image.js`. It contains a *[JavaScript class][TODO: link to JavaScript class]*, *[inheriting][TODO: link to inheriting]* from `@glimmer/component`.
 
 > Zoey says...
 >
 > `@glimmer/component`, or *[Glimmer component][TODO: link to Glimmer component]*, is one of the several component classes available to use. They are a great starting point whenever you want to add behavior to your components. In this tutorial, we will be using Glimmer components exclusively.
 >
-> In general, Glimmer components should be used whenever possible. However, you may also see `@ember/components`, or *[classic components][TODO: link to classic components]*, being used in older apps. You can tell them apart from looking at their import path, which is helpful for looking up the respective documentation, as they have different and incompatible APIs.
+> In general, Glimmer components should be used whenever possible. However, you may also see `@ember/components`, or *[classic components][TODO: link to classic components]*, used in older apps. You can tell them apart by looking at their import path (which is helpful for looking up the respective documentation, as they have different and incompatible APIs).
 
-Ember will create an *[instance][TODO: link to instance]* of the class whenever our component is invoked. We can use that to store our state:
+Ember will create an *[instance][TODO: link to instance]* of the class whenever our component is invoked. We can use that instance to store our state:
 
 ```run:file:patch lang=js cwd=super-rentals filename=app/components/rental/image.js
 @@ -3,2 +3,6 @@
@@ -44,7 +44,7 @@ Ember will create an *[instance][TODO: link to instance]* of the class whenever 
  }
 ```
 
-Here, in the *[component's constructor][TODO: link to component's constructor]*, we *[initialized][TODO: link to initialized]* the *[instance variable][TODO: link to instance variable]* `this.isLarge` to the value `false`, since this is the default state that we want for our component.
+Here, in the *[component's constructor][TODO: link to component's constructor]*, we *[initialized][TODO: link to initialized]* the *[instance variable][TODO: link to instance variable]* `this.isLarge` with the value `false`, since this is the default state that we want for our component.
 
 Let's update our template to use this state we just added:
 
@@ -66,7 +66,7 @@ Let's update our template to use this state we just added:
 +{{/if}}
 ```
 
-The `{{#if ...}}...{{else}}...{{/if}}` *[conditionals][TODO: link to conditionals]* syntax allows us to render different content. We also have access to the component's instance variables from the template. Combining these two features, we can render either the small or the large version of the image accordingly.
+In the template, we have access to the component's instance variables. The `{{#if ...}}...{{else}}...{{/if}}` *[conditionals][TODO: link to conditionals]* syntax allows us to render different content based on a condion (in this case, the value of the instance variable `this.isLarge`). Combining these two features, we can render either the small or the large version of the image accordingly.
 
 ```run:command hidden=true cwd=super-rentals
 yarn test
@@ -74,7 +74,7 @@ git add app/components/rental/image.hbs
 git add app/components/rental/image.js
 ```
 
-We can verify this is working by temporarily changing the initial value in our JavaScript file. If we change `app/components/rental/image.js` to initialize `this.isLarge = true;` in the constructor, we should see the large version of the property image in the browser. Cool!
+We can verify this works by temporarily changing the initial value in our JavaScript file. If we change `app/components/rental/image.js` to initialize `this.isLarge = true;` in the constructor, we should see the large version of the property image in the browser. Cool!
 
 ```run:file:patch hidden=true cwd=super-rentals filename=app/components/rental/image.js
 @@ -5,3 +5,3 @@
@@ -95,7 +95,7 @@ Once we've tested this out, we can change `this.isLarge` back to `false`.
 git checkout app/components/rental/image.js
 ```
 
-Since this pattern of initializing instance variables from the constructor is pretty common, there happens to be a much more concise syntax for it:
+Since this pattern of initializing instance variables in the constructor is pretty common, there happens to be a much more concise syntax for it:
 
 ```run:file:patch lang=js cwd=super-rentals filename=app/components/rental/image.js
 @@ -3,6 +3,3 @@
@@ -137,21 +137,21 @@ Let's modify our class to add a *[method][TODO: link to method]* for toggling th
 
 We did a few things here, so let's break it down.
 
-First, we added the `@tracked` *[decorator][TODO: link to decorator]* to the `isLarge` instance variable. This annotation tells Ember to monitor this variable for changes. Whenever this variable's value is updated, Ember will automatically re-render any templates that depends on its value.
+First, we added the `@tracked` *[decorator][TODO: link to decorator]* to the `isLarge` instance variable. This annotation tells Ember to monitor this variable for updates. Whenever this variable's value changes, Ember will automatically re-render any templates that depend on its value.
 
-In our case, whenever we assign a new value to `this.isLarge`, this annotation will cause Ember to re-evaluate the `{{#if this.isLarge}}` conditional in our template and will switch between the two blocks accordingly.
+In our case, whenever we assign a new value to `this.isLarge`, the `@tracked` annotation will cause Ember to re-evaluate the `{{#if this.isLarge}}` conditional in our template, and will switch between the two blocks accordingly.
 
 > Zoey says...
 >
-> Don't worry! If you referenced a variable in the template but forgot to add the `@tracked` decorator, you will get a helpful development mode error when you change its value!
+> Don't worry! If you reference a variable in the template but forget to add the `@tracked` decorator, you will get a helpful development mode error when you change its value!
 
-Next, we added a `toogleSize` method to our class that toggles `this.isLarge` between `true` and `false`.
+Next, we added a `toggleSize` method to our class that switches `this.isLarge` to the opposite of its current state (`false` becomes `true`, or `true` becomes `false`).
 
 Finally, we added the `@action` decorator to our method. This indicates to Ember that we intend to use this method from our template. Without this, the method will not function properly as a callback function (in this case, a click handler).
 
 > Zoey says...
 >
-> If you forget to do add the `@action` decorator, you will also get a helpful error when clicking on the button in development mode! I've got your back!
+> If you forget to do add the `@action` decorator, you will also get a helpful error when clicking on the button in development mode!
 
 With that, it's time to wire this up in the template:
 
@@ -176,11 +176,11 @@ With that, it's time to wire this up in the template:
 
 We changed two things here.
 
-First, since we wanted to make our component interactive, we switched the containing tag from `<div>` to `<button>`. This is important for accessibility reasons. Plus, by using the correct semantic tag, we will also get focusability and keyboard navigation handling "for free".
+First, since we wanted to make our component interactive, we switched the containing tag from `<div>` to `<button>` (this is important for accessibility reasons). By using the correct semantic tag, we will also get focusability and keyboard interaction handling "for free".
 
 Next, we used the `{{on}}` *[modifier][TODO: link to modifier]* to attach `this.toggleSize` as a click handler on the button.
 
-With that, we have created our first *[interactive][TODO: link to interactive]* component. Go ahead and try it out in the browser!
+With that, we have created our first *[interactive][TODO: link to interactive]* component. Go ahead and try it in the browser!
 
 <!-- TODO: add a gif here -->
 
@@ -237,12 +237,12 @@ visit http://localhost:4200/tests?nocontainer&deterministic
 wait  #qunit-banner.qunit-pass
 ```
 
-Let's clean up our template before moving on. We introduced a lot of duplication when we added the conditional in the template. If we look closely, the only thing that is different between the two blocks are:
+Let's clean up our template before moving on. We introduced a lot of duplication when we added the conditional in the template. If we look closely, the only things that are different between the two blocks are:
 
 1. The presence of the `"large"` CSS class on the `<button>` tag.
 2. The "View Larger" and "View Smaller" text.
 
-These changes are buried deep within the large amount of duplicated code. We can reduce the duplication by using `{{if}}` *[expression][TODO: link to expression]* instead:
+These changes are buried deep within the large amount of duplicated code. We can reduce the duplication by using an `{{if}}` *[expression][TODO: link to expression]* instead:
 
 ```run:file:patch lang=handlebars cwd=super-rentals filename=app/components/rental/image.hbs
 @@ -1,11 +1,8 @@
@@ -272,7 +272,7 @@ yarn test
 git add app/components/rental/image.hbs
 ```
 
-Optionally, `{{if}}` can also take a third argument for what the expression should evaluate into if the condition is false. This means we could also rewrite the button label like so:
+Optionally, `{{if}}` can take a third argument for what the expression should evaluate into if the condition is false. This means we could rewrite the button label like so:
 
 ```run:file:patch lang=handlebars cwd=super-rentals filename=app/components/rental/image.hbs
 @@ -2,7 +2,3 @@
