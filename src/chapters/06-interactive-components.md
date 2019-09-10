@@ -66,7 +66,7 @@ Let's update our template to use this state we just added:
 +{{/if}}
 ```
 
-In the template, we have access to the component's instance variables. The `{{#if ...}}...{{else}}...{{/if}}` *[conditionals][TODO: link to conditionals]* syntax allows us to render different content based on a condion (in this case, the value of the instance variable `this.isLarge`). Combining these two features, we can render either the small or the large version of the image accordingly.
+In the template, we have access to the component's instance variables. The `{{#if ...}}...{{else}}...{{/if}}` *[conditionals][TODO: link to conditionals]* syntax allows us to render different content based on a condition (in this case, the value of the instance variable `this.isLarge`). Combining these two features, we can render either the small or the large version of the image accordingly.
 
 ```run:command hidden=true cwd=super-rentals
 yarn test
