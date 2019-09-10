@@ -39,7 +39,7 @@ async function main() {
     .use(todoLinks)
     .use(zoeySays)
     .use(doNotEdit, { repo: 'ember-learn/super-rentals-tutorial' })
-    .use(stringify, { fences: true });
+    .use(stringify, { fences: true, listItemIndent: "1" });
 
   for (let inputPath of chapters) {
     let relativePath = relative(project, inputPath);
