@@ -8,7 +8,7 @@ If you're curious, you can explore the options available on Mapbox by using the 
 
 Once you have signed up for the service, grab your *[default public token](https://account.mapbox.com/access-tokens/)* and paste it into `config/environment.js`:
 
-```run:ignore:file:patch lang=js cwd=super-rentals filename=config/environment.js
+```run:file:patch lang=js cwd=super-rentals filename=config/environment.js
 @@ -50,2 +50,4 @@
 
 +  ENV.MAPBOX_ACCESS_TOKEN = 'paste your Mapbox access token here';
@@ -27,7 +27,7 @@ yarn test
 git add config/environment.js
 ```
 
-```run:ignore:file:patch lang=js cwd=super-rentals filename=config/environment.js
+```run:file:patch hidden=true cwd=super-rentals filename=config/environment.js
 @@ -50,3 +50,3 @@
 
 -  ENV.MAPBOX_ACCESS_TOKEN = 'paste your Mapbox access token here';
