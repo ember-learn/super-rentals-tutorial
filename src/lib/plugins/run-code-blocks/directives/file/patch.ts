@@ -42,7 +42,8 @@ async function generateDiff(filename: string, cwd: string): Promise<{ content: s
     line.startsWith('index ') ||
     line.startsWith('--- ') ||
     line.startsWith('+++ ') ||
-    line.startsWith('@@ ')
+    line.startsWith('@@ ') ||
+    line === '\\ No newline at end of file'
   )).map((line, index) => {
     if (line.startsWith('+')) {
       diff.push(`+${index + 1}`);

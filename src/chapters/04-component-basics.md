@@ -240,22 +240,22 @@ Everything looks great in the browser, but as we know, we can never be too sure.
 But what kind of test? We _could_ write a component test for the `<NavBar>` by itself, like we just did for the `<Jumbo>` component. However, since the job of `<NavBar>` is to _navigate_ us around the app, it would not make a lot of sense to test this particular component in isolation. So, let's go back to writing some acceptance tests!
 
 ```run:file:patch lang=js cwd=super-rentals filename=tests/acceptance/super-rentals-test.js
-@@ -11,2 +11,4 @@ module('Acceptance | super rentals', function(hooks) {
+@@ -11,2 +11,4 @@
      assert.equal(currentURL(), '/');
 +    assert.dom('nav').exists();
 +    assert.dom('h1').containsText('SuperRentals');
      assert.dom('h2').containsText('Welcome to Super Rentals!');
-@@ -23,2 +25,4 @@ module('Acceptance | super rentals', function(hooks) {
+@@ -23,2 +25,4 @@
      assert.equal(currentURL(), '/about');
 +    assert.dom('nav').exists();
 +    assert.dom('h1').containsText('SuperRentals');
      assert.dom('h2').containsText('About Super Rentals');
-@@ -35,2 +39,4 @@ module('Acceptance | super rentals', function(hooks) {
+@@ -35,2 +39,4 @@
      assert.equal(currentURL(), '/getting-in-touch');
 +    assert.dom('nav').exists();
 +    assert.dom('h1').containsText('SuperRentals');
      assert.dom('h2').containsText('Contact Us');
-@@ -42,2 +48,20 @@ module('Acceptance | super rentals', function(hooks) {
+@@ -42,2 +48,20 @@
    });
 +
 +  test('navigating using the nav-bar', async function(assert) {

@@ -28,17 +28,17 @@ export default async function checkpoint(node: Code, options: Options): Promise<
     cwd = join(cwd, args.cwd);
   }
 
-  console.log(`$ npm run lint:hbs`);
+  console.log(`$ yarn lint:hbs`);
 
-  await exec('npm run lint:hbs', { cwd });
+  await exec('yarn lint:hbs', { cwd });
 
-  console.log(`$ npm run lint:js`);
+  console.log(`$ yarn lint:js`);
 
-  await exec('npm run lint:js', { cwd });
+  await exec('yarn lint:js', { cwd });
 
-  console.log(`$ npm run test`);
+  console.log(`$ yarn test`);
 
-  await exec('npm run test', { cwd });
+  await exec('yarn test', { cwd });
 
   if (args.commit) {
     console.log(`$ git commit -m ${JSON.stringify(title)}`);
