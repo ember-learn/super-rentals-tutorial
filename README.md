@@ -364,6 +364,50 @@ Options:
   it is required unless they are already included in the patch and the block is
   set to `hidden`.
 
+### `run:file:show`
+
+Render the content of a file ~~or a folder~~.
+
+Example:
+
+    ```run:file:show lang=handlebars cwd=super-rentals filename=app/templates/index.hbs
+    ```
+
+Result:
+
+    ```handlebars { data-filename="app/templates/index.hbs" }
+    <div class="jumbo">
+      <div class="right tomster"></div>
+      <h2>Welcome to Super Rentals!</h2>
+      <p>We hope you find exactly what you're looking for in a place to stay.</p>
+    </div>
+    ```
+
+The content of the source code block is not used. ~~If the source is a folder,
+its structure will be rendered into the resulting code block using a format
+similar to the Unix `tree` command.~~
+
+Options:
+
+* `lang`
+
+  The syntax highlight language to use in the resulting code block.
+
+* `cwd`
+
+  Specify a CWD (relative to `dist/code`) for the filename. This defaults to
+  `.` (i.e. `dist/code`), but most of the time you probably want to set it to
+  `super-rentals` (i.e. `dist/code/super-rentals`). Otherwise, the resulting
+  code block will have its `data-filename` set to `super-rentals/app/...`,
+  which is probably not what you want. Unfortunately, we cannot just make that
+  the default, because at the beginning of the tutorial, the folder does not
+  exists yet. (Generating the app is part of the tutorial.)
+
+* `filename` (**required**)
+
+  The filename (the path relative to `cwd`) used for reading the file. Also
+  sets the `data-filename` metadata field in the resulting code block.
+
 ### `run:checkpoint`
 
 Indicates a checkpoint where the following steps are performed:
