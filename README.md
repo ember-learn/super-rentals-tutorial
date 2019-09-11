@@ -169,7 +169,7 @@ Options:
 
 ### `run:file:copy`
 
-Copy a file from the `assets` directory.
+Copy a file or folder from the `assets` folder.
 
 Example:
 
@@ -205,11 +205,15 @@ Result:
     /** ...snip... */
     ```
 
-The content of the source code block is used to populate the resulting code
-block only. If the source code block is empty, the source file's content will
-be rendered instead. This is useful because the file you are copying is
-probably quite large, and you don't necessarily want to render the whole file
-into the resulting markdown file.
+If the source is a file, then the source file's content will be rendered into
+the resulting code block. ~~If the source is a folder, its structure will be
+rendered into the resulting code block using a format similar to the Unix
+`tree` command.~~
+
+If the source code block is non-empty, its content will be rendered into the
+resulting code block in place of the default output described above. This is
+useful because the file you are copying is probably quite large, and you don't
+necessarily want to render the whole file into the resulting markdown file.
 
 Options:
 
