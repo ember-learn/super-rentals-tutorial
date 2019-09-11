@@ -12,6 +12,7 @@ interface Args {
   cwd?: string;
   expect?: string;
   timeout?: number;
+  captureCommand?: boolean;
   captureOutput?: boolean;
 }
 
@@ -22,10 +23,12 @@ export default async function startServer(node: Code, options: Options, servers:
     optional('cwd', String),
     optional('expect', String),
     optional('timeout', Number),
+    optional('captureCommand', ToBool, true),
     optional('captureOutput', ToBool)
   ]);
 
   if (args.hidden) {
+    args.captureCommand = false;
     args.captureOutput = false;
   }
 
@@ -43,6 +46,12 @@ export default async function startServer(node: Code, options: Options, servers:
     );
   }
 
+  assert(
+    args.hidden === false || args.captureCommand === false || args.captureOutput === false,
+    'At least one of `hidden`, `captureCommand` and `captureOutput` ' +
+    'should be enabled, otherwise, you will have an empty code block!'
+  );
+
   let { command, display } = parseCommand(node.value, options.cfg, node);
   let id = args.id || display;
   let { cwd } = options;
@@ -51,17 +60,20 @@ export default async function startServer(node: Code, options: Options, servers:
     cwd = join(cwd, args.cwd);
   }
 
+  let output: string[] = [];
+
   let server = servers.add(id, command, cwd);
 
   console.log(`$ ${command}`);
 
-  let output = await server.start(args.expect);
-  let value;
+  if (args.captureCommand) {
+    output.push(`$ ${display}`);
+  }
 
-  if (args.captureOutput && output) {
-    value = `$ ${display}\n${output}`;
-  } else {
-    value = `$ ${display}`;
+  let stdout = await server.start(args.expect);
+
+  if (args.captureOutput && stdout) {
+    output.push(stdout);
   }
 
   if (args.hidden) {
@@ -71,7 +83,7 @@ export default async function startServer(node: Code, options: Options, servers:
       ...node,
       lang: 'shell',
       meta: undefined,
-      value
+      value: output.join('\n').trimRight()
     };
   }
 }

@@ -9,6 +9,7 @@ import command from './directives/command';
 import copyFile from './directives/file/copy';
 import createFile from './directives/file/create';
 import patchFile from './directives/file/patch';
+import showFile from './directives/file/show';
 import ignore from './directives/ignore';
 import pause from './directives/pause';
 import screenshot from './directives/screenshot';
@@ -60,10 +61,13 @@ export default class Walker extends BaseWalker<Options> {
         return copyFile(node, options);
 
       case 'run:file:create':
-          return createFile(node, options);
+        return createFile(node, options);
 
       case 'run:file:patch':
-          return patchFile(node, options);
+        return patchFile(node, options);
+
+      case 'run:file:show':
+        return showFile(node, options);
 
       case 'run:ignore':
           return ignore(node, options);

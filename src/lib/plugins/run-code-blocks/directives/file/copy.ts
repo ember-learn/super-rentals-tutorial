@@ -1,4 +1,4 @@
-import { readFile as _readFile } from 'fs';
+import { lstat as _lstat, readFile as _readFile } from 'fs';
 import { Code } from 'mdast';
 import _mkdirp from 'mkdirp';
 import { ncp as _ncp } from 'ncp';
@@ -8,9 +8,10 @@ import { promisify } from 'util';
 import Options from '../../options';
 import parseArgs, { ToBool, optional, required } from '../../parse-args';
 
-const readFile = promisify(_readFile);
+const lstat = promisify(_lstat);
 const mkdirp = promisify(_mkdirp);
 const ncp = promisify(_ncp);
+const readFile = promisify(_readFile);
 
 interface Args {
   lang?: string;
@@ -29,33 +30,49 @@ export default async function copyFile(node: Code, options: Options): Promise<Op
     required('filename', String)
   ]);
 
-  console.log(`$ cp ${join('src', 'assets', args.src)} ${ args.filename }`);
-
   let src = join(options.assets, args.src);
-
   let destDir = options.cwd;
+  let destPath: string;
 
   if (args.cwd) {
     destDir = join(destDir, args.cwd);
   }
 
-  destDir = join(destDir, dirname(args.filename));
+  let stats = await lstat(src);
+  let isFile = stats.isFile();
+  let isDirectory = stats.isDirectory();
+
+  if (isFile) {
+    console.log(`$ cp ${join('src', 'assets', args.src)} ${ args.filename }`);
+    destDir = join(destDir, dirname(args.filename));
+    destPath = join(destDir, basename(args.filename));
+  } else if (isDirectory) {
+    console.log(`$ cp -r ${join('src', 'assets', args.src)} ${ args.filename }`);
+    destDir = destPath = join(destDir, args.filename);
+  } else {
+    throw new Error(`\`${src}\` is neither a regular file or a directory`);
+  }
 
   await mkdirp(destDir);
-
-  let destPath = join(destDir, basename(args.filename));
-
   await ncp(src, destPath);
 
   if (args.hidden) {
     return null
   } else {
-    let value = node.value || await readFile(destPath, { encoding: 'utf8' });
+    let value = node.value;
+    let meta: string | undefined;
+
+    if (isFile) {
+      value = value || await readFile(destPath, { encoding: 'utf8' });
+      meta = `{ data-filename="${args.filename}" }`;
+    } else if (isDirectory && !value) {
+      throw new Error('TODO: tree output is not yet implemented, see https://github.com/MrRaindrop/tree-cli/issues/15')
+    }
 
     return {
       ...node,
       lang: args.lang,
-      meta: `{ data-filename="${args.filename}" }`,
+      meta,
       value: value.trimRight()
     };
   }

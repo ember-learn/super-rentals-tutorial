@@ -103,10 +103,14 @@ Options:
   just make that the default, because at the beginning of the tutorial, the
   folder does not exists yet. (Generating the app is part of the tutorial.)
 
+* `captureCommand=false`
+
+  Run the command(s), but omit the command(s) themselves from the the resulting
+  code block.
+
 * `captureOutput=false`
 
-  Run the command(s), but omit the output from the command(s) in the resulting
-  code block.
+  Run the command(s), but omit their output from the resulting code block.
 
 ### `run:file:create`
 
@@ -165,7 +169,7 @@ Options:
 
 ### `run:file:copy`
 
-Copy a file from the `assets` directory.
+Copy a file or folder from the `assets` folder.
 
 Example:
 
@@ -201,11 +205,15 @@ Result:
     /** ...snip... */
     ```
 
-The content of the source code block is used to populate the resulting code
-block only. If the source code block is empty, the source file's content will
-be rendered instead. This is useful because the file you are copying is
-probably quite large, and you don't necessarily want to render the whole file
-into the resulting markdown file.
+If the source is a file, then the source file's content will be rendered into
+the resulting code block. ~~If the source is a folder, its structure will be
+rendered into the resulting code block using a format similar to the Unix
+`tree` command.~~
+
+If the source code block is non-empty, its content will be rendered into the
+resulting code block in place of the default output described above. This is
+useful because the file you are copying is probably quite large, and you don't
+necessarily want to render the whole file into the resulting markdown file.
 
 Options:
 
@@ -356,6 +364,50 @@ Options:
   it is required unless they are already included in the patch and the block is
   set to `hidden`.
 
+### `run:file:show`
+
+Render the content of a file ~~or a folder~~.
+
+Example:
+
+    ```run:file:show lang=handlebars cwd=super-rentals filename=app/templates/index.hbs
+    ```
+
+Result:
+
+    ```handlebars { data-filename="app/templates/index.hbs" }
+    <div class="jumbo">
+      <div class="right tomster"></div>
+      <h2>Welcome to Super Rentals!</h2>
+      <p>We hope you find exactly what you're looking for in a place to stay.</p>
+    </div>
+    ```
+
+The content of the source code block is not used. ~~If the source is a folder,
+its structure will be rendered into the resulting code block using a format
+similar to the Unix `tree` command.~~
+
+Options:
+
+* `lang`
+
+  The syntax highlight language to use in the resulting code block.
+
+* `cwd`
+
+  Specify a CWD (relative to `dist/code`) for the filename. This defaults to
+  `.` (i.e. `dist/code`), but most of the time you probably want to set it to
+  `super-rentals` (i.e. `dist/code/super-rentals`). Otherwise, the resulting
+  code block will have its `data-filename` set to `super-rentals/app/...`,
+  which is probably not what you want. Unfortunately, we cannot just make that
+  the default, because at the beginning of the tutorial, the folder does not
+  exists yet. (Generating the app is part of the tutorial.)
+
+* `filename` (**required**)
+
+  The filename (the path relative to `cwd`) used for reading the file. Also
+  sets the `data-filename` metadata field in the resulting code block.
+
 ### `run:checkpoint`
 
 Indicates a checkpoint where the following steps are performed:
@@ -498,9 +550,13 @@ Options:
   If used in conjunction with the `expect` option, it will fail the step if the
   checks are not completed before the deadline.
 
+* `captureCommand=false`
+
+  Omit the command used to start the server from the the resulting code block.
+
 * `captureOutput=false`
 
-  Run the command, but omit the output from the command(s) in the resulting
+  Omit the output of the command used to start the server from the resulting
   code block.
 
 ### `run:server:stop`

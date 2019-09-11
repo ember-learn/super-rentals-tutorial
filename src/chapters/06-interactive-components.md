@@ -139,7 +139,7 @@ We did a few things here, so let's break it down.
 
 First, we added the `@tracked` *[decorator][TODO: link to decorator]* to the `isLarge` instance variable. This annotation tells Ember to monitor this variable for updates. Whenever this variable's value changes, Ember will automatically re-render any templates that depend on its value.
 
-In our case, whenever we assign a new value to `this.isLarge`, the `@tracked` annotation will cause Ember to re-evaluate the `{{#if this.isLarge}}` conditional in our template, and will switch between the two blocks accordingly.
+In our case, whenever we assign a new value to `this.isLarge`, the `@tracked` annotation will cause Ember to re-evaluate the `{{#if this.isLarge}}` conditional in our template, and will switch between the two *[blocks][TODO: link to blocks]* accordingly.
 
 > Zoey says...
 >
