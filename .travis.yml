@@ -4,6 +4,7 @@ language: minimal
 addons:
   apt:
     packages:
+      - tree
       # These are required to run new chrome on old trusty
       - fonts-liberation
       - libappindicator3-1
