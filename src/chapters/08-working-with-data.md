@@ -219,7 +219,7 @@ git add public/api
 
 You can verify that everything is working correctly by navigating to `http://localhost:4200/api/rentals.json`.
 
-```run:screenshot width=1024 height=512 retina=true filename=data.png alt='Our "server" in serving up our rental properties as JSON data'
+```run:screenshot width=1024 height=512 retina=true filename=data.png alt="Our server serving up our rental properties as JSON data"
 visit http://localhost:4200/api/rentals.json
 ```
 
