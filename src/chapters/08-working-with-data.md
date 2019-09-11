@@ -127,19 +127,19 @@ By passing in `this.model` into the `<Rental>` component as the `@rental` argume
      </div>
 @@ -21,8 +21,8 @@
    <Map
--     @lat="37.7749"
--     @lng="-122.4194"
--     @zoom="9"
--     @width="150"
--     @height="150"
--     alt="A map of Grand Old Mansion"
+-    @lat="37.7749"
+-    @lng="-122.4194"
+-    @zoom="9"
+-    @width="150"
+-    @height="150"
+-    alt="A map of Grand Old Mansion"
 +    @lat={{@rental.location.lat}}
 +    @lng={{@rental.location.lng}}
 +    @zoom="9"
 +    @width="150"
 +    @height="150"
 +    alt="A map of {{@rental.title}}"
-    />
+   />
 ```
 
 Since the model object contains exactly the same data as the previously-hard-coded "Grand Old Mansion", the page should look exactly the same as before after the change.
