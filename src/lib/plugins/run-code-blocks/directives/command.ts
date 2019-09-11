@@ -1,7 +1,7 @@
 import { exec as _exec } from 'child_process';
 import { Code } from 'mdast';
 import { join } from 'path';
-import { Option } from 'ts-std';
+import { Option, assert } from 'ts-std';
 import { promisify } from 'util';
 import { parseCommands } from '../commands';
 import Options from '../options';
@@ -12,6 +12,7 @@ const exec = promisify(_exec);
 interface Args {
   hidden?: boolean;
   cwd?: string;
+  captureCommand?: boolean;
   captureOutput?: boolean;
 }
 
@@ -19,12 +20,20 @@ export default async function command(node: Code, options: Options): Promise<Opt
   let args = parseArgs<Args>(node, [
     optional('hidden', ToBool, false),
     optional('cwd', String),
+    optional('captureCommand', ToBool, true),
     optional('captureOutput', ToBool, true)
   ]);
 
   if (args.hidden) {
+    args.captureCommand = false;
     args.captureOutput = false;
   }
+
+  assert(
+    args.hidden === false || args.captureCommand === false || args.captureOutput === false,
+    'At least one of `hidden`, `captureCommand` and `captureOutput` ' +
+    'should be enabled, otherwise, you will have an empty code block!'
+  );
 
   let { cwd } = options;
 
@@ -32,11 +41,14 @@ export default async function command(node: Code, options: Options): Promise<Opt
     cwd = join(cwd, args.cwd);
   }
 
-  let output = [];
+  let output: string[] = [];
 
   for (let { command: cmd, display } of parseCommands(node.value, options.cfg, node)) {
     console.log(`$ ${cmd}`);
-    output.push(`$ ${display}`);
+
+    if (args.captureCommand) {
+      output.push(`$ ${display}`);
+    }
 
     let { stdout } = await exec(cmd, { cwd });
 

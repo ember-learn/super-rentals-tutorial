@@ -103,10 +103,14 @@ Options:
   just make that the default, because at the beginning of the tutorial, the
   folder does not exists yet. (Generating the app is part of the tutorial.)
 
+* `captureCommand=false`
+
+  Run the command(s), but omit the command(s) themselves from the the resulting
+  code block.
+
 * `captureOutput=false`
 
-  Run the command(s), but omit the output from the command(s) in the resulting
-  code block.
+  Run the command(s), but omit their output from the resulting code block.
 
 ### `run:file:create`
 
@@ -498,9 +502,13 @@ Options:
   If used in conjunction with the `expect` option, it will fail the step if the
   checks are not completed before the deadline.
 
+* `captureCommand=false`
+
+  Omit the command used to start the server from the the resulting code block.
+
 * `captureOutput=false`
 
-  Run the command, but omit the output from the command(s) in the resulting
+  Omit the output of the command used to start the server from the resulting
   code block.
 
 ### `run:server:stop`
