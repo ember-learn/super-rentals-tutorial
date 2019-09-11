@@ -5,6 +5,8 @@ addons:
   apt:
     packages:
       - tree
+      - zip
+      - zipcmp
       # These are required to run new chrome on old trusty
       - fonts-liberation
       - libappindicator3-1
