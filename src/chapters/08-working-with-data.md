@@ -205,7 +205,7 @@ When you are done, your `public` folder should now have the following content:
 ```run:file:copy hidden=true src=downloads/data cwd=super-rentals filename=public
 ```
 
-```run:command cwd=super-rentals captureCommand=false
+```run:command lang=plain cwd=super-rentals captureCommand=false
 #[cfg(unix)]
 tree public
 
