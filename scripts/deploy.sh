@@ -61,14 +61,17 @@ mkdir -p guides/release/tutorial/
 rm -rf guides/release/tutorial/*
 cp -r ../../dist/chapters/* guides/release/tutorial/
 git add guides/release/tutorial
-pushd ../../dist/assets/downloads/data
-zip -r ../data.zip .
+rm -rf public/downloads/*
+cp -r ../../dist/assets/downloads/* public/downloads/
+pushd public/downloads/data/
+zip -r ../data-current.zip .
 popd
-if ! zipcmp ../../dist/assets/downloads/data.zip public/downloads/data.zip; then
-  cp ../../dist/assets/downloads/data.zip public/downloads/data.zip
+if ! (git checkout -- public/downloads/data.zip 2>&1 && zipcmp public/downloads/data.zip public/downloads/data-current.zip); then
+  mv public/downloads/data-current.zip public/downloads/data.zip
   advzip -z -q -4 public/downloads/data.zip
 fi
-git rm -rf public/screenshots
+rm -rf public/downloads/data
+rm -rf public/screenshots
 find ../../dist/assets/screenshots -type f -name "*.png" | xargs -n 1 ../../scripts/optimize-screenshot.sh
 git add public
 if git diff --cached --exit-code; then
