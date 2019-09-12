@@ -107,6 +107,13 @@ async function main() {
 
   script.push(
 `
+  await page.$$eval('img', async imgs => {
+    for (let img of imgs) {
+      if (!img.complete || img.naturalHeight === 0) {
+        await new Promise(resolve => img.onload = resolve);
+      }
+    }
+  });
   await page.screenshot(${js(options)});
   await browser.close();
 }

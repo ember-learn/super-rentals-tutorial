@@ -74,7 +74,7 @@ git add app/routes/index.js
 git add app/templates/index.hbs
 ```
 
-Ok, now that we know that we have a model to use at our disposal, let's remove some of the hard-coding that we did earlier! Instead of explicitly hard-coding the rental information into our `<Rental>` component, we can pass the model object to our component instead.
+Okay, now that we know that we have a model to use at our disposal, let's remove some of the hard-coding that we did earlier! Instead of explicitly hard-coding the rental information into our `<Rental>` component, we can pass the model object to our component instead.
 
 Let's try it out.
 
@@ -127,19 +127,19 @@ By passing in `this.model` into the `<Rental>` component as the `@rental` argume
      </div>
 @@ -21,8 +21,8 @@
    <Map
--     @lat="37.7749"
--     @lng="-122.4194"
--     @zoom="9"
--     @width="150"
--     @height="150"
--     alt="A map of Grand Old Mansion"
+-    @lat="37.7749"
+-    @lng="-122.4194"
+-    @zoom="9"
+-    @width="150"
+-    @height="150"
+-    alt="A map of Grand Old Mansion"
 +    @lat={{@rental.location.lat}}
 +    @lng={{@rental.location.lng}}
 +    @zoom="9"
 +    @width="150"
 +    @height="150"
 +    alt="A map of {{@rental.title}}"
-    />
+   />
 ```
 
 Since the model object contains exactly the same data as the previously-hard-coded "Grand Old Mansion", the page should look exactly the same as before after the change.
@@ -198,7 +198,7 @@ Now that we have things in place, let's do the fun part of removing *all* our ha
 
 In a production app, the data that we'd fetch would most likely come from a remote API server. To avoid setting up an API server just for this tutorial, we will put some JSON data into the `public` folder instead. That way, we can still request these JSON data with regular HTTP requests &mdash; just like we would with a real API server  &mdash; but without having to write any server logic.
 
-But where will the data come from? You can <a href="/downloads/data.zip" download="data.zip">download this data file</a>, where we have prepared some JSON data and bunlded them into a `.zip` file format. Extract its content into the `public` folder.
+But where will the data come from? You can <a href="/downloads/data.zip" download="data.zip">download this data file</a>, where we have prepared some JSON data and bundled them into a `.zip` file format. Extract its content into the `public` folder.
 
 When you are done, your `public` folder should now have the following content:
 
@@ -219,7 +219,7 @@ git add public/api
 
 You can verify that everything is working correctly by navigating to `http://localhost:4200/api/rentals.json`.
 
-```run:screenshot width=1024 height=512 retina=true filename=data.png alt='Our "server" in serving up our rental properties as JSON data'
+```run:screenshot width=1024 height=512 retina=true filename=data.png alt="Our server serving up our rental properties as JSON data"
 visit http://localhost:4200/api/rentals.json
 ```
 
