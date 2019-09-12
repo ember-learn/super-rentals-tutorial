@@ -90,6 +90,11 @@ Lines starting with `#` and empty lines are ignored.
 
 Options:
 
+* `lang`
+
+  The syntax highlight language to use in the resulting code block. Defaults
+  to `shell`.
+
 * `hidden=true`
 
   Run the command(s), but omit the code block from the final markdown file
@@ -523,6 +528,11 @@ Options:
   shutting it down later. This is optional; by default, the command to start
   the server is used as the id, but this allows you to specify a shorter name
   if desired.
+
+* `lang`
+
+  The syntax highlight language to use in the resulting code block. Defaults
+  to `shell`.
 
 * `hidden=true`
 

@@ -10,6 +10,7 @@ import parseArgs, { ToBool, optional } from '../parse-args';
 const exec = promisify(_exec);
 
 interface Args {
+  lang?: string;
   hidden?: boolean;
   cwd?: string;
   captureCommand?: boolean;
@@ -18,6 +19,7 @@ interface Args {
 
 export default async function command(node: Code, options: Options): Promise<Option<Code>> {
   let args = parseArgs<Args>(node, [
+    optional('lang', String, 'shell'),
     optional('hidden', ToBool, false),
     optional('cwd', String),
     optional('captureCommand', ToBool, true),
@@ -62,7 +64,7 @@ export default async function command(node: Code, options: Options): Promise<Opt
   } else {
     return {
       ...node,
-      lang: 'shell',
+      lang: args.lang,
       meta: undefined,
       value: output.join('\n').trimRight()
     };
