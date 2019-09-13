@@ -8,6 +8,7 @@ import Servers from '../../servers';
 
 interface Args {
   id?: string;
+  lang?: string;
   hidden?: boolean;
   cwd?: string;
   expect?: string;
@@ -19,6 +20,7 @@ interface Args {
 export default async function startServer(node: Code, options: Options, servers: Servers): Promise<Option<Code>> {
   let args = parseArgs<Args>(node, [
     optional('id', String),
+    optional('lang', String, 'shell'),
     optional('hidden', ToBool, false),
     optional('cwd', String),
     optional('expect', String),
@@ -81,7 +83,7 @@ export default async function startServer(node: Code, options: Options, servers:
   } else {
     return {
       ...node,
-      lang: 'shell',
+      lang: args.lang,
       meta: undefined,
       value: output.join('\n').trimRight()
     };

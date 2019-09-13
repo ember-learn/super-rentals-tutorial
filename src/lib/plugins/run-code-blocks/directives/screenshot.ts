@@ -94,23 +94,25 @@ async function main() {
 
     switch (action) {
       case 'visit':
-        script.push(`  await page.goto(${js(arg)}, { waitUtil: 'networkidle0' })`);
+        script.push(`  await page.goto(${js(arg)}, { waitUtil: 'networkidle0' });`);
         break;
       case 'wait':
-        script.push(`  await page.waitForSelector(${js(arg)})`);
+        script.push(`  await page.waitForSelector(${js(arg)});`);
         break;
       default:
         throw new Error(`Unknown action: ${action}`);
     }
   }
 
-
   script.push(
 `
   await page.$$eval('img', async imgs => {
     for (let img of imgs) {
       if (!img.complete || img.naturalHeight === 0) {
-        await new Promise(resolve => img.onload = resolve);
+        await new Promise((resolve, reject) => {
+          img.onload = resolve;
+          img.onerror = () => reject(\`failed to load \${img.src}\`);
+        });
       }
     }
   });
