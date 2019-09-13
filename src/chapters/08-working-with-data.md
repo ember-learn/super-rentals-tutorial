@@ -206,8 +206,12 @@ When you are done, your `public` folder should now have the following content:
 ```
 
 ```run:command lang=plain cwd=super-rentals captureCommand=false
+# Tree uses UTF-8 "non-breaking space" which gets turned into &nbsp;
+# Somewhere in the guides repo's markdown pipeline there is a bug
+# that further turns them into &amp;nbsp;
+
 #[cfg(unix)]
-tree public
+tree public | sed 's/\xC2\xA0/ /g'
 
 #[cfg(windows)]
 tree public /F
