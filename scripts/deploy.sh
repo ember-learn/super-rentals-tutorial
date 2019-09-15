@@ -64,10 +64,10 @@ git add guides/release/tutorial
 rm -rf public/downloads/*
 cp -r ../../dist/assets/downloads/* public/downloads/
 pushd public/downloads/data/
-zip -r ../data-current.zip .
+zip -r current.zip .
 popd
-if ! (git checkout -- public/downloads/data.zip 2>&1 && zipcmp public/downloads/data.zip public/downloads/data-current.zip); then
-  mv public/downloads/data-current.zip public/downloads/data.zip
+if ! (git checkout -- public/downloads/data.zip 2>&1 && zipcmp public/downloads/data.zip public/downloads/data/current.zip); then
+  mv public/downloads/data/current.zip public/downloads/data.zip
   advzip -z -q -4 public/downloads/data.zip
 fi
 rm -rf public/downloads/data
