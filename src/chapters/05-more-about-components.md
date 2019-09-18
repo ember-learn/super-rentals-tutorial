@@ -179,15 +179,15 @@ Let's write a test for our new component!
 -    // Set any properties with this.set('myProperty', 'value');
 -    // Handle any actions with this.set('myAction', function(val) { ... });
 -
--    await render(hbs`{{rental/image}}`);
+-    await render(hbs`<Rental::Image />`);
 -
 -    assert.equal(this.element.textContent.trim(), '');
 -
 -    // Template block usage:
 -    await render(hbs`
--      {{#rental/image}}
+-      <Rental::Image>
 -        template block text
--      {{/rental/image}}
+-      </Rental::Image>
 -    `);
 -
 -    assert.equal(this.element.textContent.trim(), 'template block text');
