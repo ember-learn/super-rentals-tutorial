@@ -120,6 +120,8 @@ del package.json
 
 ```
 
+After creating the repository from the [ember-cli](https://ember-cli.com/) `new` command, navigate into it.
+
 ```shell
 $ cd super-rentals
 ```
