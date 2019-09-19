@@ -10,13 +10,10 @@ Here, we are going to do just that! We are going to implement the "View Larger" 
 
 In other words, we want a way to _toggle_ the image between one of the two *[states][TODO: link to states]*. In order to do that, we need a way for the component to store two possible states, and to be aware which states it is currently in.
 
-Ember optionally allows us to associate JavaScript code with a component for exactly this purpose. We can add a JavaScript file for our `<Rental::Image>` component by [~~running the `component-class` generator~~](https://github.com/emberjs/ember.js/pull/18359) running the `component` generator again with the `-gc` flag:
-
-<!-- TODO: https://github.com/emberjs/ember.js/pull/18359 -->
+Ember optionally allows us to associate JavaScript code with a component for exactly this purpose. We can add a JavaScript file for our `<Rental::Image>` component by running the `component-class` generator:
 
 ```run:command cwd=super-rentals
-#[display(ember generate component rental/image -gc)]
-(echo n && echo n) | ember generate component rental/image -gc
+ember generate component-class rental/image
 ```
 
 ```run:command hidden=true cwd=super-rentals

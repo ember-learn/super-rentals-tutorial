@@ -61,19 +61,17 @@ ember server
 
 With the Mapbox API key in place, let's generate a new component for our map.
 
-<!-- TODO: https://github.com/emberjs/ember.js/pull/18359 (use --with-component-class) -->
-
 ```run:command cwd=super-rentals
-ember generate component map -gc
+ember generate component map --with-component-class
 ```
 
-Since not every component will necessarily have some defined behavior associated with it, the component generator does not generate a JavaScript file for us by default. As we saw earlier, we can always [~~use the `component-class` generator~~](https://github.com/emberjs/ember.js/pull/18359) run the generator again to add a JavaScript file for a component later on.
+Since not every component will necessarily have some defined behavior associated with it, the component generator does not generate a JavaScript file for us by default. As we saw earlier, we can always use the `component-class` generator to add a JavaScript file for a component later on.
 
-However, in the case of our `<Map>` component, we are pretty sure that we are going to need a JavaScript file for some behavior that we have yet to define! To save a step later, we can pass the [~~`--with-component-class`~~](https://github.com/emberjs/ember.js/pull/18359) `-gc` flag to the component generator so that we have everything we need from the get-go.
+However, in the case of our `<Map>` component, we are pretty sure that we are going to need a JavaScript file for some behavior that we have yet to define! To save a step later, we can pass the `--with-component-class` flag to the component generator so that we have everything we need from the get-go.
 
 > Zoey says...
 >
-> Too much typing? Use `ember g component -gc map` instead. The `-gc` flag stands for **G**limmer **c**omponent, but you may also remember it as **g**enerate **c**lass.
+> Too much typing? Use `ember g component map -gc` instead. The `-gc` flag stands for **G**limmer **c**omponent, but you may also remember it as **g**enerate **c**lass.
 
 ```run:command hidden=true cwd=super-rentals
 yarn test
