@@ -24,6 +24,10 @@ cache:
     - /home/travis/.npm/
     - /home/travis/.yarn/
 
+branches:
+  only:
+    - master
+
 env:
   global:
     - VOLTA_HOME=/home/travis/.volta/
