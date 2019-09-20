@@ -1,6 +1,4 @@
-<!-- TODO: fill this in -->
-
-Install Ember using npm:
+You can install the latest version of *[Ember CLI][TODO: link to Ember CLI]* by running the following command. If you've already done this by following the [Quick Start](../../getting-started/quick-start/) guide, feel free to skip ahead!
 
 ```shell
 $ npm install -g ember-cli
@@ -14,7 +12,7 @@ ember --version
 
 If a version number is shown, you're ready to go.
 
-<!-- TODO: fill this in -->
+We can create a new project using Ember CLI's `new` command. It follows the pattern `ember new <project-name>`. In our case, the project name would be `super-rentals`:
 
 ```run:command hidden=true
 # Hack: convince ember-cli we are really not in a project. Otherwise, we will get the "You cannot use the new command inside an ember-cli project." error when running `ember new`.
@@ -120,17 +118,35 @@ del package.json
 
 ```
 
-After creating the repository from the [ember-cli](https://ember-cli.com/) `new` command, navigate into it.
-
-```shell
-$ cd super-rentals
-```
-
 ```run:command hidden=true cwd=super-rentals
 yarn test
 git add tests/index.html
 git commit --amend --no-edit
 ```
+
+This should have created a new folder for us called `super-rentals`. We can navigate into it using the `cd` command.
+
+```shell
+$ cd super-rentals
+```
+
+For the rest of the tutorial, all commands should be run within the `super-rentals` folder. This folder has the following structure:
+
+```run:command lang=plain captureCommand=false
+# Tree uses UTF-8 "non-breaking space" which gets turned into &nbsp;
+# Somewhere in the guides repo's markdown pipeline there is a bug
+# that further turns them into &amp;nbsp;
+
+#[cfg(unix)]
+tree super-rentals -a -I "node_modules|\.git" --dirsfirst | sed 's/\xC2\xA0/ /g'
+
+#[cfg(windows)]
+tree super-rentals /F
+```
+
+We will get to know the purposes of these files and folders as we go. For now, just know we will spend most of the time working within the `app` folder.
+
+Ember CLI comes with a lot of different commands for a variety of development tasks, such as the `ember new` command that we saw earlier. It also comes with a *development server*, which we can launch with the `ember server` command:
 
 ```run:server:start cwd=super-rentals expect="Serving on http://localhost:4200/"
 #[cfg(all(ci, unix))]
@@ -145,19 +161,46 @@ ember server | awk '{ \
 ember server
 ```
 
+The development server is responsible for compiling our app and serving it to the browsers. It may take a while to boot up. Once it's up and running, open your favorite browser and head to http://localhost:4200. You should see the following welcome page:
+
 ```run:screenshot width=1024 retina=true filename=welcome.png alt="Welcome to Ember!"
 visit http://localhost:4200/
 ```
 
-<!-- TODO: explain ember server, etc. -->
+> Zoey says...
+>
+> The `localhost` address in URL means that you can only access the development server from your local machine. If you would like to share your work to the world, you will have to *[deploy][TODO: link to deploy]* your app to the public Internet. Don't worry, we will cover that in Part 2 of the tutorial.
+
+You can exit out of the development server at any time by pressing `Ctrl + C` on your keyboard in the terminal where the server is running. We recommend having two terminal windows open: one to run the server in background, another to type Ember CLI commands.
+
+The development server has a feature called *live reload*, which monitors your app for file changes, automatically re-compiles everything, and refreshes any open browser pages. This comes in really handy during development, so let's give that a try!
+
+As text on the welcome page pointed out, the source code for the page is located in `app/templates/application.hbs`. Let's try to edit that file and replace it with our own content:
+
+```run:file:patch lang=handlebars cwd=super-rentals filename=app/templates/application.hbs
+@@ -1,6 +1 @@
+-{{!-- The following component displays Ember's default welcome message. --}}
+-<WelcomePage />
+-{{!-- Feel free to remove this! --}}
+-
+-{{outlet}}
+-
++Hello World!!!
+```
+
+Soon after saving the file, your browser should automatically refresh and render our greetings to the world. Neat!
+
+```run:screenshot width=1024 height=250 retina=true filename=hello-world.png alt="Hello World!!!"
+visit http://localhost:4200/
+```
 
 When you are done experimenting, go ahead and delete the `app/templates/application.hbs` file. We won't be needing this for a while, so let's start afresh. We can add it back later when we have a need for it.
 
 ```run:command hidden=true cwd=super-rentals
-git rm app/templates/application.hbs
+git rm -f app/templates/application.hbs
 ```
 
-If you still have your browser tab open, your tab should automatically reload into a blank page as you delete the file. This reflects the fact that we no longer have an application template in our app.
+Again, if you still have your browser tab open, your tab will automatically re-render a blank page as soon as you delete the file. This reflects the fact that we no longer have an application template in our app.
 
 Create a `app/templates/index.hbs` file and paste the following markup.
 

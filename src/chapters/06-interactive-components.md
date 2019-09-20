@@ -194,7 +194,7 @@ Finally, let's write a test for this new behavior:
  import { setupRenderingTest } from 'ember-qunit';
 -import { render } from '@ember/test-helpers';
 +import { render, click } from '@ember/test-helpers';
- import hbs from 'htmlbars-inline-precompile';
+ import { hbs } from 'ember-cli-htmlbars';
 @@ -20,2 +21,26 @@
    });
 +

@@ -141,7 +141,7 @@ We just added a lot of behavior into a single component, so let's write some tes
  import { setupRenderingTest } from 'ember-qunit';
 -import { render } from '@ember/test-helpers';
 +import { render, find } from '@ember/test-helpers';
- import hbs from 'htmlbars-inline-precompile';
+ import { hbs } from 'ember-cli-htmlbars';
 +import ENV from 'super-rentals/config/environment';
 
 @@ -8,18 +9,53 @@

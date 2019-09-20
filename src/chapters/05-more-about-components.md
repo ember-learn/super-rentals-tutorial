@@ -170,8 +170,6 @@ In general, it is a good idea to add `...attributes` to the primary element in y
 
 Let's write a test for our new component!
 
-<!-- TODO: https://github.com/emberjs/ember.js/issues/18242 -->
-
 ```run:file:patch lang=js cwd=super-rentals filename=tests/integration/components/rental/image-test.js
 @@ -8,18 +8,13 @@
 
