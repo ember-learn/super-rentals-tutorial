@@ -44,7 +44,7 @@ del package.json
 ```
 
 ```run:file:patch hidden=true cwd=super-rentals filename=tests/index.html
-@@ -28,2 +28,71 @@
+@@ -28,2 +28,81 @@
      <script src="{{rootURL}}assets/tests.js"></script>
 +    <script>
 +      if (QUnit.urlParams.deterministic) {
@@ -98,16 +98,26 @@ del package.json
 +
 +        QUnit.config.callbacks.log.unshift(details => {
 +          details.runtime = clock.tick();
++
++          if (details.source) {
++            details.source = details.source.replace(/.js((:[0-9]+):[0-9]+)/g, '.js');
++          }
 +        });
 +
 +        QUnit.config.callbacks.testDone.unshift(details => {
 +          let current;
++
 +          for(let i=0; i<10; i++) {
 +            current = clock.tick();
 +          }
++
 +          clock = undefined;
 +          totalRuntime += current;
 +          details.runtime = current;
++
++          if (details.source) {
++            details.source = details.source.replace(/.js((:[0-9]+):[0-9]+)/g, '.js');
++          }
 +        });
 +
 +        QUnit.config.callbacks.done.unshift(details => {
