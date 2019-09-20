@@ -24,10 +24,17 @@ cache:
     - /home/travis/.npm/
     - /home/travis/.yarn/
 
+branches:
+  only:
+    - master
+
 env:
   global:
     - VOLTA_HOME=/home/travis/.volta/
     - PATH=$VOLTA_HOME/bin:$PATH
+    # This is needed for external PRs to build, since secure ENV don't apply for those
+    # Get your own token at https://account.mapbox.com/access-tokens
+    - MAPBOX_ACCESS_TOKEN="pk.eyJ1IjoiZW1iZXJqcyIsImEiOiJjazBydnZjb2wwYXA5M2Rwc3IydGF2eXM0In0.EQiBFsRi9Jm70XFPiXnoHg"
 
 before_install:
   - curl https://get.volta.sh | bash
