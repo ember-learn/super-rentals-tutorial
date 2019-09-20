@@ -117,7 +117,7 @@ visit http://localhost:4200/tests?nocontainer&deterministic
 wait  #qunit-banner.qunit-pass
 ```
 
-While it may not save you a lot of characters in this case, [encapsulating][TODO: link to encapsulating]* the implementation of the "jumbo" header into its own component makes the template slightly easier to read, as it allows the reader to focus on things that are unique to just that page. Further, if we need to make a change to the header, we can make it in a single place. Feel free to give that a try!
+While it may not save you a lot of characters in this case, *[encapsulating][TODO: link to encapsulating]* the implementation of the "jumbo" header into its own component makes the template slightly easier to read, as it allows the reader to focus on things that are unique to just that page. Further, if we need to make a change to the header, we can make it in a single place. Feel free to give that a try!
 
 Before we move on to the next component, let's write an automated test for our `<Jumbo>` component. Run this command in your terminal:
 
@@ -129,7 +129,7 @@ ember generate component-test jumbo
 git add tests/integration/components/jumbo-test.js
 ```
 
-Here, we used the generator to generate a *[component test][TODO: link to component test]*. These are used to render and test a single component at a time. This is in contrast to the acceptance tests that we wrote earlier, which have to navigate and render entire pages worth of content.
+Here, we used the generator to generate a *[component test][TODO: link to component test]*, also known as a *[rendering test][TODO: link to rendering test]*. These are used to render and test a single component at a time. This is in contrast to the acceptance tests that we wrote earlier, which have to navigate and render entire pages worth of content.
 
 Let's replace the boilerplate code that was generated for us with our own test:
 
@@ -156,7 +156,7 @@ Let's replace the boilerplate code that was generated for us with our own test:
 +    await render(hbs`<Jumbo>Hello World</Jumbo>`);
 +
 +    assert.dom('.jumbo').exists();
-+    assert.dom('.jumbo').containsText('Hello World');
++    assert.dom('.jumbo').hasText('Hello World');
 +    assert.dom('.jumbo .tomster').exists();
    });
 ```
@@ -243,18 +243,18 @@ But what kind of test? We _could_ write a component test for the `<NavBar>` by i
 @@ -11,2 +11,4 @@
      assert.equal(currentURL(), '/');
 +    assert.dom('nav').exists();
-+    assert.dom('h1').containsText('SuperRentals');
-     assert.dom('h2').containsText('Welcome to Super Rentals!');
++    assert.dom('h1').hasText('SuperRentals');
+     assert.dom('h2').hasText('Welcome to Super Rentals!');
 @@ -23,2 +25,4 @@
      assert.equal(currentURL(), '/about');
 +    assert.dom('nav').exists();
-+    assert.dom('h1').containsText('SuperRentals');
-     assert.dom('h2').containsText('About Super Rentals');
++    assert.dom('h1').hasText('SuperRentals');
+     assert.dom('h2').hasText('About Super Rentals');
 @@ -35,2 +39,4 @@
      assert.equal(currentURL(), '/getting-in-touch');
 +    assert.dom('nav').exists();
-+    assert.dom('h1').containsText('SuperRentals');
-     assert.dom('h2').containsText('Contact Us');
++    assert.dom('h1').hasText('SuperRentals');
+     assert.dom('h2').hasText('Contact Us');
 @@ -42,2 +48,20 @@
    });
 +
@@ -262,9 +262,9 @@ But what kind of test? We _could_ write a component test for the `<NavBar>` by i
 +    await visit('/');
 +
 +    assert.dom('nav').exists();
-+    assert.dom('nav a.menu-index').containsText('SuperRentals')
-+    assert.dom('nav a.menu-about').containsText('About');
-+    assert.dom('nav a.menu-contact').containsText('Contact');
++    assert.dom('nav a.menu-index').hasText('SuperRentals')
++    assert.dom('nav a.menu-about').hasText('About');
++    assert.dom('nav a.menu-contact').hasText('Contact');
 +
 +    await click('nav a.menu-about');
 +    assert.equal(currentURL(), '/about');
@@ -328,7 +328,7 @@ While we are at it, we will also add a container element that wraps around the w
  <Jumbo>
 ```
 
-The `{{outlet}}` keyword denotes the place where our site's pages should be rendered into, similar to the `{{yield}}` keyword.
+The `{{outlet}}` keyword denotes the place where our site's pages should be rendered into, similar to the `{{yield}}` keyword we saw [earlier][TODO: add anchor link back to where we first mentioned it].
 
 This is much nicer! We can run our test suite which confirms that everything still works after our refactor. We are ready to move on to the next feature!
 

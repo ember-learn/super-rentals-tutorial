@@ -68,11 +68,11 @@ Then, we will write a test to ensure all of the details are present. We will rep
 +    await render(hbs`<Rental />`);
 +
 +    assert.dom('article').hasClass('rental');
-+    assert.dom('article h3').containsText('Grand Old Mansion');
-+    assert.dom('article .detail.owner').containsText('Veruca Salt');
-+    assert.dom('article .detail.type').containsText('Standalone');
-+    assert.dom('article .detail.location').containsText('San Francisco');
-+    assert.dom('article .detail.bedrooms').containsText('15');
++    assert.dom('article h3').hasText('Grand Old Mansion');
++    assert.dom('article .detail.owner').includesText('Veruca Salt');
++    assert.dom('article .detail.type').includesText('Standalone');
++    assert.dom('article .detail.location').includesText('San Francisco');
++    assert.dom('article .detail.bedrooms').includesText('15');
    });
 ```
 
@@ -207,7 +207,7 @@ Finally, we should also update the tests for the `<Rental>` component to confirm
 
 ```run:file:patch lang=js cwd=super-rentals filename=tests/integration/components/rental-test.js
 @@ -17,2 +17,3 @@
-     assert.dom('article .detail.bedrooms').containsText('15');
+     assert.dom('article .detail.bedrooms').includesText('15');
 +    assert.dom('article .image').exists();
    });
 ```

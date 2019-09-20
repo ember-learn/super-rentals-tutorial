@@ -32,7 +32,7 @@ Generators aren't required; we _could_ have created the file ourselves which wou
 >
 > Want to save even more typing? `ember generate ...` can be shortened into `ember g ...`. That's 7 fewer characters!
 
-Acceptance tests are one of a few types of automated testing at our disposal in Ember. We will learn about the other types later, but what makes acceptance tests unique is that they test our app from the user's perspective &mdash; they are an automated version of the "click around and see if it works" testing we did earlier, which is exactly what we need.
+Acceptance tests, also known as *application tests*, are one of a few types of automated testing at our disposal in Ember. We will learn about the other types later, but what makes acceptance tests unique is that they test our app from the user's perspective &mdash; they are an automated version of the "click around and see if it works" testing we did earlier, which is exactly what we need.
 
 Let's open the generated test file and replace the boilerplate test with our own:
 
@@ -52,9 +52,9 @@ Let's open the generated test file and replace the boilerplate test with our own
 +    await visit('/');
 +
 +    assert.equal(currentURL(), '/');
-+    assert.dom('h2').containsText('Welcome to Super Rentals!');
++    assert.dom('h2').hasText('Welcome to Super Rentals!');
 +
-+    assert.dom('.jumbo a.button').containsText('About Us');
++    assert.dom('.jumbo a.button').hasText('About Us');
 +    await click('.jumbo a.button');
 +
 +    assert.equal(currentURL(), '/about');
@@ -69,7 +69,7 @@ This is almost always the behavior we want, so we will almost always use `await`
 
 After navigating to the `/` URL and waiting for things to settle, we check that the current URL matches the URL that we expect (`/`). We can use the `currentURL` test helper here, as well as `equal` *[assertion][TODO: link to assertion]*. This is how we encode our "checklist" into code &mdash; by specifying, or *[asserting][TODO: link to asserting]* how things _should_ behave, we will be alerted if our app does _not_ behave in the way that we expect.
 
-Next, we confirmed that the page has an `<h1>` tag that contains the text "Welcome to Super Rentals!". Knowing this is true means that we can be quite certain that the correct template has been rendered, without errors.
+Next, we confirmed that the page has an `<h2>` tag that contains the text "Welcome to Super Rentals!". Knowing this is true means that we can be quite certain that the correct template has been rendered, without errors.
 
 Then, we looked for a link with the text `About Us`, located using the *[CSS selector][TODO: link to CSS selector]* `.jumbo a.button`. This is the same syntax we used in our stylesheet, which means "look inside the tag with the `jumbo` class for an `<a>` tag with the `button` class". This matches up with the HTML structure in our template.
 
@@ -130,9 +130,9 @@ Let's practice what we learned by adding tests for the remaining pages:
 +    await visit('/about');
 +
 +    assert.equal(currentURL(), '/about');
-+    assert.dom('h2').containsText('About Super Rentals');
++    assert.dom('h2').hasText('About Super Rentals');
 +
-+    assert.dom('.jumbo a.button').containsText('Contact Us');
++    assert.dom('.jumbo a.button').hasText('Contact Us');
 +    await click('.jumbo a.button');
 +
 +    assert.equal(currentURL(), '/getting-in-touch');
@@ -142,9 +142,9 @@ Let's practice what we learned by adding tests for the remaining pages:
 +    await visit('/getting-in-touch');
 +
 +    assert.equal(currentURL(), '/getting-in-touch');
-+    assert.dom('h2').containsText('Contact Us');
++    assert.dom('h2').hasText('Contact Us');
 +
-+    assert.dom('a.button').containsText('About');
++    assert.dom('a.button').hasText('About');
 +    await click('.jumbo a.button');
 +
 +    assert.equal(currentURL(), '/about');
@@ -164,7 +164,7 @@ yarn test
 git add tests/acceptance/super-rentals-test.js
 ```
 
-For the rest of the tutorial, we will continue to add more automated tests as we develop new features. Testing is optional; tests don't affect the functionality your app, they just protect it from *[regressions][TODO: link to regressions]*, which is just a fancy way of saying "accidental breakages."
+For the rest of the tutorial, we will continue to add more automated tests as we develop new features. Testing is optional but highly recommended. Tests don't affect the functionality your app, they just protect it from *[regressions][TODO: link to regressions]*, which is just a fancy way of saying "accidental breakages."
 
 If you are in a hurry, you can skip over the testing sections in this tutorial and still be able to follow along with everything else. But don't you find it super satisfying &mdash; _oddly satisfying_ &mdash; to watch a robot click on things really, really fast?
 
