@@ -45,16 +45,14 @@ Usually, this is where we'd fetch data from a server. Since fetching data is usu
 
 We'll get to that bit later on. At the moment, we are just returning the same hard-coding model data, extracted from the `<Rental>` component, but in a JavaScript object (also known as *[POJO][TODO: link to POJO]*) format.
 
-<!-- TODO: change `this.model.*` to `@model` once we are tracking 3.14 beta -->
-
-So, now that we've prepared some model data for our route, let's use it in our template. In route templates, we can access the model for the route as [~~`@model`~~](https://github.com/emberjs/ember.js/pull/18363) `this.model`. In our case, that would contain the POJO returned from our model hook.
+So, now that we've prepared some model data for our route, let's use it in our template. In route templates, we can access the model for the route as `@model`. In our case, that would contain the POJO returned from our model hook.
 
 To test that this is working, let's modify our template and try to render the `title` property from our model:
 
 ```run:file:patch lang=handlebars cwd=super-rentals filename=app/templates/index.hbs
 @@ -6,2 +6,4 @@
 
-+<h1>{{this.model.title}}</h1>
++<h1>{{@model.title}}</h1>
 +
  <div class="rentals">
 ```
@@ -83,20 +81,20 @@ First, let's pass in our model to our `<Rental>` component as the `@rental` argu
 ```run:file:patch lang=handlebars cwd=super-rentals filename=app/templates/index.hbs
 @@ -6,9 +6,7 @@
 
--<h1>{{this.model.title}}</h1>
+-<h1>{{@model.title}}</h1>
 -
  <div class="rentals">
    <ul class="results">
 -    <li><Rental /></li>
 -    <li><Rental /></li>
 -    <li><Rental /></li>
-+    <li><Rental @rental={{this.model}} /></li>
-+    <li><Rental @rental={{this.model}} /></li>
-+    <li><Rental @rental={{this.model}} /></li>
++    <li><Rental @rental={{@model}} /></li>
++    <li><Rental @rental={{@model}} /></li>
++    <li><Rental @rental={{@model}} /></li>
    </ul>
 ```
 
-By passing in `this.model` into the `<Rental>` component as the `@rental` argument, we will have access to our "Grand Old Mansion" model object in the `<Rental>` component's template! Now, we can replace our hard-coded values in this component by using the values that live on our `@rental` model.
+By passing in `@model` into the `<Rental>` component as the `@rental` argument, we will have access to our "Grand Old Mansion" model object in the `<Rental>` component's template! Now, we can replace our hard-coded values in this component by using the values that live on our `@rental` model.
 
 ```run:file:patch lang=handlebars cwd=super-rentals filename=app/components/rental.hbs
 @@ -2,18 +2,18 @@
@@ -318,17 +316,17 @@ After parsing the JSON data, we extracted the nested `attributes` object, added 
 
 Awesome! Now we're in business.
 
-The last change we'll need to make is to our `index.hbs` route template, where we invoke our `<Rental>` components. Previously, we were passing in `@rental` as `this.model` to our components. However, `this.model` is no longer a single object, but rather, an array! So, we'll need to change this template to account for that.
+The last change we'll need to make is to our `index.hbs` route template, where we invoke our `<Rental>` components. Previously, we were passing in `@rental` as `@model` to our components. However, `@model` is no longer a single object, but rather, an array! So, we'll need to change this template to account for that.
 
 Let's see how.
 
 ```run:file:patch lang=handlebars cwd=super-rentals filename=app/templates/index.hbs
 @@ -8,5 +8,5 @@
    <ul class="results">
--    <li><Rental @rental={{this.model}} /></li>
--    <li><Rental @rental={{this.model}} /></li>
--    <li><Rental @rental={{this.model}} /></li>
-+    {{#each this.model as |rental|}}
+-    <li><Rental @rental={{@model}} /></li>
+-    <li><Rental @rental={{@model}} /></li>
+-    <li><Rental @rental={{@model}} /></li>
++    {{#each @model as |rental|}}
 +      <li><Rental @rental={{rental}} /></li>
 +    {{/each}}
    </ul>
