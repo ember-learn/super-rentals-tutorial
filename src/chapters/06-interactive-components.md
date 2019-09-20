@@ -209,17 +209,17 @@ Finally, let's write a test for this new behavior:
 +    assert.dom('button.image').exists();
 +
 +    assert.dom('.image').doesNotHaveClass('large');
-+    assert.dom('.image small').containsText('View Larger');
++    assert.dom('.image small').hasText('View Larger');
 +
 +    await click('button.image');
 +
 +    assert.dom('.image').hasClass('large')
-+    assert.dom('.image small').containsText('View Smaller');
++    assert.dom('.image small').hasText('View Smaller');
 +
 +    await click('button.image');
 +
 +    assert.dom('.image').doesNotHaveClass('large');
-+    assert.dom('.image small').containsText('View Larger');
++    assert.dom('.image small').hasText('View Larger');
 +  });
  });
 ```
