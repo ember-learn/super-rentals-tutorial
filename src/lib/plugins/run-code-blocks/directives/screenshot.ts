@@ -108,11 +108,13 @@ async function main() {
 `
   await page.$$eval('img', async imgs => {
     for (let img of imgs) {
-      if (!img.complete || img.naturalHeight === 0) {
+      if (!img.complete) {
         await new Promise((resolve, reject) => {
           img.onload = resolve;
           img.onerror = () => reject(\`failed to load \${img.src}\`);
         });
+      } else if(img.naturalHeight === 0) {
+        return Promise.reject(\`failed to load \${img.src}\`);
       }
     }
   });
