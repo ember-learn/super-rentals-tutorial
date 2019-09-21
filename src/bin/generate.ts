@@ -8,16 +8,25 @@ import { ncp as _ncp } from 'ncp';
 import { basename, join, relative } from 'path';
 import markdown from 'remark-parse';
 import stringify from 'remark-stringify';
-import unified from 'unified';
+import unified, { Processor } from 'unified';
 import { promisify } from 'util';
 
-import { doNotEdit, runCodeBlocks, todoLinks, zoeySays } from '../lib';
+import { doNotEdit, retinaImages, runCodeBlocks, todoLinks, zoeySays } from '../lib';
 
 const glob = promisify(_glob);
 const readFile = promisify(_readFile);
 const writeFile = promisify(_writeFile);
 const mkdirp = promisify(_mkdirp);
 const ncp = promisify(_ncp);
+
+async function run(processor: Processor, project: string, path: string): Promise<void> {
+  let relativePath = relative(project, path);
+  let filename = basename(path);
+  let outputPath = join(project, 'dist', 'chapters', filename);
+  let contents = await readFile(path, { encoding: 'utf8' });
+  let result = await processor.process({ path: relativePath, contents });
+  await writeFile(outputPath, result, { encoding: 'utf8' });
+}
 
 async function main() {
   let project = process.cwd();
@@ -41,19 +50,19 @@ async function main() {
     .use(doNotEdit, { repo: 'ember-learn/super-rentals-tutorial' })
     .use(stringify, { fences: true, listItemIndent: '1' });
 
-  for (let inputPath of chapters) {
-    let relativePath = relative(project, inputPath);
-    let filename = basename(inputPath);
+  for (let chapter of chapters) {
+    console.log(`Processing ${chapter}`);
+    await run(processor, project, chapter);
+  }
 
-    console.log(`Processing ${filename}`);
+  let postProcessor = unified()
+    .use(markdown)
+    .use(retinaImages, { assets: assetsDir })
+    .use(stringify, { fences: true, listItemIndent: '1' });
 
-    let outputPath = join(project, 'dist', 'chapters', filename);
-
-    let contents = await readFile(inputPath, { encoding: 'utf8' });
-
-    let result = await processor.process({ path: relativePath, contents });
-
-    await writeFile(outputPath, result, { encoding: 'utf8' });
+  for (let chapter of chapters) {
+    console.log(`Post-processing ${chapter}`);
+    await run(postProcessor, project, chapter);
   }
 }
 

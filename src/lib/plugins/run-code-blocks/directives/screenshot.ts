@@ -1,6 +1,5 @@
 import { exec as _exec } from 'child_process';
-import _imageSize from 'image-size';
-import { Code, HTML, Image } from 'mdast';
+import { Code, Image } from 'mdast';
 import _mkdirp from 'mkdirp';
 import { basename, extname, join } from 'path';
 import { ScreenshotOptions, Viewport } from 'puppeteer';
@@ -11,7 +10,6 @@ import Options from '../options';
 import parseArgs, { ToBool, optional, required } from '../parse-args';
 
 const exec = promisify(_exec);
-const imageSize = promisify(_imageSize);
 const mkdirp = promisify(_mkdirp);
 
 interface Args {
@@ -26,23 +24,6 @@ interface Args {
 
 function js(v: JSONValue): string {
   return JSON.stringify(v);
-}
-
-function attr(v: unknown): string {
-  let escaped = String(v).replace(/<>"/g, c => {
-    switch (c) {
-      case '<':
-        return '&lt;';
-      case '>':
-        return '&gt;';
-      case '"':
-        return '&quot;';
-      default:
-        throw new Error(`Unknown character: \`${c}\``);
-    }
-  });
-
-  return JSON.stringify(escaped);
 }
 
 function compile(steps: string, path: string, args: Args): string {
@@ -132,7 +113,7 @@ main().catch(error => {
   return script.join('\n');
 }
 
-export default async function screenshot(node: Code, options: Options, vfile: VFile): Promise<Image | HTML> {
+export default async function screenshot(node: Code, options: Options, vfile: VFile): Promise<Image> {
   let args = parseArgs<Args>(node, [
     required('filename', String),
     required('alt', String),
@@ -176,24 +157,11 @@ export default async function screenshot(node: Code, options: Options, vfile: VF
   let { alt } = args;
   let { position, data } = node;
 
-  if (args.retina) {
-    let size = await imageSize(path);
-    let width = Math.floor(size.width / 2);
-    let height = Math.floor(size.height / 2);
-
-    return {
-      type: 'html',
-      value: `<img src=${attr(src)} alt=${attr(alt)} width=${attr(width)} height=${attr(height)}>`,
-      position,
-      data
-    };
-  } else {
-    return {
-      type: 'image',
-      url: src,
-      alt,
-      position,
-      data
-    }
-  }
+  return {
+    type: 'image',
+    url: src,
+    alt,
+    position,
+    data
+  };
 }
