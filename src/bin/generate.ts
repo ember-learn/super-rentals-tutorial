@@ -19,11 +19,9 @@ const writeFile = promisify(_writeFile);
 const mkdirp = promisify(_mkdirp);
 const ncp = promisify(_ncp);
 
-async function run(processor: Processor, project: string, path: string): Promise<void> {
-  let relativePath = relative(project, path);
-  let filename = basename(path);
-  let outputPath = join(project, 'dist', 'chapters', filename);
-  let contents = await readFile(path, { encoding: 'utf8' });
+async function run(processor: Processor, projectPath: string, inputPath: string, outputPath: string): Promise<void> {
+  let relativePath = relative(projectPath, inputPath);
+  let contents = await readFile(inputPath, { encoding: 'utf8' });
   let result = await processor.process({ path: relativePath, contents });
   await writeFile(outputPath, result, { encoding: 'utf8' });
 }
@@ -50,9 +48,13 @@ async function main() {
     .use(doNotEdit, { repo: 'ember-learn/super-rentals-tutorial' })
     .use(stringify, { fences: true, listItemIndent: '1' });
 
-  for (let chapter of chapters) {
-    console.log(`Processing ${chapter}`);
-    await run(processor, project, chapter);
+  let outputPaths = [];
+
+  for (let inputPath of chapters) {
+    console.log(`Processing ${inputPath}`);
+    let outputPath = join(project, 'dist', 'chapters', basename(inputPath));
+    outputPaths.push(outputPath);
+    await run(processor, project, inputPath, outputPath);
   }
 
   let postProcessor = unified()
@@ -60,9 +62,9 @@ async function main() {
     .use(retinaImages, { assets: assetsDir })
     .use(stringify, { fences: true, listItemIndent: '1' });
 
-  for (let chapter of chapters) {
-    console.log(`Post-processing ${chapter}`);
-    await run(postProcessor, project, chapter);
+  for (let outputPath of outputPaths) {
+    console.log(`Post-processing ${outputPath}`);
+    await run(postProcessor, project, outputPath, outputPath);
   }
 }
 
