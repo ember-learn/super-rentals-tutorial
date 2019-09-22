@@ -310,7 +310,7 @@ diff --git a/app/components/map.js b/app/components/map.js
 index 78e765f..1cad468 100644
 --- a/app/components/map.js
 +++ b/app/components/map.js
-@@ -3,3 +3,15 @@ import ENV from 'super-rentals/config/environment';
+@@ -3,3 +3,15 @@
 
 +const MAPBOX_API = 'https://api.mapbox.com/styles/v1/mapbox/streets-v11/static';
 +

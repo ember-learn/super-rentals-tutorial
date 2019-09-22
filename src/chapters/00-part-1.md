@@ -18,7 +18,3 @@ This tutorial is structured into two parts. The first part covers the following 
 The second part of the tutorial builds upon these concepts and takes things to the next level.
 
 Let's dive right in!
-
-```run:ignore:checkpoint cwd=super-rentals commit=false
-Chapter 0
-```
