@@ -75,14 +75,14 @@ However, in the case of our `<Map>` component, we are pretty sure that we are go
 
 ```run:command hidden=true cwd=super-rentals
 yarn test
-git add app/components/map.hbs
-git add app/components/map.js
+git add app/components/map/index.hbs
+git add app/components/map/index.js
 git add tests/integration/components/map-test.js
 ```
 
 Let's start with our JavaScript file:
 
-```run:file:patch lang=js cwd=super-rentals filename=app/components/map.js
+```run:file:patch lang=js cwd=super-rentals filename=app/components/map/index.js
 @@ -1,4 +1,8 @@
  import Component from '@glimmer/component';
 +import ENV from 'super-rentals/config/environment';
@@ -98,7 +98,7 @@ Here, we import the access token from the config file and return it from a `toke
 
 Now, let's move from the JavaScript file to the template:
 
-```run:file:patch lang=handlebars cwd=super-rentals filename=app/components/map.hbs
+```run:file:patch lang=handlebars cwd=super-rentals filename=app/components/map/index.hbs
 @@ -1 +1,8 @@
 -{{yield}}
 \ No newline at end of file
@@ -220,8 +220,8 @@ We just added a lot of behavior into a single component, so let's write some tes
 
 ```run:command hidden=true cwd=super-rentals
 yarn test
-git add app/components/map.hbs
-git add app/components/map.js
+git add app/components/map/index.hbs
+git add app/components/map/index.js
 git add tests/integration/components/map-test.js
 ```
 
@@ -232,7 +232,7 @@ wait  #qunit-banner.qunit-pass
 
 Hey, all the tests passed! But does that mean it actually works in practice? Let's find out by invoking the `<Map>` component from the `<Rental>` component's template:
 
-```run:file:patch lang=handlebars cwd=super-rentals filename=app/components/rental.hbs
+```run:file:patch lang=handlebars cwd=super-rentals filename=app/components/rental/index.hbs
 @@ -20,2 +20,10 @@
    </div>
 +  <Map
@@ -270,7 +270,7 @@ For good measures, we will also add an assertion to the `<Rental>` tests to make
 
 ```run:command hidden=true cwd=super-rentals
 yarn test
-git add app/components/rental.hbs
+git add app/components/rental/index.hbs
 git add tests/integration/components/rental-test.js
 ```
 
@@ -282,11 +282,11 @@ From within our JavaScript class, we have access to our component's arguments us
 >
 > `this.args` is an API provided by the Glimmer component superclass. You may come across other components superclasses, such "classic" components in legacy codebases, that provide different APIs for accessing component arguments from JavaScript code.
 
-```run:file:patch lang=js cwd=super-rentals filename=app/components/map.js
-diff --git a/app/components/map.js b/app/components/map.js
+```run:file:patch lang=js cwd=super-rentals filename=app/components/map/index.js
+diff --git a/app/components/map/index.js b/app/components/map/index.js
 index 78e765f..1cad468 100644
---- a/app/components/map.js
-+++ b/app/components/map.js
+--- a/app/components/map/index.js
++++ b/app/components/map/index.js
 @@ -3,3 +3,15 @@ import ENV from 'super-rentals/config/environment';
 
 +const MAPBOX_API = 'https://api.mapbox.com/styles/v1/mapbox/streets-v11/static';
@@ -305,7 +305,7 @@ index 78e765f..1cad468 100644
    get token() {
 ```
 
-```run:file:patch lang=handlebars cwd=super-rentals filename=app/components/map.hbs
+```run:file:patch lang=handlebars cwd=super-rentals filename=app/components/map/index.hbs
 @@ -4,3 +4,3 @@
      ...attributes
 -    src="https://api.mapbox.com/styles/v1/mapbox/streets-v11/static/{{@lng}},{{@lat}},{{@zoom}}/{{@width}}x{{@height}}@2x?access_token={{this.token}}"
@@ -317,8 +317,8 @@ Much nicer! And all of our tests still pass!
 
 ```run:command hidden=true cwd=super-rentals
 yarn test
-git add app/components/map.hbs
-git add app/components/map.js
+git add app/components/map/index.hbs
+git add app/components/map/index.js
 ```
 
 ```run:screenshot width=1024 height=768 retina=true filename=pass-2.png alt="Tests passing after the src getter refactor"

@@ -140,6 +140,21 @@ This should have created a new folder for us called `super-rentals`. We can navi
 $ cd super-rentals
 ```
 
+Let's make nested co-location the default:
+
+```run:file:patch lang=js cwd=super-rentals filename=.ember-cli.js
+@@ -13,3 +13,4 @@
+   */
+-  "disableAnalytics": false
++  "disableAnalytics": false,
++  "componentStructure": "nested"
+ }
+```
+
+```run:command hidden=true cwd=super-rentals
+git add .ember-cli.js
+```
+
 For the rest of the tutorial, all commands should be run within the `super-rentals` folder. This folder has the following structure:
 
 ```run:command lang=plain captureCommand=false

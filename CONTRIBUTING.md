@@ -15,7 +15,7 @@ If you are modifying or adding new prose to the tutorial, please be sure to foll
 * When naming chapters, be sure that they are prefixed with two digits before the chapter name to ensure that they are ordered correctly.
     * For example: `01-orientation.md`.
 * When referring to filenames, be sure to specify the full relative path to a file. This is to make it easy to copy-paste the filename when people use the tutorial.
-    * For example: *"Let's start by creating a new file at `app/components/jumbo.hbs`."*
+    * For example: *"Let's start by creating a new file at `app/components/jumbo/index.hbs`."*
 * When referring to other chapters, link to the chapter using its relative path in the tutorial. Please be sure to **include the trailing slash** in the path so that the markdown will be linted correctly in the guides repo.
     * For example: `We learned about this in a [previous chapter](../02-building-pages/)`.
 * When referring to important key terms, be sure to *italicize* the term and link to a definition for it. This highlighting only needs to be done once, ideally on the first instance of the term. Note that, when using the "TODO" format (a placeholder for a link to be added in the future), we used `[]` rather than `()` to wrap the link markdown. This ensures that the generated output does not have broken links.

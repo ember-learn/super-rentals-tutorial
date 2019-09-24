@@ -18,10 +18,10 @@ ember generate component-class rental/image
 
 ```run:command hidden=true cwd=super-rentals
 yarn test
-git add app/components/rental/image.js
+git add app/components/rental/image/index.js
 ```
 
-This generated a JavaScript file with the same name as our component's template at `app/components/rentals/image.js`. It contains a *[JavaScript class][TODO: link to JavaScript class]*, *[inheriting][TODO: link to inheriting]* from `@glimmer/component`.
+This generated a JavaScript file with the same name as our component's template at `app/components/rentals/image/index.js`. It contains a *[JavaScript class][TODO: link to JavaScript class]*, *[inheriting][TODO: link to inheriting]* from `@glimmer/component`.
 
 > Zoey says...
 >
@@ -31,7 +31,7 @@ This generated a JavaScript file with the same name as our component's template 
 
 Ember will create an *[instance][TODO: link to instance]* of the class whenever our component is invoked. We can use that instance to store our state:
 
-```run:file:patch lang=js cwd=super-rentals filename=app/components/rental/image.js
+```run:file:patch lang=js cwd=super-rentals filename=app/components/rental/image/index.js
 @@ -3,2 +3,6 @@
  export default class RentalImageComponent extends Component {
 +  constructor(...args) {
@@ -45,7 +45,7 @@ Here, in the *[component's constructor][TODO: link to component's constructor]*,
 
 Let's update our template to use this state we just added:
 
-```run:file:patch lang=handlebars cwd=super-rentals filename=app/components/rental/image.hbs
+```run:file:patch lang=handlebars cwd=super-rentals filename=app/components/rental/image/index.hbs
 @@ -1,3 +1,11 @@
 -<div class="image">
 -  <img ...attributes>
@@ -67,13 +67,13 @@ In the template, we have access to the component's instance variables. The `{{#i
 
 ```run:command hidden=true cwd=super-rentals
 yarn test
-git add app/components/rental/image.hbs
-git add app/components/rental/image.js
+git add app/components/rental/image/index.hbs
+git add app/components/rental/image/index.js
 ```
 
-We can verify this works by temporarily changing the initial value in our JavaScript file. If we change `app/components/rental/image.js` to initialize `this.isLarge = true;` in the constructor, we should see the large version of the property image in the browser. Cool!
+We can verify this works by temporarily changing the initial value in our JavaScript file. If we change `app/components/rental/image/index.js` to initialize `this.isLarge = true;` in the constructor, we should see the large version of the property image in the browser. Cool!
 
-```run:file:patch hidden=true cwd=super-rentals filename=app/components/rental/image.js
+```run:file:patch hidden=true cwd=super-rentals filename=app/components/rental/image/index.js
 @@ -5,3 +5,3 @@
      super(...args);
 -    this.isLarge = false;
@@ -89,12 +89,12 @@ wait  .rentals li:nth-of-type(3) article.rental .image.large img
 Once we've tested this out, we can change `this.isLarge` back to `false`.
 
 ```run:command hidden=true cwd=super-rentals
-git checkout app/components/rental/image.js
+git checkout app/components/rental/image/index.js
 ```
 
 Since this pattern of initializing instance variables in the constructor is pretty common, there happens to be a much more concise syntax for it:
 
-```run:file:patch lang=js cwd=super-rentals filename=app/components/rental/image.js
+```run:file:patch lang=js cwd=super-rentals filename=app/components/rental/image/index.js
 @@ -3,6 +3,3 @@
  export default class RentalImageComponent extends Component {
 -  constructor(...args) {
@@ -109,14 +109,14 @@ This does exactly the same thing as before, but it's much shorter and less to ty
 
 ```run:command hidden=true cwd=super-rentals
 yarn test
-git add app/components/rental/image.js
+git add app/components/rental/image/index.js
 ```
 
 Of course, our users cannot edit our source code, so we need a way for them to toggle the image size from the browser. Specifically, we want to toggle the value of `this.isLarge` whenever the user clicks on our component.
 
 Let's modify our class to add a *[method][TODO: link to method]* for toggling the size:
 
-```run:file:patch lang=js cwd=super-rentals filename=app/components/rental/image.js
+```run:file:patch lang=js cwd=super-rentals filename=app/components/rental/image/index.js
 @@ -1,5 +1,11 @@
  import Component from '@glimmer/component';
 +import { tracked } from '@glimmer/tracking';
@@ -152,7 +152,7 @@ Finally, we added the `@action` decorator to our method. This indicates to Ember
 
 With that, it's time to wire this up in the template:
 
-```run:file:patch lang=handlebars cwd=super-rentals filename=app/components/rental/image.hbs
+```run:file:patch lang=handlebars cwd=super-rentals filename=app/components/rental/image/index.hbs
 @@ -1,11 +1,11 @@
  {{#if this.isLarge}}
 -  <div class="image large">
@@ -183,8 +183,8 @@ With that, we have created our first *[interactive][TODO: link to interactive]* 
 
 ```run:command hidden=true cwd=super-rentals
 yarn test
-git add app/components/rental/image.hbs
-git add app/components/rental/image.js
+git add app/components/rental/image/index.hbs
+git add app/components/rental/image/index.js
 ```
 
 Finally, let's write a test for this new behavior:
@@ -241,7 +241,7 @@ Let's clean up our template before moving on. We introduced a lot of duplication
 
 These changes are buried deep within the large amount of duplicated code. We can reduce the duplication by using an `{{if}}` *[expression][TODO: link to expression]* instead:
 
-```run:file:patch lang=handlebars cwd=super-rentals filename=app/components/rental/image.hbs
+```run:file:patch lang=handlebars cwd=super-rentals filename=app/components/rental/image/index.hbs
 @@ -1,11 +1,8 @@
 -{{#if this.isLarge}}
 -  <button type="button" class="image large" {{on "click" this.toggleSize}}>
@@ -266,12 +266,12 @@ The expression version of `{{if}}` takes two arguments. The first argument is th
 
 ```run:command hidden=true cwd=super-rentals
 yarn test
-git add app/components/rental/image.hbs
+git add app/components/rental/image/index.hbs
 ```
 
 Optionally, `{{if}}` can take a third argument for what the expression should evaluate into if the condition is false. This means we could rewrite the button label like so:
 
-```run:file:patch lang=handlebars cwd=super-rentals filename=app/components/rental/image.hbs
+```run:file:patch lang=handlebars cwd=super-rentals filename=app/components/rental/image/index.hbs
 @@ -2,7 +2,3 @@
    <img ...attributes>
 -  {{#if this.isLarge}}
@@ -289,7 +289,7 @@ Run the test suite one last time to confirm our refactor didn't break anything u
 
 ```run:command hidden=true cwd=super-rentals
 yarn test
-git add app/components/rental/image.hbs
+git add app/components/rental/image/index.hbs
 ```
 
 ```run:screenshot width=1024 height=512 retina=true filename=pass-2.png alt="Tests still passing after the refactor"

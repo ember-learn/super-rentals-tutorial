@@ -15,9 +15,9 @@ During the course of developing an app, it is pretty common to reuse the same UI
 
 Since it is not a lot of code, it may not seem like a big deal to duplicate this structure on each page. However, if our designer wanted us to make a change to the header, we would have to find and update every single copy of this code. As our app gets bigger, this will become even more of a problem.
 
-Components are the perfect solution to this. In its most basic form, a component is just a piece of template that can be referred to by name. Let's start by creating a new file at `app/components/jumbo.hbs` with markup for the "jumbo" header:
+Components are the perfect solution to this. In its most basic form, a component is just a piece of template that can be referred to by name. Let's start by creating a new file at `app/components/jumbo/index.hbs` with markup for the "jumbo" header:
 
-```run:file:create lang=handlebars cwd=super-rentals filename=app/components/jumbo.hbs
+```run:file:create lang=handlebars cwd=super-rentals filename=app/components/jumbo/index.hbs
 <div class="jumbo">
   <div class="right tomster"></div>
   {{yield}}
@@ -25,7 +25,7 @@ Components are the perfect solution to this. In its most basic form, a component
 ```
 
 ```run:command hidden=true cwd=super-rentals
-git add app/components/jumbo.hbs
+git add app/components/jumbo/index.hbs
 ```
 
 That's it, we have created our first component! We can now *[invoke][TODO: link to invoke]* this component anywhere in our app, using `<Jumbo>` as the tag name.

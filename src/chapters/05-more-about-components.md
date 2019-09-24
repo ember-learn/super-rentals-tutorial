@@ -10,17 +10,17 @@ Let's start by creating the `<Rental>` component. This time, we will use the com
 ember generate component rental
 ```
 
-The generator created two new files for us, a component template at `app/components/rental.hbs`, and a component test file at `tests/integration/components/rental-test.js`.
+The generator created two new files for us, a component template at `app/components/rental/index.hbs`, and a component test file at `tests/integration/components/rental-test.js`.
 
 ```run:command hidden=true cwd=super-rentals
 yarn test
-git add app/components/rental.hbs
+git add app/components/rental/index.hbs
 git add tests/integration/components/rental-test.js
 ```
 
 We will start by editing the template. Let's *[hard-code](https://en.wikipedia.org/wiki/Hard_coding)* the details for one rental property for now, and replace it with the real data from the server later on.
 
-```run:file:patch lang=handlebars cwd=super-rentals filename=app/components/rental.hbs
+```run:file:patch lang=handlebars cwd=super-rentals filename=app/components/rental/index.hbs
 @@ -1,1 +1,17 @@
 -{{yield}}
 \ No newline at end of file
@@ -80,7 +80,7 @@ The test should pass.
 
 ```run:command hidden=true cwd=super-rentals
 yarn test
-git add app/components/rental.hbs
+git add app/components/rental/index.hbs
 git add tests/integration/components/rental-test.js
 ```
 
@@ -124,11 +124,11 @@ Next, let's add the image for the rental property. We will use the component gen
 ember generate component rental/image
 ```
 
-This time, we had a `/` in the component's name. This resulted in the component being created at `app/components/rental/image.hbs`, which can be invoked as `<Rental::Image>`.
+This time, we had a `/` in the component's name. This resulted in the component being created at `app/components/rental/image/index.hbs`, which can be invoked as `<Rental::Image>`.
 
 ```run:command hidden=true cwd=super-rentals
 yarn test
-git add app/components/rental/image.hbs
+git add app/components/rental/image/index.hbs
 git add tests/integration/components/rental/image-test.js
 ```
 
@@ -136,7 +136,7 @@ Components like these are known as *[namespaced](https://en.wikipedia.org/wiki/N
 
 Let's edit the component's template:
 
-```run:file:patch lang=handlebars cwd=super-rentals filename=app/components/rental/image.hbs
+```run:file:patch lang=handlebars cwd=super-rentals filename=app/components/rental/image/index.hbs
 @@ -1,1 +1,3 @@
 -{{yield}}
 \ No newline at end of file
@@ -147,7 +147,7 @@ Let's edit the component's template:
 
 Instead of hard-coding specific values for the `src` and `alt` attributes on the `<img>` tag, we opted for the `...attributes` keyword instead, which is also sometimes referred to as the *["splattributes"][TODO: link to splattributes]* syntax. This allows arbitrary HTML attributes to be passed in when invoking this component, like so:
 
-```run:file:patch lang=handlebars cwd=super-rentals filename=app/components/rental.hbs
+```run:file:patch lang=handlebars cwd=super-rentals filename=app/components/rental/index.hbs
 @@ -1,2 +1,6 @@
  <article class="rental">
 +  <Rental::Image
@@ -216,8 +216,8 @@ Because we already tested `<Rental::Image>` extensively on its own, we can omit 
 
 ```run:command hidden=true cwd=super-rentals
 yarn test
-git add app/components/rental.hbs
-git add app/components/rental/image.hbs
+git add app/components/rental/index.hbs
+git add app/components/rental/image/index.hbs
 git add tests/integration/components/rental-test.js
 git add tests/integration/components/rental/image-test.js
 ```

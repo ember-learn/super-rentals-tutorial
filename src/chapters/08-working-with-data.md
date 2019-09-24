@@ -96,7 +96,7 @@ First, let's pass in our model to our `<Rental>` component as the `@rental` argu
 
 By passing in `@model` into the `<Rental>` component as the `@rental` argument, we will have access to our "Grand Old Mansion" model object in the `<Rental>` component's template! Now, we can replace our hard-coded values in this component by using the values that live on our `@rental` model.
 
-```run:file:patch lang=handlebars cwd=super-rentals filename=app/components/rental.hbs
+```run:file:patch lang=handlebars cwd=super-rentals filename=app/components/rental/index.hbs
 @@ -2,18 +2,18 @@
    <Rental::Image
 -    src="https://upload.wikimedia.org/wikipedia/commons/c/cb/Crane_estate_(5).jpg"
@@ -182,7 +182,7 @@ Notice that we also need to update the invocation of the `<Rental>` component in
 
 ```run:command hidden=true cwd=super-rentals
 yarn test
-git add app/components/rental.hbs
+git add app/components/rental/index.hbs
 git add app/templates/index.hbs
 git add tests/integration/components/rental-test.js
 ```
