@@ -6,7 +6,7 @@ SRC="$1"
 DEST=$(echo -n "$1" | sed "s|../../dist/assets/|public/|")
 
 if git checkout -- "$DEST" > /dev/null 2>&1; then
-  if perceptualdiff -downsample 1 -colorfactor 0.5 "$SRC" "$DEST" > /dev/null; then
+  if perceptualdiff -downsample 2 -colorfactor 0.5 "$SRC" "$DEST" > /dev/null; then
     echo "$DEST (unchanged)"
     exit 0
   fi
