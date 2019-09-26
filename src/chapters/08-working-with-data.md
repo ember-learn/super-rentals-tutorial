@@ -39,7 +39,7 @@ Then, we are extending the `Route` class into our _own_ `IndexRoute`, which we a
 
 So far, so good. But what's happening inside of this route class? We implemented an *[async method][TODO: link to async method]* called `model()`. This method is also known as the *[model hook][TODO: link to model hook]*.
 
-The model hook is responsible for fetching and preparing any data that you need for your route. Ember will automatically call this hook for when entering a route, so that you can have an opportunity to do what you need to get the data you need. The object returned from this hook is known as the *[model][TODO: link to model]* for the route (surprise!).
+The model hook is responsible for fetching and preparing any data that you need for your route. Ember will automatically call this hook when entering a route, so that you can have an opportunity to run your own code to get the data you need. The object returned from this hook is known as the *[model][TODO: link to model]* for the route (surprise!).
 
 Usually, this is where we'd fetch data from a server. Since fetching data is usually an asynchronous operation, the model hook is marked as `async`. This gives us the option of using the `await` keyword to wait for the data fetching operations to finish.
 
