@@ -324,6 +324,6 @@ visit http://localhost:4200/
 ember server
 ```
 
-```run:ignore:checkpoint cwd=super-rentals
+```run:checkpoint cwd=super-rentals
 Chapter 1
 ```
