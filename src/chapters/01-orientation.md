@@ -147,8 +147,12 @@ For the rest of the tutorial, all commands should be run within the `super-renta
 # Somewhere in the guides repo's markdown pipeline there is a bug
 # that further turns them into &amp;nbsp;
 
+# Also, try to hide yarn.lock from view and fake a package-lock.json
+
 #[cfg(unix)]
-tree super-rentals -a -I "node_modules|\.git" --dirsfirst | sed 's/\xC2\xA0/ /g'
+tree super-rentals -a -I "node_modules|.git|yarn.lock" --dirsfirst | \
+  sed 's/\xC2\xA0/ /g' | \
+  sed $'s/^\\(.*\\)package\\.json$/\\1package.json\\\n\\1package-lock.json/g'
 
 #[cfg(windows)]
 tree super-rentals /F
