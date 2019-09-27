@@ -1,4 +1,17 @@
-You can install the latest version of *[Ember CLI][TODO: link to Ember CLI]* by running the following command. If you've already done this by following the [Quick Start](../../getting-started/quick-start/) guide, feel free to skip ahead!
+In this chapter, you will install *[Ember CLI][TODO: link to Ember CLI]*, use it to generate a new Ember project, and add some basic templates and styles to your new app. By the end of this chapter, you should have a landing page with Professor Tomster's cute little face featured on it:
+
+<!-- TODO: add screen shot of the end state -->
+
+While building your landing page, you will learn about:
+* Installing Ember CLI
+* Creating a new Ember app with Ember CLI
+* Starting and stopping the development server
+* Editing files and live reload
+* Working with HTML, CSS and assets in an Ember app
+
+## Installing Ember CLI
+
+You can install the latest version of Ember CLI by running the following command. If you've already done this by following the [Quick Start](../../getting-started/quick-start/) guide, feel free to skip ahead!
 
 ```shell
 $ npm install -g ember-cli
@@ -11,6 +24,8 @@ ember --version
 ```
 
 If a version number is shown, you're ready to go.
+
+## Creating a New Ember App with Ember CLI
 
 We can create a new project using Ember CLI's `new` command. It follows the pattern `ember new <project-name>`. In our case, the project name would be `super-rentals`:
 
@@ -160,7 +175,9 @@ tree super-rentals -a -I "node_modules|.git|yarn.lock" --dirsfirst \
 tree super-rentals /F
 ```
 
-We will get to know the purposes of these files and folders as we go. For now, just know we will spend most of the time working within the `app` folder.
+We'll learn about the purposes of these files and folders as we go. For now, just know that we'll spend most of our time working within the `app` folder.
+
+## Starting and Stopping the Development Server
 
 Ember CLI comes with a lot of different commands for a variety of development tasks, such as the `ember new` command that we saw earlier. It also comes with a *development server*, which we can launch with the `ember server` command:
 
@@ -185,9 +202,11 @@ visit http://localhost:4200/
 
 > Zoey says...
 >
-> The `localhost` address in URL means that you can only access the development server from your local machine. If you would like to share your work to the world, you will have to *[deploy][TODO: link to deploy]* your app to the public Internet. Don't worry, we will cover that in Part 2 of the tutorial.
+> The `localhost` address in the URL means that you can only access the development server from your local machine. If you would like to share your work with the world, you will have to *[deploy][TODO: link to deploy]* your app to the public Internet. We'll cover how to do that in Part 2 of the tutorial.
 
 You can exit out of the development server at any time by typing `Ctrl + C` into the terminal window where `ember server` is running. That is, typing the "C" key on your keyboard *while* holding down the "Ctrl" key at the same time. Once it has stopped, you can start it back up again with the same `ember server` command. We recommend having two terminal windows open: one to run the server in background, another to type other Ember CLI commands.
+
+## Editing Files and Live Reload
 
 The development server has a feature called *live reload*, which monitors your app for file changes, automatically re-compiles everything, and refreshes any open browser pages. This comes in really handy during development, so let's give that a try!
 
@@ -218,6 +237,8 @@ git rm -f app/templates/application.hbs
 
 Again, if you still have your browser tab open, your tab will automatically re-render a blank page as soon as you delete the file. This reflects the fact that we no longer have an application template in our app.
 
+## Working with HTML, CSS and Assets in an Ember App
+
 Create a `app/templates/index.hbs` file and paste the following markup.
 
 ```run:file:create lang=handlebars cwd=super-rentals filename=app/templates/index.hbs
@@ -242,9 +263,9 @@ visit http://localhost:4200/
 git add app/templates/index.hbs
 ```
 
-Before we do anything else, let's add some styling to our app. We spend enough time staring at the computer screen as it is, we must protect our eyesight against unstyled markup!
+Before we do anything else, let's add some styling to our app. We spend enough time staring at the computer screen as it is, so we must protect our eyesight against unstyled markup!
 
-Fortunately, our designer sent us some CSS for us to use, so we can just go ahead <a href="/downloads/style.css" download="app.css">download the stylesheet file</a> and copy it into `app/styles/app.css`. This file has all the styles we need for building the rest of the app.
+Fortunately, our designer sent us some CSS to use, so we can <a href="/downloads/style.css" download="app.css">download the stylesheet file</a> and copy it into `app/styles/app.css`. This file has all the styles we need for building the rest of the app.
 
 ```run:file:copy lang=css src=downloads/style.css cwd=super-rentals filename=app/styles/app.css
 @import url(https://fonts.googleapis.com/css?family=Lato:300,300italic,400,700,700italic);
@@ -281,7 +302,7 @@ body {
 /* ...snip... */
 ```
 
-If you are familiar with CSS, feel free to customize them to your liking! Just keep in mind that you may see some visual differences going forward, if you choose to do so.
+If you are familiar with CSS, feel free to customize these styles to your liking! Just keep in mind that you may see some visual differences going forward, should you choose to do so.
 
 When you are ready, save the CSS file; our trusty development server should pick it up and refresh our page right away. No more unstyled content!
 

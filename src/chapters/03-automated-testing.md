@@ -2,6 +2,16 @@
 ember server
 ```
 
+In this chapter, you will use Ember's built-in testing framework to write some automated tests for your app, and in the process, you will learn about:
+* The purpose of automated testing
+* Writing acceptance tests
+* Using generators in Ember CLI
+* Testing with the QUnit test framework
+* Working with Ember's test helpers
+* Practicing the testing workflow
+
+## The Purpose of Automated Testing
+
 We accomplished a lot in the last few chapters! Let's recap &mdash; we started with a blank canvas, added a few pages of content, styled everything to look pretty, dropped in a picture of Tomster, added links between our pages and amazingly, everything worked together flawlessly!
 
 But do we _really_ know that everything is actually working? Sure, we clicked around a bit to confirm that things look as expected. But do we feel confident that we checked _every_ page after the most recent change that we made?
@@ -10,9 +20,11 @@ After all, most of us have experienced (or heard horror stories about) making a 
 
 Maybe we can write a checklist somewhere of all the things to check after making changes to our site. But surely, this will get out of hand as we add more features to our app. It is also going to get old really quickly &mdash; repetitive tasks like that are best left to robots.
 
-Hmm, robots. That's an idea. What if we can write this checklist and just get the computer to check everything for us? I think we just invented the idea of *[automated testing][TODO: link to automated testing]*!
+Hmm, robots. That's an idea. What if we can write this checklist and just get the computer to check everything for us? I think we just invented the idea of *[automated testing][TODO: link to automated testing]*! Okay, maybe we were not the first to come up with the concept, but we independently discovered it so we still deserve some credit.
 
-Okay, maybe we were not the first to come up with the concept, but we independently discovered it so we still deserve some credit. Once we are done patting ourselves on the back, go ahead and run the following command in the terminal:
+## Adding Acceptance Tests with Generators
+
+Once we are done patting ourselves on the back, go ahead and run the following command in the terminal:
 
 ```run:command cwd=super-rentals
 ember generate acceptance-test super-rentals
@@ -31,6 +43,8 @@ Generators aren't required; we _could_ have created the file ourselves which wou
 > Zoey says...
 >
 > Want to save even more typing? `ember generate ...` can be shortened into `ember g ...`. That's 7 fewer characters!
+
+## Writing Acceptance Tests
 
 Acceptance tests, also known as *application tests*, are one of a few types of automated testing at our disposal in Ember. We will learn about the other types later, but what makes acceptance tests unique is that they test our app from the user's perspective &mdash; they are an automated version of the "click around and see if it works" testing we did earlier, which is exactly what we need.
 
@@ -71,7 +85,7 @@ After navigating to the `/` URL and waiting for things to settle, we check that 
 
 Next, we confirmed that the page has an `<h2>` tag that contains the text "Welcome to Super Rentals!". Knowing this is true means that we can be quite certain that the correct template has been rendered, without errors.
 
-Then, we looked for a link with the text `About Us`, located using the *[CSS selector][TODO: link to CSS selector]* `.jumbo a.button`. This is the same syntax we used in our stylesheet, which means "look inside the tag with the `jumbo` class for an `<a>` tag with the `button` class". This matches up with the HTML structure in our template.
+Then, we looked for a link with the text `About Us`, located using the *[CSS selector][TODO: link to CSS selector]* `.jumbo a.button`. This is the same syntax we used in our stylesheet, which means "look inside the tag with the `jumbo` class for an `<a>` tag with the `button` class." This matches up with the HTML structure in our template.
 
 Once the existence of this element on the page was confirmed, we told the test robot to click on this link. As mentioned above, this is a user interaction, so it needs to be `await`-ed.
 
@@ -88,7 +102,7 @@ git add tests/acceptance/super-rentals-test.js
 
 We can put our automated test into motion by running the *[test server][TODO: link to test server]* using the `ember test --server` command, or `ember t -s` for short. This server behaves much like the development server, but it is explicitly running for our tests. It may automatically open a browser window and take you to the test UI, or you can open `http://localhost:7357/` yourself.
 
-If you watch really carefully, you can see our test robot roam around our app and clicking links:
+If you watch really carefully, you can see our test robot roaming around our app and clicking links:
 
 <!-- TODO: make this a gif instead -->
 
@@ -119,6 +133,8 @@ Don't forget to put that line back in when you are done!
 git checkout app/templates/index.hbs
 yarn test
 ```
+
+## Practicing the Testing Workflow
 
 Let's practice what we learned by adding tests for the remaining pages:
 
@@ -164,7 +180,7 @@ yarn test
 git add tests/acceptance/super-rentals-test.js
 ```
 
-For the rest of the tutorial, we will continue to add more automated tests as we develop new features. Testing is optional but highly recommended. Tests don't affect the functionality your app, they just protect it from *[regressions][TODO: link to regressions]*, which is just a fancy way of saying "accidental breakages."
+For the rest of the tutorial, we will continue to add more automated tests as we develop new features. Testing is optional but highly recommended. Tests don't affect the functionality of your app, they just protect it from *[regressions][TODO: link to regressions]*, which is just a fancy way of saying "accidental breakages."
 
 If you are in a hurry, you can skip over the testing sections in this tutorial and still be able to follow along with everything else. But don't you find it super satisfying &mdash; _oddly satisfying_ &mdash; to watch a robot click on things really, really fast?
 
