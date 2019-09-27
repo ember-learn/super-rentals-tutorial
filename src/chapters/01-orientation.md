@@ -27,7 +27,7 @@ echo "{}" > package.json
 #[cfg(all(ci, unix))]
 #[display(ember new super-rentals -b @ember/octane-app-blueprint)]
 ember new super-rentals --yarn -b @ember/octane-app-blueprint \
-  | awk '{ gsub("Yarn", "npm"); print }'
+  | awk '{ gsub("Yarn", "npm"); gsub("yarn", "npm"); print }'
 
 #[cfg(not(all(ci, unix)))]
 ember new super-rentals --yarn -b @ember/octane-app-blueprint
