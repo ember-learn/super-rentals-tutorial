@@ -140,6 +140,26 @@ This should have created a new folder for us called `super-rentals`. We can navi
 $ cd super-rentals
 ```
 
+Let's bring the pods!!!
+
+```run:file:patch lang=js cwd=super-rentals filename=config/environment.js
+@@ -5,2 +5,3 @@
+     modulePrefix: 'super-rentals',
++    podModulePrefix: 'super-rentals/pods',
+     environment,
+```
+
+```run:command cwd=super-rentals
+mkdir -p app/pods/application
+mv app/templates/application.hbs app/pods/application/template.hbs
+yarn test
+git add .ember-cli.js
+git add config/environment.js
+git add app/templates/application.hbs
+git add app/pods/application/template.hbs
+git commit -m "Use pods"
+```
+
 For the rest of the tutorial, all commands should be run within the `super-rentals` folder. This folder has the following structure:
 
 ```run:command lang=plain captureCommand=false
@@ -191,9 +211,9 @@ You can exit out of the development server at any time by typing `Ctrl + C` into
 
 The development server has a feature called *live reload*, which monitors your app for file changes, automatically re-compiles everything, and refreshes any open browser pages. This comes in really handy during development, so let's give that a try!
 
-As text on the welcome page pointed out, the source code for the page is located in `app/templates/application.hbs`. Let's try to edit that file and replace it with our own content:
+As text on the welcome page pointed out, the source code for the page is located in `app/pods/application/template.hbs`. Let's try to edit that file and replace it with our own content:
 
-```run:file:patch lang=handlebars cwd=super-rentals filename=app/templates/application.hbs
+```run:file:patch lang=handlebars cwd=super-rentals filename=app/pods/application/template.hbs
 @@ -1,6 +1 @@
 -{{!-- The following component displays Ember's default welcome message. --}}
 -<WelcomePage />
@@ -210,17 +230,17 @@ Soon after saving the file, your browser should automatically refresh and render
 visit http://localhost:4200/
 ```
 
-When you are done experimenting, go ahead and delete the `app/templates/application.hbs` file. We won't be needing this for a while, so let's start afresh. We can add it back later when we have a need for it.
+When you are done experimenting, go ahead and delete the `app/pods/application/template.hbs` file. We won't be needing this for a while, so let's start afresh. We can add it back later when we have a need for it.
 
 ```run:command hidden=true cwd=super-rentals
-git rm -f app/templates/application.hbs
+git rm -f app/pods/application/template.hbs
 ```
 
 Again, if you still have your browser tab open, your tab will automatically re-render a blank page as soon as you delete the file. This reflects the fact that we no longer have an application template in our app.
 
-Create a `app/templates/index.hbs` file and paste the following markup.
+Create a `app/pods/index/template.hbs` file and paste the following markup.
 
-```run:file:create lang=handlebars cwd=super-rentals filename=app/templates/index.hbs
+```run:file:create lang=handlebars cwd=super-rentals filename=app/pods/index/template.hbs
 <div class="jumbo">
   <div class="right tomster"></div>
   <h2>Welcome to Super Rentals!</h2>
@@ -239,7 +259,7 @@ visit http://localhost:4200/
 ```
 
 ```run:command hidden=true cwd=super-rentals
-git add app/templates/index.hbs
+git add app/pods/index/template.hbs
 ```
 
 Before we do anything else, let's add some styling to our app. We spend enough time staring at the computer screen as it is, we must protect our eyesight against unstyled markup!

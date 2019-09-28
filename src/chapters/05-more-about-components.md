@@ -91,7 +91,7 @@ wait  #qunit-banner.qunit-pass
 
 Finally, let's invoke this a couple of times from our index template to populate the page.
 
-```run:file:patch lang=js cwd=super-rentals filename=app/templates/index.hbs
+```run:file:patch lang=js cwd=super-rentals filename=app/pods/index/template.hbs
 @@ -5 +5,9 @@
  </Jumbo>
 +
@@ -106,7 +106,7 @@ Finally, let's invoke this a couple of times from our index template to populate
 
 ```run:command hidden=true cwd=super-rentals
 yarn test
-git add app/templates/index.hbs
+git add app/pods/index/template.hbs
 ```
 
 With that, we should see the `<Rental>` component showing our Grand Old Mansion three times on the page:

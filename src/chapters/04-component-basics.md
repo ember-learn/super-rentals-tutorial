@@ -38,7 +38,7 @@ When invoking a component, Ember will replace the component tag with the content
 
 Let's try it out by editing the index template:
 
-```run:file:patch lang=js cwd=super-rentals filename=app/templates/index.hbs
+```run:file:patch lang=js cwd=super-rentals filename=app/pods/index/template.hbs
 @@ -1,3 +1,2 @@
 -<div class="jumbo">
 -  <div class="right tomster"></div>
@@ -99,7 +99,7 @@ After saving, everything should look exactly the same as before, and all the tes
 
 ```run:command hidden=true cwd=super-rentals
 yarn test
-git add app/templates/index.hbs
+git add app/pods/index/template.hbs
 git add app/templates/about.hbs
 git add app/templates/contact.hbs
 ```
@@ -213,7 +213,7 @@ Next, we will add our `<NavBar>` component to the top of each page:
  <Jumbo>
 ```
 
-```run:file:patch lang=js cwd=super-rentals filename=app/templates/index.hbs
+```run:file:patch lang=js cwd=super-rentals filename=app/pods/index/template.hbs
 @@ -1 +1,2 @@
 +<NavBar />
  <Jumbo>
@@ -228,7 +228,7 @@ visit http://localhost:4200/
 ```run:command hidden=true cwd=super-rentals
 git add app/templates/about.hbs
 git add app/templates/contact.hbs
-git add app/templates/index.hbs
+git add app/pods/index/template.hbs
 ```
 
 > Zoey says...
@@ -300,7 +300,7 @@ This template is special in that it does not have its own URL and cannot be navi
 
 While we are at it, we will also add a container element that wraps around the whole page, as requested by our designer for styling purposes.
 
-```run:file:create lang=handlebars cwd=super-rentals filename=app/templates/application.hbs
+```run:file:create lang=handlebars cwd=super-rentals filename=app/pods/application/template.hbs
 <div class="container">
   <NavBar />
   <div class="body">
@@ -309,7 +309,7 @@ While we are at it, we will also add a container element that wraps around the w
 </div>
 ```
 
-```run:file:patch lang=js cwd=super-rentals filename=app/templates/index.hbs
+```run:file:patch lang=js cwd=super-rentals filename=app/pods/index/template.hbs
 @@ -1,2 +1 @@
 -<NavBar />
  <Jumbo>
@@ -334,8 +334,8 @@ This is much nicer! We can run our test suite which confirms that everything sti
 
 ```run:command hidden=true cwd=super-rentals
 yarn test
-git add app/templates/application.hbs
-git add app/templates/index.hbs
+git add app/pods/application/template.hbs
+git add app/pods/index/template.hbs
 git add app/templates/contact.hbs
 git add app/templates/about.hbs
 ```

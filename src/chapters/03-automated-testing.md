@@ -101,7 +101,7 @@ It happens really quickly though &mdash; blink and you might miss it! In fact, I
 
 As much as I enjoy watching this robot hard at work, the important thing here is that the test we wrote has *[passed][TODO: link to passed]*, meaning everything is working exactly as we expect and the test UI is all green and happy. If you want, you can go to `index.hbs`, delete the `<LinkTo>` component and see what things look like when we have *[a failing test][TODO: link to a failing test]*.
 
-```run:file:patch hidden=true cwd=super-rentals filename=app/templates/index.hbs
+```run:file:patch hidden=true cwd=super-rentals filename=app/pods/index/template.hbs
 @@ -4,3 +4,2 @@
    <p>We hope you find exactly what you're looking for in a place to stay.</p>
 -  <LinkTo @route="about" class="button">About Us</LinkTo>
@@ -116,7 +116,7 @@ wait  #qunit-banner.qunit-fail
 Don't forget to put that line back in when you are done!
 
 ```run:command hidden=true cwd=super-rentals
-git checkout app/templates/index.hbs
+git checkout app/pods/index/template.hbs
 yarn test
 ```
 

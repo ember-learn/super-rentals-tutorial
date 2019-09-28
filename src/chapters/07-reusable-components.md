@@ -62,7 +62,7 @@ ember server
 With the Mapbox API key in place, let's generate a new component for our map.
 
 ```run:command cwd=super-rentals
-ember generate component map --with-component-class
+ember generate component map --with-component-class --pod
 ```
 
 Since not every component will necessarily have some defined behavior associated with it, the component generator does not generate a JavaScript file for us by default. As we saw earlier, we can always use the `component-class` generator to add a JavaScript file for a component later on.
@@ -75,14 +75,14 @@ However, in the case of our `<Map>` component, we are pretty sure that we are go
 
 ```run:command hidden=true cwd=super-rentals
 yarn test
-git add app/components/map.hbs
-git add app/components/map.js
-git add tests/integration/components/map-test.js
+git add app/pods/components/map/component.js
+git add app/pods/components/map/template.hbs
+git add tests/integration/pods/components/map/component-test.js
 ```
 
 Let's start with our JavaScript file:
 
-```run:file:patch lang=js cwd=super-rentals filename=app/components/map.js
+```run:file:patch lang=js cwd=super-rentals filename=app/pods/components/map/component.js
 @@ -1,4 +1,8 @@
  import Component from '@glimmer/component';
 +import ENV from 'super-rentals/config/environment';
@@ -98,7 +98,7 @@ Here, we import the access token from the config file and return it from a `toke
 
 Now, let's move from the JavaScript file to the template:
 
-```run:file:patch lang=handlebars cwd=super-rentals filename=app/components/map.hbs
+```run:file:patch lang=handlebars cwd=super-rentals filename=app/pods/components/map/template.hbs
 @@ -1 +1,8 @@
 -{{yield}}
 \ No newline at end of file
@@ -134,7 +134,7 @@ Finally, since we are using the `@2x` "retina" image, we should specify the `wid
 
 We just added a lot of behavior into a single component, so let's write some tests! In particular, we should make sure to have some *[test coverage][TODO: link to test coverage]* for the overriding-HTML-attributes behavior we discussed above.
 
-```run:file:patch lang=js cwd=super-rentals filename=tests/integration/components/map-test.js
+```run:file:patch lang=js cwd=super-rentals filename=tests/integration/pods/components/map/component-test.js
 @@ -2,4 +2,5 @@
  import { setupRenderingTest } from 'ember-qunit';
 -import { render } from '@ember/test-helpers';
@@ -218,9 +218,9 @@ We just added a lot of behavior into a single component, so let's write some tes
 
 ```run:command hidden=true cwd=super-rentals
 yarn test
-git add app/components/map.hbs
-git add app/components/map.js
-git add tests/integration/components/map-test.js
+git add app/pods/components/map/template.hbs
+git add app/pods/components/map/component.js
+git add tests/integration/pods/components/map/component-test.js
 ```
 
 ```run:screenshot width=1024 height=768 retina=true filename=pass.png alt="Tests passing with the new <Map> tests"
@@ -280,11 +280,11 @@ From within our JavaScript class, we have access to our component's arguments us
 >
 > `this.args` is an API provided by the Glimmer component superclass. You may come across other components superclasses, such "classic" components in legacy codebases, that provide different APIs for accessing component arguments from JavaScript code.
 
-```run:file:patch lang=js cwd=super-rentals filename=app/components/map.js
-diff --git a/app/components/map.js b/app/components/map.js
+```run:file:patch lang=js cwd=super-rentals filename=app/pods/components/map/component.js
+diff --git a/app/pods/components/map/component.js b/app/pods/components/map/component.js
 index 78e765f..1cad468 100644
---- a/app/components/map.js
-+++ b/app/components/map.js
+--- a/app/pods/components/map/component.js
++++ b/app/pods/components/map/component.js
 @@ -3,3 +3,15 @@ import ENV from 'super-rentals/config/environment';
 
 +const MAPBOX_API = 'https://api.mapbox.com/styles/v1/mapbox/streets-v11/static';
@@ -303,7 +303,7 @@ index 78e765f..1cad468 100644
    get token() {
 ```
 
-```run:file:patch lang=handlebars cwd=super-rentals filename=app/components/map.hbs
+```run:file:patch lang=handlebars cwd=super-rentals filename=app/pods/components/map/template.hbs
 @@ -4,3 +4,3 @@
      ...attributes
 -    src="https://api.mapbox.com/styles/v1/mapbox/streets-v11/static/{{@lng}},{{@lat}},{{@zoom}}/{{@width}}x{{@height}}@2x?access_token={{this.token}}"
@@ -315,8 +315,8 @@ Much nicer! And all of our tests still pass!
 
 ```run:command hidden=true cwd=super-rentals
 yarn test
-git add app/components/map.hbs
-git add app/components/map.js
+git add app/pods/components/map/template.hbs
+git add app/pods/components/map/component.js
 ```
 
 ```run:screenshot width=1024 height=768 retina=true filename=pass-2.png alt="Tests passing after the src getter refactor"
@@ -334,7 +334,7 @@ Since all arguments are implicitly marked as `@tracked` by the Glimmer component
 
 Just to be sure, we can add a test for this behavior:
 
-```run:file:patch lang=js cwd=super-rentals filename=tests/integration/components/map-test.js
+```run:file:patch lang=js cwd=super-rentals filename=tests/integration/pods/components/map/component-test.js
 @@ -32,2 +32,42 @@
 
 +  test('it updates the `src` attribute when the arguments change', async function(assert) {
@@ -390,7 +390,7 @@ With all our tests passing, we are ready to move on!
 
 ```run:command hidden=true cwd=super-rentals
 yarn test
-git add tests/integration/components/map-test.js
+git add tests/integration/pods/components/map/component-test.js
 ```
 
 ```run:screenshot width=1024 height=768 retina=true filename=pass-3.png alt="All our tests are passing"

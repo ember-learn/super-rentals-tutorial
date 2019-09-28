@@ -49,7 +49,7 @@ So, now that we've prepared some model data for our route, let's use it in our t
 
 To test that this is working, let's modify our template and try to render the `title` property from our model:
 
-```run:file:patch lang=handlebars cwd=super-rentals filename=app/templates/index.hbs
+```run:file:patch lang=handlebars cwd=super-rentals filename=app/pods/index/template.hbs
 @@ -6,2 +6,4 @@
 
 +<h1>{{@model.title}}</h1>
@@ -69,7 +69,7 @@ Awesome!
 ```run:command hidden=true cwd=super-rentals
 yarn test
 git add app/routes/index.js
-git add app/templates/index.hbs
+git add app/pods/index/template.hbs
 ```
 
 Okay, now that we know that we have a model to use at our disposal, let's remove some of the hard-coding that we did earlier! Instead of explicitly hard-coding the rental information into our `<Rental>` component, we can pass the model object to our component instead.
@@ -78,7 +78,7 @@ Let's try it out.
 
 First, let's pass in our model to our `<Rental>` component as the `@rental` argument. We will also remove the extraneous `<h1>` tag we added earlier, now that we know things are working:
 
-```run:file:patch lang=handlebars cwd=super-rentals filename=app/templates/index.hbs
+```run:file:patch lang=handlebars cwd=super-rentals filename=app/pods/index/template.hbs
 @@ -6,9 +6,7 @@
 
 -<h1>{{@model.title}}</h1>
@@ -183,7 +183,7 @@ Notice that we also need to update the invocation of the `<Rental>` component in
 ```run:command hidden=true cwd=super-rentals
 yarn test
 git add app/components/rental.hbs
-git add app/templates/index.hbs
+git add app/pods/index/template.hbs
 git add tests/integration/components/rental-test.js
 ```
 
@@ -320,7 +320,7 @@ The last change we'll need to make is to our `index.hbs` route template, where w
 
 Let's see how.
 
-```run:file:patch lang=handlebars cwd=super-rentals filename=app/templates/index.hbs
+```run:file:patch lang=handlebars cwd=super-rentals filename=app/pods/index/template.hbs
 @@ -8,5 +8,5 @@
    <ul class="results">
 -    <li><Rental @rental={{@model}} /></li>
@@ -350,7 +350,7 @@ Better yet, all of our tests are still passing too!
 ```run:command hidden=true cwd=super-rentals
 yarn test
 git add app/routes/index.js
-git add app/templates/index.hbs
+git add app/pods/index/template.hbs
 ```
 
 ```run:screenshot width=1024 height=768 retina=true filename=pass-2.png alt="All our tests are passing"

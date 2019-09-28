@@ -104,7 +104,7 @@ Since Ember offers great support for URLs out-of-the-box, we _could_ just link o
 
 With Ember, we can do better than that! Instead of the plain-old `<a>` tag, Ember provides an alternative called `<LinkTo>`. For example, here is how you would use it on the pages we just created:
 
-```run:file:patch lang=handlebars cwd=super-rentals filename=app/templates/index.hbs
+```run:file:patch lang=handlebars cwd=super-rentals filename=app/pods/index/template.hbs
 @@ -4,2 +4,3 @@
    <p>We hope you find exactly what you're looking for in a place to stay.</p>
 +  <LinkTo @route="about" class="button">About Us</LinkTo>
@@ -154,7 +154,7 @@ visit http://localhost:4200/getting-in-touch
 ```
 
 ```run:command hidden=true cwd=super-rentals
-git add app/templates/index.hbs
+git add app/pods/index/template.hbs
 git add app/templates/about.hbs
 git add app/templates/contact.hbs
 ```
