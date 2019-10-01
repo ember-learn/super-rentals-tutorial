@@ -2,13 +2,28 @@
 ember server
 ```
 
+In this chapter, you will add interactivity to the page, allowing the user to click an image to enlarge or shrink it:
+
+<!-- TODO: add gif of the end state -->
+
+While doing so, you will learn about:
+* Adding behavior to components with classes
+* Accessing instance states from templates
+* Managing state with tracked properties
+* Using conditionals syntaxes in templates
+* Responding to user interaction with actions
+* Invoking element modifiers
+* Testing user interactions
+
+## Adding Behavior to Components with Classes
+
 So far, all the components we have written are purely *[presentational][TODO: link to presentational]* &mdash; they are simply reusable snippets of markup. That's pretty cool! But in Ember, components can do so much more.
 
 Sometimes, you want to associate some *[behavior][TODO: link to behavior]* with your components so that they can do more interesting things. For example, `<LinkTo>` can respond to clicks by changing the URL and navigating us to a different page.
 
 Here, we are going to do just that! We are going to implement the "View Larger" and "View Smaller" functionality, which will allow our users to click on a property's image to view a larger version, and click on it again to return to the smaller version.
 
-In other words, we want a way to _toggle_ the image between one of the two *[states][TODO: link to states]*. In order to do that, we need a way for the component to store two possible states, and to be aware which states it is currently in.
+In other words, we want a way to _toggle_ the image between one of the two *[states][TODO: link to states]*. In order to do that, we need a way for the component to store two possible states, and to be aware of which state it is currently in.
 
 Ember optionally allows us to associate JavaScript code with a component for exactly this purpose. We can add a JavaScript file for our `<Rental::Image>` component by running the `component-class` generator:
 
@@ -42,6 +57,8 @@ Ember will create an *[instance][TODO: link to instance]* of the class whenever 
 ```
 
 Here, in the *[component's constructor][TODO: link to component's constructor]*, we *[initialized][TODO: link to initialized]* the *[instance variable][TODO: link to instance variable]* `this.isLarge` with the value `false`, since this is the default state that we want for our component.
+
+## Accessing Instance States from Templates
 
 Let's update our template to use this state we just added:
 
@@ -114,6 +131,8 @@ git add app/components/rental/image.js
 
 Of course, our users cannot edit our source code, so we need a way for them to toggle the image size from the browser. Specifically, we want to toggle the value of `this.isLarge` whenever the user clicks on our component.
 
+## Managing State with Tracked Properties
+
 Let's modify our class to add a *[method][TODO: link to method]* for toggling the size:
 
 ```run:file:patch lang=js cwd=super-rentals filename=app/components/rental/image.js
@@ -141,6 +160,8 @@ In our case, whenever we assign a new value to `this.isLarge`, the `@tracked` an
 > Zoey says...
 >
 > Don't worry! If you reference a variable in the template but forget to add the `@tracked` decorator, you will get a helpful development mode error when you change its value!
+
+## Responding to User Interaction with Actions
 
 Next, we added a `toggleSize` method to our class that switches `this.isLarge` to the opposite of its current state (`false` becomes `true`, or `true` becomes `false`).
 
@@ -186,6 +207,8 @@ yarn test
 git add app/components/rental/image.hbs
 git add app/components/rental/image.js
 ```
+
+## Testing User Interactions
 
 Finally, let's write a test for this new behavior:
 

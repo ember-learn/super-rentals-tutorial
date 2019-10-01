@@ -4,6 +4,16 @@ ember server
 
 It's time to finally work on the rentals listing!
 
+<!-- TODO: add screen shot of the end state -->
+
+While building this list of rental properties, you will learn about:
+* Generating components
+* Organizing code with namespaced components
+* Forwarding HTML attributes with `...attributes`
+* Determining the appropriate amount of test coverage
+
+## Generating Components
+
 Let's start by creating the `<Rental>` component. This time, we will use the component generator to create the template and test file for us:
 
 ```run:command cwd=super-rentals
@@ -118,6 +128,8 @@ wait  .rentals li:nth-of-type(3) article.rental
 
 Things are looking pretty convincing already; not bad for just a little bit of work!
 
+## Organizing Code with Namespaced Components
+
 Next, let's add the image for the rental property. We will use the component generator for this again:
 
 ```run:command cwd=super-rentals
@@ -133,6 +145,8 @@ git add tests/integration/components/rental/image-test.js
 ```
 
 Components like these are known as *[namespaced](https://en.wikipedia.org/wiki/Namespace)* components. Namespacing allows us to organize our components by folders according to their purpose. This is completely optional &mdash; namespaced components are not special in any way.
+
+## Forwarding HTML Attributes with `...attributes`
 
 Let's edit the component's template:
 
@@ -164,9 +178,9 @@ visit http://localhost:4200/
 wait  .rentals li:nth-of-type(3) article.rental .image img
 ```
 
-This way, our `<Rental::Image>` component is not coupled to any specific rental property on the site. Of course, hard-coding problem still exists (we simply moved it to the `<Rental>` component), but we will deal with that soon. We will limit all the hard-coding to the `<Rental>` component, so that we will have an easier time cleaning it up when we switch to fetching real data.
+This way, our `<Rental::Image>` component is not coupled to any specific rental property on the site. Of course, the hard-coding problem still exists (we simply moved it to the `<Rental>` component), but we will deal with that soon. We will limit all the hard-coding to the `<Rental>` component, so that we will have an easier time cleaning it up when we switch to fetching real data.
 
-In general, it is a good idea to add `...attributes` to the primary element in your component. This will allow for maximum flexibility, as the invoker may need to pass along classes for styling, or ARIA attributes to improve accessibility.
+In general, it is a good idea to add `...attributes` to the primary element in your component. This will allow for maximum flexibility, as the invoker may need to pass along classes for styling or ARIA attributes to improve accessibility.
 
 Let's write a test for our new component!
 
@@ -202,6 +216,8 @@ Let's write a test for our new component!
 +    assert.dom('.image img').hasAttribute('alt', 'Teaching Tomster');
    });
 ```
+
+## Determining the Appropriate Amount of Test Coverage
 
 Finally, we should also update the tests for the `<Rental>` component to confirm that we successfully invoked `<Rental::Image>`.
 

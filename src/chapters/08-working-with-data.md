@@ -2,9 +2,24 @@
 ember server
 ```
 
+In this chapter, we will remove the hard-coded data from our `<Rental>` component. By the end, your app would finally be displaying real data that came from the server!
+
+<!-- TODO: add screen shot of the end state -->
+
+In this chapter, you will learn about:
+* Working with route files
+* Returning local data from the model hook
+* Accessing route models from templates
+* Mocking server data with static JSON files
+* Fetching remote data from the model hook
+* Adapting server data
+* Loops and local variables in templates with `{{#each}}`
+
+## Working with Route Files
+
 So far, we've been hard-coding everything into our `<Rental>` component. But that's probably not very sustainable, since eventually, we want our data to come from a server instead. Let's go ahead and move some of those hard-coded values out of the component in preparation for that.
 
-We want to start working towards a place where we can eventually fetch data from the server, and then render the requested data as dynamic content from the templates. In order to do that, we will need a place where we can write the code for fetching data and loading them into the routes.
+We want to start working towards a place where we can eventually fetch data from the server, and then render the requested data as dynamic content from the templates. In order to do that, we will need a place where we can write the code for fetching data and loading it into the routes.
 
 In Ember, *[route files][TODO: link to route files]* are the place to do that. We haven't needed them yet, because all our routes are essentially just rendering static pages up until this point, but we are about to change that.
 
@@ -37,6 +52,8 @@ There's a lot happening here that we haven't seen before, so let's walk through 
 
 Then, we are extending the `Route` class into our _own_ `IndexRoute`, which we also *[`export`][TODO: link to export]* so that the rest of the application can use it.
 
+## Returning Local Data from the Model Hook
+
 So far, so good. But what's happening inside of this route class? We implemented an *[async method][TODO: link to async method]* called `model()`. This method is also known as the *[model hook][TODO: link to model hook]*.
 
 The model hook is responsible for fetching and preparing any data that you need for your route. Ember will automatically call this hook when entering a route, so that you can have an opportunity to run your own code to get the data you need. The object returned from this hook is known as the *[model][TODO: link to model]* for the route (surprise!).
@@ -44,6 +61,8 @@ The model hook is responsible for fetching and preparing any data that you need 
 Usually, this is where we'd fetch data from a server. Since fetching data is usually an asynchronous operation, the model hook is marked as `async`. This gives us the option of using the `await` keyword to wait for the data fetching operations to finish.
 
 We'll get to that bit later on. At the moment, we are just returning the same hard-coding model data, extracted from the `<Rental>` component, but in a JavaScript object (also known as *[POJO][TODO: link to POJO]*) format.
+
+## Accessing Route Models from Templates
 
 So, now that we've prepared some model data for our route, let's use it in our template. In route templates, we can access the model for the route as `@model`. In our case, that would contain the POJO returned from our model hook.
 
@@ -192,11 +211,13 @@ visit http://localhost:4200/tests?nocontainer&deterministic
 wait  #qunit-banner.qunit-pass
 ```
 
+## Mocking Server Data with Static JSON Files
+
 Now that we have things in place, let's do the fun part of removing *all* our hard-coded values from the model hook and actually fetch some data from the server!
 
-In a production app, the data that we'd fetch would most likely come from a remote API server. To avoid setting up an API server just for this tutorial, we will put some JSON data into the `public` folder instead. That way, we can still request these JSON data with regular HTTP requests &mdash; just like we would with a real API server  &mdash; but without having to write any server logic.
+In a production app, the data that we'd fetch would most likely come from a remote API server. To avoid setting up an API server just for this tutorial, we will put some JSON data into the `public` folder instead. That way, we can still request this JSON data with regular HTTP requests &mdash; just like we would with a real API server  &mdash; but without having to write any server logic.
 
-But where will the data come from? You can <a href="/downloads/data.zip" download="data.zip">download this data file</a>, where we have prepared some JSON data and bundled them into a `.zip` file format. Extract its content into the `public` folder.
+But where will the data come from? You can <a href="/downloads/data.zip" download="data.zip">download this data file</a>, where we have prepared some JSON data and bundled it into a `.zip` file format. Extract its content into the `public` folder.
 
 When you are done, your `public` folder should now have the following content:
 
@@ -226,6 +247,8 @@ visit http://localhost:4200/api/rentals.json
 ```
 
 Awesome! Our "server" is now up and running, serving up our rental properties as JSON data.
+
+## Fetching Remote Data from the Model Hook
 
 Now, let's turn our attention to our model hook again. We need to change it so that we actually fetch the data from the server.
 
@@ -258,11 +281,13 @@ First off, we're using the browser's *[Fetch API](https://developer.mozilla.org/
 
 As mentioned above, fetching data from the server is usually an asynchronous operation. The Fetch API takes this into account, which is why `fetch` is an `async` function, just like our model hook. To consume its response, we will have to pair it with the `await` keyword.
 
-The Fetch API returns a *[response object][TODO: link to response object]* asynchronously. Once we have this object, we can convert the server's response into whatever format we need; in our case, we knew the server sent the data using the JSON format, so we can use the `response.json()` method to *[parse][TODO: link to parse]* the response data accordingly. Parsing the response data is _also_ an asynchronous operation, so we'll just use the `await` keyword here, too.
+The Fetch API returns a *[response object][TODO: link to response object]* asynchronously. Once we have this object, we can convert the server's response into whatever format we need; in our case, we knew the server sent the data using the JSON format, so we can use the `json()` method to *[parse][TODO: link to parse]* the response data accordingly. Parsing the response data is _also_ an asynchronous operation, so we'll just use the `await` keyword here, too.
 
 ```run:command hidden=true cwd=super-rentals
 git add app/routes/index.js
 ```
+
+## Adapting Server Data
 
 Before we go any further, let's pause for a second to look at the our server's data again.
 
@@ -273,7 +298,7 @@ This data follows the *[JSON:API][TODO: link to JSON:API]* format, which is _sli
 
 First off, the JSON:API format returns an array nested under the `"data"` key, rather than a just the data for a single rental property. If we think about this, though, it makes sense; we now want to show a whole list of rental properties that are coming from our server, not just one, so an array of rental property objects is just what we need.
 
-This rental property objects contained in the array also has a slightly different structure. Every data object has a `type` and `id`, which we don't intend to use in our template (yet!). For now, the only data we really need is nested within the `attributes` key.
+The rental property objects contained in the array also have a slightly different structure. Every data object has a `type` and `id`, which we don't intend to use in our template (yet!). For now, the only data we really need is nested within the `attributes` key.
 
 There's one more key difference here, which perhaps only those with very sharp eyes will be able to catch: the data coming from the server is missing the `type` property, which previously existed on our hard-coded model object. The `type` property could either be `"Standalone"` or `"Community"`, depending on the type of rental property, which is required by our `<Rental>` component.
 
@@ -312,9 +337,11 @@ We can handle it all in our model hook:
    }
 ```
 
-After parsing the JSON data, we extracted the nested `attributes` object, added back the missing `type` attribute manually, and then return it from the model hook. That way, the rest of our app won't have any idea that these difference ever existed.
+After parsing the JSON data, we extracted the nested `attributes` object, added back the missing `type` attribute manually, then returned it from the model hook. That way, the rest of our app will have no idea that this difference ever existed.
 
 Awesome! Now we're in business.
+
+## Loops and Local Variables in Templates with `{{#each}}`
 
 The last change we'll need to make is to our `index.hbs` route template, where we invoke our `<Rental>` components. Previously, we were passing in `@rental` as `@model` to our components. However, `@model` is no longer a single object, but rather, an array! So, we'll need to change this template to account for that.
 

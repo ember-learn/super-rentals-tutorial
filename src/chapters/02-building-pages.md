@@ -2,6 +2,19 @@
 ember server
 ```
 
+In this chapter, you will build the first few pages of your Ember app and set up links between them. By the end of this chapter, you should have two new pages – an "About" page and a "Contact" page. These pages will be linked to from your landing page:
+
+<!-- TODO: add screen shot of the end state -->
+
+While building these pages, you will learn about:
+* Defining routes
+* Using route templates
+* Customizing URLs
+* Linking pages with the `<LinkTo>` component
+* Passing arguments and attributes to components
+
+## Defining Routes
+
 With our [first page](../01-orientation/) down, let's add another one!
 
 This time, we would like the page to be served on the `/about` URL. In order to do this, we will need to tell Ember about our plan to add a page at that location. Otherwise, Ember will think we have visited an invalid URL!
@@ -20,6 +33,8 @@ This adds a *[route][TODO: link to route]* named "about", which is served at the
 ```run:command hidden=true cwd=super-rentals
 git add app/router.js
 ```
+
+## Using Route Templates
 
 With that in place, we can create a new `app/templates/about.hbs` template with the following content:
 
@@ -46,6 +61,8 @@ git add app/templates/about.hbs
 ```
 
 With that, our second page is done!
+
+## Defining Routes with Custom Paths
 
 We're on a roll! While we're at it, let's add our third page. This time, things are a little bit different. Everyone at the company calls this the "contact" page. However, the old website we are replacing already has a similar page, which is served at the legacy URL `/getting-in-touch`.
 
@@ -98,6 +115,8 @@ visit http://localhost:4200/getting-in-touch
 git add app/templates/contact.hbs
 ```
 
+## Linking Pages with the `<LinkTo>` Component
+
 We just put so much effort into making these pages, we need to make sure people can find them! The way we do that on the web is by using *[hyperlinks][TODO: link to hyperlinks]*, or *links* for short.
 
 Since Ember offers great support for URLs out-of-the-box, we _could_ just link our pages together using the `<a>` tag with the appropriate `href`. However, clicking on those links would require the browser to make a *[full-page refresh][TODO: link to full page refresh]*, which means that it would have to make a trip back to the server to fetch the page, and then load everything from scratch again.
@@ -131,7 +150,7 @@ There is quite a bit going on here, so let's break it down.
 
 We have a lot more to say about components later, but for now, you can think of them as a way to provide *[custom tags][TODO: link to custom tags]* to supplement the built-in ones that came with the browser.
 
-The `@route=...` part is how we pass *[arguments][TODO: link to arguments]* into the component. Here, we use this to specify _which_ route we want to link to. Note that this should be the _name_ of the route, not the path, which is why we specified `"about"` instead of `"/about"`, and `"contact"` instead of `"/getting-in-touch"`.
+The `@route=...` part is how we pass *[arguments][TODO: link to arguments]* into the component. Here, we use this argument to specify _which_ route we want to link to. (Note that this should be the _name_ of the route, not the path, which is why we specified `"about"` instead of `"/about"`, and `"contact"` instead of `"/getting-in-touch"`.)
 
 In addition to arguments, components can also take the usual HTML attributes as well. In our example, we added a `"button"` class for styling purposes, but we could also specify other attributes as we see fit, such as the [ARIA][TODO: link to ARIA] [`role` attribute][TODO: link to role attribute]. These are passed without the `@` symbol (`class=...` as opposed to `@class=...`), so that Ember will know they are just regular HTML attributes.
 
@@ -161,7 +180,7 @@ git add app/templates/contact.hbs
 
 We will learn more about how all of this works soon. In the meantime, go ahead and click on the link in the browser. Did you notice how snappy that was?
 
-Congratulations, you have completed your training as a master page-crafter!
+Congratulations, you are well on your way to becoming a master page-crafter!
 
 ```run:server:stop
 ember server
