@@ -38,7 +38,7 @@ async function render(nodes: BlockContent[], position?: Position): Promise<HTML>
         ${content.join('        \n')}
       </div>
     </div>
-    <img src="/images/mascots/zoey.png" role="presentation" alt="Ember Mascot">
+    <img src="/images/mascots/zoey.png" role="presentation" alt="">
   </div>
 </div>`;
 
