@@ -207,7 +207,7 @@ With that, we have created our first *[interactive][TODO: link to interactive]* 
 
 <!-- TODO: make this a gif instead -->
 
-```run:screenshot width=1024 height=1500 retina=true filename=rental-image-default.png alt="<Rental::Image> (default size)"
+```run:screenshot width=1024 retina=true filename=rental-image-default.png alt="<Rental::Image> (default size)"
 visit http://localhost:4200/
 wait  .rentals li:nth-of-type(3) article.rental .image img
 ```
@@ -215,7 +215,7 @@ wait  .rentals li:nth-of-type(3) article.rental .image img
 ```run:screenshot width=1024 height=1500 retina=true filename=rental-image-large.png alt="<Rental::Image> (large size)"
 visit http://localhost:4200/
 wait  .rentals li:nth-of-type(3) article.rental .image img
-click .rentals li:first-of-type article.rental .image img
+click .rentals li:first-of-type article.rental .image
 wait  .rentals li:first-of-type article.rental .image.large img
 ```
 

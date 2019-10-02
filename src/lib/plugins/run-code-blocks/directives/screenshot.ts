@@ -71,7 +71,8 @@ async function main() {
       continue;
     }
 
-    let [action, arg] = step.split(/\s+/, 2);
+    let [action, ...rest] = step.split(/\s+/);
+    let arg = rest.join(' ');
 
     switch (action) {
       case 'click':
