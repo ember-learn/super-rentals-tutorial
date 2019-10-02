@@ -2,7 +2,18 @@
 ember server
 ```
 
-Now that we are fetching real data from our "server", let's add a new feature: dedicated pages for each of our rentals.
+Now that we are fetching real data from our "server", let's add a new feature — dedicated pages for each of our rentals:
+
+<!-- TODO: add screen shot of the end state -->
+
+While adding these rental pages, you will learn about:
+* Routes with dynamic segments
+* Links with dynamic segments
+* Component tests with access to the router
+* Accessing parameters from dynamic segments
+* Sharing common setup code between tests
+
+## Routes with Dynamic Segments
 
 It would be great for our individual rental pages to be available through predictable URLs like `/rentals/grand-old-mansion`. Also, since these pages are dedicated to individual rentals, we can show more detailed information about each property on this page. It would also be nice to be able to have a way to bookmark a rental property, and share direct links to each individual rental listing so that our users can come back to these pages later on, after they are done browsing.
 
@@ -15,11 +26,13 @@ But first things first: we need to add a route for this new page. We can do that
  });
 ```
 
-Notice that we are doing something a little different here. Instead of using the default path (`/rental`), we're specifying a custom path. Not only are using a custom path, but we're also passing in a `:rental_id`, which is what we call a *[dynamic segment][TODO: link to dynamic segment]*. When these routes are evaluated, the `rental_id` will be substituted with the `id` of the individual rental property that we are trying to navigate to.
+Notice that we are doing something a little different here. Instead of using the default path (`/rental`), we're specifying a custom path. Not only are we using a custom path, but we're also passing in a `:rental_id`, which is what we call a *[dynamic segment][TODO: link to dynamic segment]*. When these routes are evaluated, the `rental_id` will be substituted with the `id` of the individual rental property that we are trying to navigate to.
 
 ```run:command hidden=true cwd=super-rentals
 git add app/router.js
 ```
+
+## Links with Dynamic Segments
 
 Now that we have this route in place, we can update our `<Rental>` component to actually _link_ to each of our detailed rental properties!
 
@@ -41,7 +54,7 @@ Since we know that we're linking to the `rental` route that we just created, we 
 git add app/components/rental.hbs
 ```
 
-Let's see this in action. If we go back to our browser and refresh the page, we'll should see our links, and they should all link to the correct URLs.
+Let's see this in action. If we go back to our browser and refresh the page, we should see our links, and they should all link to the correct URLs.
 
 ```run:screenshot width=1024 retina=true filename=broken-links.png alt="Broken links"
 visit http://localhost:4200/
@@ -57,7 +70,7 @@ Thankfully, we can fix this pretty easily. As it turns out, the data that is ret
 visit http://localhost:4200/api/rentals.json
 ```
 
-If we look at the JSON data here, we can see that the `id` is include right alongside the `attributes` key. So we have access to this data; the only trouble is that we're not including it in our model! Let's change our model hook in the `index` route so that it includes the `id`.
+If we look at the JSON data here, we can see that the `id` is included right alongside the `attributes` key. So we have access to this data; the only trouble is that we're not including it in our model! Let's change our model hook in the `index` route so that it includes the `id`.
 
 ```run:file:patch lang=js cwd=super-rentals filename=app/routes/index.js
 @@ -14,3 +14,3 @@
@@ -78,6 +91,8 @@ Now that we've included our model's `id`, we should see the correct URLs to each
 git add app/routes/index.js
 ```
 
+## Component Tests with Access to the Router
+
 Alright, we have just one more step left here: updating the tests. We can add an `id` to the rental that we defined in our test using `setProperties` and add an assertion for the expected URL, too.
 
 ```run:file:patch lang=js cwd=super-rentals filename=tests/integration/components/rental-test.js
@@ -95,7 +110,18 @@ Alright, we have just one more step left here: updating the tests. We can add an
 git add tests/integration/components/rental-test.js
 ```
 
-Awesome! However, there is one more point to mention here: by default, a component test (like the one that we have here) does not set up the router. Usually, this is what you'd want, since for more components, you likely aren't going need the router to test what you want. But in this specific case, we have a `<LinkTo>` in our component that is relying on the router to generate its URLs.
+If we run the tests in the browser, everything should...
+
+```run:screenshot width=1024 height=768 retina=true filename=fail.png alt="The test failed"
+visit http://localhost:4200/tests?nocontainer&deterministic
+wait  #qunit-banner.qunit-fail
+```
+
+...wait a minute, our tests didn't pass!
+
+Well, it's about time that we ran into something that didn't Just Work™ on the first try! This is the *advanced* part of the tutorial after all. 😉 
+
+Component tests (like the one we have here) do not set up the router by default, because it's usually not necessary. In this specific case, however, we have a `<LinkTo>` in our component that is relying on the router to generate its URLs.
 
 In this situation, we essentially need to _specifically_ opt-in to explicitly use our router in our component test. We can do this by calling `setupRouter()` in our `beforeEach` hook, which will set up the router before each test.
 
@@ -111,7 +137,7 @@ In this situation, we essentially need to _specifically_ opt-in to explicitly us
 
 > Zoey says...
 >
-> As its name implies, the `beforeEach` hook runs _once_ before each `test` function is executed. This hook is the ideal place to setup anything that might be needed by all test cases in the file. On the other hand, if you need to do any cleanup after your tests, there is an `afterEach` hook!
+> As its name implies, the `beforeEach` hook runs _once_ before each `test` function is executed. This hook is the ideal place to set up anything that might be needed by all test cases in the file. On the other hand, if you need to do any cleanup after your tests, there is an `afterEach` hook!
 
 Setting up our router before each test function is executed will allow us to properly test that the URLs generated by `<LinkTo>` are exactly what we expect them to be.
 
@@ -125,9 +151,11 @@ visit http://localhost:4200/tests?nocontainer&deterministic
 wait  #qunit-banner.qunit-pass
 ```
 
+## Accessing Parameters from Dynamic Segments
+
 Awesome! We're making such great progress.
 
-Ok, now that we have our `rental` route, let's finish up our `rental` page. The first step to doing this is making our route actually _do_ something. We added the route, but we haven't actually implemented it. So let's do that first by creating the route file.
+Now that we have our `rental` route, let's finish up our `rental` page. The first step to doing this is making our route actually _do_ something. We added the route, but we haven't actually implemented it. So let's do that first by creating the route file.
 
 ```run:file:create lang=js cwd=super-rentals filename=app/routes/rental.js
 import Route from '@ember/routing/route';
@@ -157,17 +185,19 @@ export default class RentalRoute extends Route {
 }
 ```
 
-We'll notice that the model hook in our `RentalRoute` is _almost_ the same as our `IndexRoute`. There is one major difference between these two routes, and we can see difference that reflected here.
+We'll notice that the model hook in our `RentalRoute` is _almost_ the same as our `IndexRoute`. There is one major difference between these two routes, and we can see that difference reflected here.
 
 Unlike the `IndexRoute`, we have a `params` object being passed into our model hook. This is because we need to fetch our data from the `/api/rentals/${id}.json` endpoint, _not_ the `/api/rentals.json` endpoint we were previously using. We already know that the individual rental endpoints fetch a single rental object, rather than an array of them, and that the route uses a `/:rental_id` dynamic segment to figure out which rental object we're trying to fetch from the server.
 
-But how does the dynamic segment get to actually get to the `fetch` function? Well, we have to pass it into the function. Conveniently, we have access to the value of the `/:rental_id` dynamic segment through the `params` object. This is why we have a `params` argument in our model hook here. It is being passed through to this hook, and we use the `params.rental_id` attribute to figure out what data we want to `fetch`.
+But how does the dynamic segment actually get to the `fetch` function? Well, we have to pass it into the function. Conveniently, we have access to the value of the `/:rental_id` dynamic segment through the `params` object. This is why we have a `params` argument in our model hook here. It is being passed through to this hook, and we use the `params.rental_id` attribute to figure out what data we want to `fetch`.
 
 Other than these minor differences though, the rest of the route is pretty much the same to what we had in our index route.
 
 ```run:command hidden=true cwd=super-rentals
 git add app/routes/rental.js
 ```
+
+## Displaying Model Details with a Component
 
 Next, let's make a `<Rental::Detailed>` component.
 
@@ -233,10 +263,12 @@ git add tests/integration/components/rental/detailed-test.js
 
 This component is similar to our `<Rental>` component, except for the following differences.
 
-* It shows a banner with a share button on the top.
+* It shows a banner with a share button at the top (Implementation to come later).
 * It shows a bigger image by default, with some additional detailed information.
 * It shows a bigger map.
 * It shows a description.
+
+## Sharing Common Setup Code Between Tests
 
 Now that we have this template in place, we can add some tests for this new component of ours.
 
@@ -311,6 +343,8 @@ visit http://localhost:4200/tests?nocontainer&deterministic
 wait  #qunit-banner.qunit-pass
 ```
 
+## Adding a Route Template
+
 Finally, let's add a `rental` template to actually _invoke_ our `<Rental::Detailed>` component, as well as adding an acceptance test for this new behavior in our app.
 
 ```run:file:create lang=handlebars cwd=super-rentals filename=app/templates/rental.hbs
@@ -362,6 +396,8 @@ wait  #qunit-banner.qunit-pass
 ```
 
 ...they all pass! Great work!
+
+This page _looks_ done, but we have a share button that doesn't actually work. We'll address this in the next chapter. 
 
 ```run:server:stop
 ember server
