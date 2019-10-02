@@ -67,13 +67,19 @@ async function main() {
   ];
 
   for (let step of steps.split('\n')) {
-    if (step === '') {
+    if (step === '' || step.startsWith('#')) {
       continue;
     }
 
     let [action, arg] = step.split(/\s+/, 2);
 
     switch (action) {
+      case 'click':
+        script.push(`  await page.click(${js(arg)});`);
+        break;
+      case 'eval':
+        script.push(`  await page.evaluate(${js(arg)});`);
+        break;
       case 'visit':
         script.push(`  await page.goto(${js(arg)}, { waitUtil: 'networkidle0' });`);
         break;
