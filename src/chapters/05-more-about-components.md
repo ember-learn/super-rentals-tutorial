@@ -2,11 +2,12 @@
 ember server
 ```
 
-It's time to finally work on the rentals listing!
+It's time to finally work on the rentals listing:
 
-<!-- TODO: add screen shot of the end state -->
+![The Super Rentals app by the end of the chapter](/screenshots/05-more-about-components/rental-image@2x.png)
 
 While building this list of rental properties, you will learn about:
+
 * Generating components
 * Organizing code with namespaced components
 * Forwarding HTML attributes with `...attributes`

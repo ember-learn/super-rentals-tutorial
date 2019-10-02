@@ -1,8 +1,9 @@
-The last missing feature for the `<Rental>` component is a map to show the location of the rental, which is what we're going to work on next.
+The last missing feature for the `<Rental>` component is a map to show the location of the rental, which is what we're going to work on next:
 
-<!-- TODO: add screen shot of the end state -->
+![The Super Rentals app by the end of the chapter](/screenshots/07-reusable-components/three-old-mansions@2x.png)
 
 While adding the map, you will learn about:
+
 * Managing application-level configurations
 * Parameterizing components with arguments
 * Accessing component arguments
@@ -310,7 +311,7 @@ diff --git a/app/components/map.js b/app/components/map.js
 index 78e765f..1cad468 100644
 --- a/app/components/map.js
 +++ b/app/components/map.js
-@@ -3,3 +3,15 @@ import ENV from 'super-rentals/config/environment';
+@@ -3,3 +3,15 @@
 
 +const MAPBOX_API = 'https://api.mapbox.com/styles/v1/mapbox/streets-v11/static';
 +

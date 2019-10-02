@@ -1,8 +1,9 @@
 In this chapter, you will install *[Ember CLI][TODO: link to Ember CLI]*, use it to generate a new Ember project, and add some basic templates and styles to your new app. By the end of this chapter, you should have a landing page with Professor Tomster's cute little face featured on it:
 
-<!-- TODO: add screen shot of the end state -->
+![The Super Rentals app by the end of the chapter](/screenshots/01-orientation/styled-with-tomster@2x.png)
 
 While building your landing page, you will learn about:
+
 * Installing Ember CLI
 * Creating a new Ember app with Ember CLI
 * Starting and stopping the development server

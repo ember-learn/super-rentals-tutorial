@@ -2,11 +2,12 @@
 ember server
 ```
 
-In this chapter, we will remove the hard-coded data from our `<Rental>` component. By the end, your app would finally be displaying real data that came from the server!
+In this chapter, we will remove the hard-coded data from our `<Rental>` component. By the end, your app would finally be displaying real data that came from the server:
 
-<!-- TODO: add screen shot of the end state -->
+![The Super Rentals app by the end of the chapter](/screenshots/08-working-with-data/three-properties@2x.png)
 
 In this chapter, you will learn about:
+
 * Working with route files
 * Returning local data from the model hook
 * Accessing route models from templates

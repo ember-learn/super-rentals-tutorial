@@ -4,9 +4,14 @@ ember server
 
 In this chapter, you will add interactivity to the page, allowing the user to click an image to enlarge or shrink it:
 
-<!-- TODO: add gif of the end state -->
+<!-- TODO: make this a gif instead -->
+
+![The Super Rentals app by the end of the chapter (default image size)](/screenshots/06-interactive-components/rental-image-default@2x.png)
+
+![The Super Rentals app by the end of the chapter (large image size)](/screenshots/06-interactive-components/rental-image-large@2x.png)
 
 While doing so, you will learn about:
+
 * Adding behavior to components with classes
 * Accessing instance states from templates
 * Managing state with tracked properties
@@ -200,7 +205,19 @@ Next, we used the `{{on}}` *[modifier][TODO: link to modifier]* to attach `this.
 
 With that, we have created our first *[interactive][TODO: link to interactive]* component. Go ahead and try it in the browser!
 
-<!-- TODO: add a gif here -->
+<!-- TODO: make this a gif instead -->
+
+```run:screenshot width=1024 height=1500 retina=true filename=rental-image-default.png alt="<Rental::Image> (default size)"
+visit http://localhost:4200/
+wait  .rentals li:nth-of-type(3) article.rental .image img
+```
+
+```run:screenshot width=1024 height=1500 retina=true filename=rental-image-large.png alt="<Rental::Image> (large size)"
+visit http://localhost:4200/
+wait  .rentals li:nth-of-type(3) article.rental .image img
+click .rentals li:first-of-type article.rental .image img
+wait  .rentals li:first-of-type article.rental .image.large img
+```
 
 ```run:command hidden=true cwd=super-rentals
 yarn test
