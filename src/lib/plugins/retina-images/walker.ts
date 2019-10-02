@@ -20,7 +20,7 @@ async function isRetinaImage(src: string, options: Options): Promise<boolean> {
 }
 
 function attr(v: unknown): string {
-  let escaped = String(v).replace(/<>"/g, c => {
+  let escaped = String(v).replace(/[<>"]/g, c => {
     switch (c) {
       case '<':
         return '&lt;';
