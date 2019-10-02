@@ -235,7 +235,7 @@ We just added a lot of behavior into a single component, so let's write some tes
    });
 ```
 
-Note that the `hasAttribute` test helper from [qunit-dom][TODO: link to qunit-dom] supports using *[regular expressions][TODO: link to regular expressions]*. We used this feature to confirm that the `src` attribute starts with `https://api.mapbox.com/`, as opposed to requiring it to be an exact match against a string. This allows us to be reasonably confident that the code is working correctly, without being overly-detailed in our tests.
+Note that the `hasAttribute` test helper from [`qunit-dom`][TODO: link to qunit-dom] supports using *[regular expressions][TODO: link to regular expressions]*. We used this feature to confirm that the `src` attribute starts with `https://api.mapbox.com/`, as opposed to requiring it to be an exact match against a string. This allows us to be reasonably confident that the code is working correctly, without being overly-detailed in our tests.
 
 *Fingers crossed...* Let's run our tests.
 
