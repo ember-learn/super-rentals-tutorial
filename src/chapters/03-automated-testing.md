@@ -2,7 +2,12 @@
 ember server
 ```
 
-In this chapter, you will use Ember's built-in testing framework to write some automated tests for your app, and in the process, you will learn about:
+In this chapter, you will use Ember's built-in testing framework to write some automated tests for your app. By the end of this chapter, we will have an automated test suite that we can run to ensure our app is working correctly:
+
+![The Super Rentals test suite by the end of the chapter](/screenshots/03-automated-testing/pass-2@2x.png)
+
+In the process, you will learn about:
+
 * The purpose of automated testing
 * Writing acceptance tests
 * Using generators in Ember CLI

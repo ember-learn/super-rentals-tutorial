@@ -2,11 +2,12 @@
 ember server
 ```
 
-In this chapter, you will *[refactor][TODO: link to refactor]* your existing templates to use components. By the end, everything should look the same, but with less code duplication:
+In this chapter, you will *[refactor][TODO: link to refactor]* your existing templates to use components. We will also be adding a site-wide navigation bar:
 
-<!-- TODO: add screen shot of the end state -->
+![The Super Rentals app by the end of the chapter](/screenshots/04-component-basics/index-with-nav@2x.png)
 
 In doing so, you will learn about:
+
 * Extracting markup into components
 * Invoking components
 * Passing content to components

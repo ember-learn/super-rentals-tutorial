@@ -1,8 +1,9 @@
-The last missing feature for the `<Rental>` component is a map to show the location of the rental, which is what we're going to work on next.
+The last missing feature for the `<Rental>` component is a map to show the location of the rental, which is what we're going to work on next:
 
-<!-- TODO: add screen shot of the end state -->
+![The Super Rentals app by the end of the chapter](/screenshots/07-reusable-components/three-old-mansions@2x.png)
 
 While adding the map, you will learn about:
+
 * Managing application-level configurations
 * Parameterizing components with arguments
 * Accessing component arguments

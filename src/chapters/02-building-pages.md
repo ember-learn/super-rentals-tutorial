@@ -2,11 +2,16 @@
 ember server
 ```
 
-In this chapter, you will build the first few pages of your Ember app and set up links between them. By the end of this chapter, you should have two new pages – an "About" page and a "Contact" page. These pages will be linked to from your landing page:
+In this chapter, you will build the first few pages of your Ember app and set up links between them. By the end of this chapter, you should have two new pages – an about page and a contact page. These pages will be linked to from your landing page:
 
-<!-- TODO: add screen shot of the end state -->
+![The Super Rentals app (homepage) by the end of the chapter](/screenshots/02-building-pages/index-with-link@2x.png)
+
+![The Super Rentals app (about page) by the end of the chapter](/screenshots/02-building-pages/about-with-link@2x.png)
+
+![The Super Rentals app (contact page) by the end of the chapter](/screenshots/02-building-pages/contact-with-link@2x.png)
 
 While building these pages, you will learn about:
+
 * Defining routes
 * Using route templates
 * Customizing URLs
