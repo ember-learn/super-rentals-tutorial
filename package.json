@@ -46,5 +46,8 @@
   "volta": {
     "node": "12.8.1",
     "yarn": "1.17.3"
+  },
+  "resolutions": {
+    "clean-css": "^4.1.11"
   }
 }
