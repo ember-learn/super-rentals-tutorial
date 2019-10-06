@@ -51,7 +51,7 @@ export default class IndexRoute extends Route {
 
 There's a lot happening here that we haven't seen before, so let's walk through this. First, we're importing the *[`Route` class][TODO: link to Route class]* into the file. This class is used as a starting point for adding functionality to a route, such as loading data.
 
-Then, we are extending the `Route` class into our _own_ `IndexRoute`, which we also *[`export`][TODO: link to export]* so that the rest of the application can use it.
+Then, we are extending the `Route` class into our *own* `IndexRoute`, which we also *[`export`][TODO: link to export]* so that the rest of the application can use it.
 
 ## Returning Local Data from the Model Hook
 
@@ -282,7 +282,7 @@ First off, we're using the browser's *[Fetch API](https://developer.mozilla.org/
 
 As mentioned above, fetching data from the server is usually an asynchronous operation. The Fetch API takes this into account, which is why `fetch` is an `async` function, just like our model hook. To consume its response, we will have to pair it with the `await` keyword.
 
-The Fetch API returns a *[response object][TODO: link to response object]* asynchronously. Once we have this object, we can convert the server's response into whatever format we need; in our case, we knew the server sent the data using the JSON format, so we can use the `json()` method to *[parse][TODO: link to parse]* the response data accordingly. Parsing the response data is _also_ an asynchronous operation, so we'll just use the `await` keyword here, too.
+The Fetch API returns a *[response object][TODO: link to response object]* asynchronously. Once we have this object, we can convert the server's response into whatever format we need; in our case, we knew the server sent the data using the JSON format, so we can use the `json()` method to *[parse][TODO: link to parse]* the response data accordingly. Parsing the response data is *also* an asynchronous operation, so we'll just use the `await` keyword here, too.
 
 ```run:command hidden=true cwd=super-rentals
 git add app/routes/index.js
@@ -295,7 +295,7 @@ Before we go any further, let's pause for a second to look at the our server's d
 ```run:file:show lang=json cwd=super-rentals filename=public/api/rentals.json
 ```
 
-This data follows the *[JSON:API][TODO: link to JSON:API]* format, which is _slightly_ different than the hard-coded data that we were returning from the model hook before.
+This data follows the *[JSON:API][TODO: link to JSON:API]* format, which is *slightly* different than the hard-coded data that we were returning from the model hook before.
 
 First off, the JSON:API format returns an array nested under the `"data"` key, rather than a just the data for a single rental property. If we think about this, though, it makes sense; we now want to show a whole list of rental properties that are coming from our server, not just one, so an array of rental property objects is just what we need.
 
@@ -362,7 +362,7 @@ Let's see how.
 
 We can use the `{{#each}}...{{/each}}` syntax to iterate and loop through the array returned by the model hook. For each iteration through the array &mdash; for each item in the array &mdash; we will render the block that is passed to it once. In our case, the block is our `<Rental>` component, surrounded by `<li>` tags.
 
-Inside of the block we have access to the item of the _current_ iteration with the `{{rental}}` variable. But why `rental`? Well, because we named it that! This variable comes from the `as |rental|` declaration of the `each` loop. We could have just as easily called it something else, like `as |property|`, in which case we would have to access the current item through the `{{property}}` variable.
+Inside of the block we have access to the item of the *current* iteration with the `{{rental}}` variable. But why `rental`? Well, because we named it that! This variable comes from the `as |rental|` declaration of the `each` loop. We could have just as easily called it something else, like `as |property|`, in which case we would have to access the current item through the `{{property}}` variable.
 
 Now, let's go over to our browser and see what our index route looks like with this change.
 

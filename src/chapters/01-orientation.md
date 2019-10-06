@@ -199,7 +199,7 @@ ember server | awk '{ \
 ember server
 ```
 
-The development server is responsible for compiling our app and serving it to the browsers. It may take a while to boot up. Once it's up and running, open your favorite browser and head to http://localhost:4200. You should see the following welcome page:
+The development server is responsible for compiling our app and serving it to the browsers. It may take a while to boot up. Once it's up and running, open your favorite browser and head to <http://localhost:4200>. You should see the following welcome page:
 
 ```run:screenshot width=1024 retina=true filename=welcome.png alt="Welcome to Ember!"
 visit http://localhost:4200/

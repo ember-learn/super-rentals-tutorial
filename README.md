@@ -77,7 +77,7 @@ line-continuation, as in:
       lines."
     ```
 
-Mutliple commands can be supplied. If any of them fails, it will fail the
+Multiple commands can be supplied. If any of them fails, it will fail the
 build.
 
     ```run:command
@@ -110,7 +110,7 @@ Options:
 
 * `captureCommand=false`
 
-  Run the command(s), but omit the command(s) themselves from the the resulting
+  Run the command(s), but omit the command(s) themselves from the resulting
   code block.
 
 * `captureOutput=false`
@@ -562,7 +562,7 @@ Options:
 
 * `captureCommand=false`
 
-  Omit the command used to start the server from the the resulting code block.
+  Omit the command used to start the server from the resulting code block.
 
 * `captureOutput=false`
 
@@ -591,8 +591,8 @@ Options:
 
 ## How?
 
-* Requires [volta](https://volta.sh), `git`
-* Probably only works on unix/bash for now (PRs welcome)
+* Requires [Volta](https://volta.sh), `git`
+* Probably only works on Unix/bash for now (PRs welcome)
   * Should probably run the build in a docker container anyway
 * `yarn install`
 * `MAPBOX_ACCESS_TOKEN=your-token-here yarn build`
