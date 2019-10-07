@@ -315,7 +315,7 @@ visit http://localhost:4200/
 git add app/styles/app.css
 ```
 
-To match mockup from our designer, we will also need to download the `teaching-tomster.png` image, which was referenced from our CSS file:
+To match the mockup from our designer, we will also need to download the `teaching-tomster.png` image, which was referenced from our CSS file:
 
 ```css { data-filename=app/styles/app.css }
 .tomster {
