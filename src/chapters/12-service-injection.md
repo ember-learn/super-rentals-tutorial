@@ -143,10 +143,11 @@ wait  .share.button
 ```
 
 ```run:screenshot width=1024 retina=true filename=suggested-tweet.png alt="Suggested tweet"
-# Ideally, we would just visit the same page and click the share button.
-# Unfortunately, with that approach, the screenshot fails ~50% of the time
-# with a "Cannot take screenshot with 0 width" error.
-visit https://twitter.com/intent/tweet?url=http%3A%2F%2Flocalhost%3A4200%2Frentals%2Fgrand-old-mansion&text=Check%20out%20Grand%20Old%20Mansion%20on%20Super%20Rentals!&hashtags=vacation%2Ctravel%2Cauthentic%2Cblessed%2Csuperrentals&via=emberjs
+visit http://localhost:4200/rentals/grand-old-mansion
+wait  .share.button
+# Remove the target attribute so that clicking on the button doesn't open a new page.
+eval  document.querySelector(".share.button").removeAttribute('target')
+click .share.button
 wait  textarea#status
 ```
 
