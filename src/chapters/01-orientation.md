@@ -250,7 +250,7 @@ Create a `app/templates/index.hbs` file and paste the following markup.
 </div>
 ```
 
-If you are thinking, "Hey, that looks like HTML!", then you would be right! In their simplest form, Ember templates are really just HTML. If you are already familiar with them, you should feel right at home here.
+If you are thinking, "Hey, that looks like HTML!", then you would be right! In their simplest form, Ember templates are really just HTML. If you are already familiar with HTML, you should feel right at home here.
 
 Of course, unlike HTML, Ember templates can do a lot more than just displaying static content. We will see that in action soon.
 
