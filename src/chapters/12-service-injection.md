@@ -139,7 +139,7 @@ With that, we should have a working share button!
 
 ```run:screenshot width=1024 retina=true filename=share-button.png alt="A share button that works!"
 visit http://localhost:4200/rentals/grand-old-mansion
-wait  .rental.detailed .share.button
+wait  .share.button
 ```
 
 ```run:screenshot width=1024 retina=true filename=suggested-tweet.png alt="Suggested tweet"
