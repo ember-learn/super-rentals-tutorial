@@ -156,7 +156,7 @@ yarn test
 git add tests/unit/models/rental-test.js
 ```
 
-```run:screenshot width=1024 height=960 retina=true filename=pass-1.png alt="All the tests pass!"
+```run:screenshot width=1024 height=1024 retina=true filename=pass-1.png alt="All the tests pass!"
 visit http://localhost:4200/tests?nocontainer&deterministic
 wait  #qunit-banner.qunit-pass
 ```
@@ -301,7 +301,7 @@ git add app/routes/rental.js
 git add app/adapters/application.js
 ```
 
-```run:screenshot width=1024 height=960 retina=true filename=pass-2.png alt="Once again, all the tests are passing again!"
+```run:screenshot width=1024 height=1024 retina=true filename=pass-2.png alt="Once again, all the tests are passing again!"
 visit http://localhost:4200/tests?nocontainer&deterministic
 wait  #qunit-banner.qunit-pass
 ```
