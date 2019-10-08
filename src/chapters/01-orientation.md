@@ -250,7 +250,7 @@ Create a `app/templates/index.hbs` file and paste the following markup.
 </div>
 ```
 
-If you are thinking, "Hey, that looks like HTML!", then you would be right! In their simplest form, Ember templates are really just HTML. If you are already familiar with them, you should feel right at home here.
+If you are thinking, "Hey, that looks like HTML!", then you would be right! In their simplest form, Ember templates are really just HTML. If you are already familiar with HTML, you should feel right at home here.
 
 Of course, unlike HTML, Ember templates can do a lot more than just displaying static content. We will see that in action soon.
 
@@ -315,7 +315,7 @@ visit http://localhost:4200/
 git add app/styles/app.css
 ```
 
-To match mockup from our designer, we will also need to download the `teaching-tomster.png` image, which was referenced from our CSS file:
+To match the mockup from our designer, we will also need to download the `teaching-tomster.png` image, which was referenced from our CSS file:
 
 ```css { data-filename=app/styles/app.css }
 .tomster {
