@@ -71,7 +71,7 @@ With that, our second page is done!
 
 We're on a roll! While we're at it, let's add our third page. This time, things are a little bit different. Everyone at the company calls this the "contact" page. However, the old website we are replacing already has a similar page, which is served at the legacy URL `/getting-in-touch`.
 
-We want to keep the existing URLs for the new website, but `getting-in-touch` is a mouthful to type and say out loud all the time! Fortunately, we can have the best of the both worlds:
+We want to keep the existing URLs for the new website, but we don't want to have to type `getting-in-touch` all over the new codebase! Fortunately, we can have the best of the both worlds:
 
 ```run:file:patch lang=js cwd=super-rentals filename=app/router.js
 @@ -10,2 +10,3 @@
