@@ -159,7 +159,7 @@ The `@route=...` part is how we pass *[arguments][TODO: link to arguments]* into
 
 In addition to arguments, components can also take the usual HTML attributes as well. In our example, we added a `"button"` class for styling purposes, but we could also specify other attributes as we see fit, such as the [ARIA][TODO: link to ARIA] [`role` attribute][TODO: link to role attribute]. These are passed without the `@` symbol (`class=...` as opposed to `@class=...`), so that Ember will know they are just regular HTML attributes.
 
-Under the hood, the `<LinkTo>` component generates a regular `<a>` tag for us with the appropriate `href` for the specific route. This allows for perfect interoperability for all *[screen readers][TODO: link to screen readers]*, as well as the ability for our users to bookmark the link or open it in a new tab.
+Under the hood, the `<LinkTo>` component generates a regular `<a>` tag for us with the appropriate `href` for the specific route. This `<a>` tag works just fine with *[screen readers][TODO: link to screen readers]*, as well as allowing our users to bookmark the link or open it in a new tab.
 
 However, when clicking on one of these special links, Ember will intercept the click, render the content for the new page, and update the URL &mdash; all performed locally without having to wait for the server, thus avoiding a full page refresh.
 
