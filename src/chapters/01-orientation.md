@@ -60,7 +60,7 @@ del package.json
 ```
 
 ```run:file:patch hidden=true cwd=super-rentals filename=tests/index.html
-@@ -28,2 +28,81 @@
+@@ -28,2 +28,85 @@
      <script src="{{rootURL}}assets/tests.js"></script>
 +    <script>
 +      if (QUnit.urlParams.deterministic) {
@@ -116,7 +116,9 @@ del package.json
 +          details.runtime = clock.tick();
 +
 +          if (details.source) {
-+            details.source = details.source.replace(/.js((:[0-9]+):[0-9]+)/g, '.js');
++            Object.defineProperty(details, 'source', {
++              value: details.source.replace(/\.js((:[0-9]+)?:[0-9]+)/g, '.js')
++            });
 +          }
 +        });
 +
@@ -132,7 +134,9 @@ del package.json
 +          details.runtime = current;
 +
 +          if (details.source) {
-+            details.source = details.source.replace(/.js((:[0-9]+):[0-9]+)/g, '.js');
++            Object.defineProperty(details, 'source', {
++              value: details.source.replace(/\.js((:[0-9]+)?:[0-9]+)/g, '.js')
++            });
 +          }
 +        });
 +
