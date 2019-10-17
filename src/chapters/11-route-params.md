@@ -60,11 +60,11 @@ Let's see this in action. If we go back to our browser and refresh the page, we 
 visit http://localhost:4200/
 ```
 
-Wait a second &mdash; we have links, but they are all pointing to `/rentals/undefined`. Yikes! This is because `<LinkTo>` tries to use the `id` property from our model in order to replace the dynamic segment and generate the URL.
+Wait a second&mdash;we have links, but they are all pointing to `/rentals/undefined`. Yikes! This is because `<LinkTo>` tries to use the `id` property from our model in order to replace the dynamic segment and generate the URL.
 
 So what's the problem here? Well, our model doesn't actually have an `id` property! So _of course_ the `<LinkTo>` component isn't going to be able to find it and use it to generate the URL. Oops!
 
-Thankfully, we can fix this pretty easily. As it turns out, the data that is returned by our server &mdash; the JSON data that lives in our `public/api` folder &mdash; actually does have an `id` attribute on it. We can double check this by going to `http://localhost:4200/api/rentals.json`.
+Thankfully, we can fix this pretty easily. As it turns out, the data that is returned by our server&mdash;the JSON data that lives in our `public/api` folder&mdash;actually does have an `id` attribute on it. We can double check this by going to `http://localhost:4200/api/rentals.json`.
 
 ```run:screenshot width=1024 height=512 retina=true filename=data.png alt="Our data do have an id attribute"
 visit http://localhost:4200/api/rentals.json
@@ -119,7 +119,7 @@ wait  #qunit-banner.qunit-fail
 
 ...wait a minute, our tests didn't pass!
 
-Well, it's about time that we ran into something that didn't Just Work™ on the first try! This is the *advanced* part of the tutorial after all. 😉 
+Well, it's about time that we ran into something that didn't Just Work™ on the first try! This is the *advanced* part of the tutorial after all. 😉
 
 Component tests (like the one we have here) do not set up the router by default, because it's usually not necessary. In this specific case, however, we have a `<LinkTo>` in our component that is relying on the router to generate its URLs.
 
@@ -330,7 +330,7 @@ Now that we have this template in place, we can add some tests for this new comp
    });
 ```
 
-We can again use the `beforeEach` hook that we learned about earlier, which allows us to have two tests that each focus on a different, single aspect of the component, while also sharing some boilerplate code! This feels similar to other tests that we've already written &mdash; hopefully it feels easy, too!
+We can again use the `beforeEach` hook that we learned about earlier, which allows us to have two tests that each focus on a different, single aspect of the component, while also sharing some boilerplate code! This feels similar to other tests that we've already written&mdash;hopefully it feels easy, too!
 
 ```run:command hidden=true cwd=super-rentals
 yarn test
@@ -397,7 +397,7 @@ wait  #qunit-banner.qunit-pass
 
 ...they all pass! Great work!
 
-This page _looks_ done, but we have a share button that doesn't actually work. We'll address this in the next chapter. 
+This page _looks_ done, but we have a share button that doesn't actually work. We'll address this in the next chapter.
 
 ```run:server:stop
 ember server

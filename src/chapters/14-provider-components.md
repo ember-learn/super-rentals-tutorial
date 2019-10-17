@@ -50,7 +50,7 @@ In order to make our search box actually work, we are going to need to retain an
 
 But, where are we going to put this newly-introduced piece of state? In order to wire up the search box, we need a place to store the search query. At the moment, our search box lives on the `index.hbs` route template, which doesn't have a good place to store this search query state. Darn, this would be so much easier to do if we had a component, because we could just store the state directly on the component!
 
-Wait...why don't we just refactor the search box into a component? Once we do that, this will all be a bit easier &mdash; hooray!
+Wait...why don't we just refactor the search box into a component? Once we do that, this will all be a bit easier&mdash;hooray!
 
 Let's start simple again and begin our refactor by creating a new template for our component, which we will call `rentals.hbs`.
 
@@ -282,7 +282,7 @@ However, the main difference here is the use of `as |results|` when we are invok
 
 The `as |results|` syntax might look a little new to us, but it isn't the first time that we've seen the this feature in action. Back when we first learned about the `{{#each}}` syntax, which we use to loop over a collection, we wrote something like this: `{{#each @items as |item|}}...some content here...{{/each}}`.
 
-When we use this syntax, we are passing a block &mdash; the `...some content here...` in our example &mdash; to `{{#each}}`. Ember will iterate through the array we provided (`@items`) and render our block _once per item_ in the array.
+When we use this syntax, we are passing a block&mdash;the `...some content here...` in our example&mdash;to `{{#each}}`. Ember will iterate through the array we provided (`@items`) and render our block _once per item_ in the array.
 
 Inside of our block, we need to be able to access the current item _somehow_. The `{{#each}}` helper provides the item to our block via the `as |item|` declaration, which creates a local variable `item`, also known as a *[block parameter][TODO: link to block parameter]*.. In other words, as we iterate through `@items`, we will have access to the current item that we're looping over through the block parameter (`item`) The block parameter is only accessible from within inside of the block. Ember will fill in the block parameter with the current item of the iteration, and it will do this each time that it calls our block.
 
