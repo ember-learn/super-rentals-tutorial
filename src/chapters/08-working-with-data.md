@@ -218,7 +218,7 @@ wait  #qunit-banner.qunit-pass
 
 Now that we have things in place, let's do the fun part of removing *all* our hard-coded values from the model hook and actually fetch some data from the server!
 
-In a production app, the data that we'd fetch would most likely come from a remote API server. To avoid setting up an API server just for this tutorial, we will put some JSON data into the `public` folder instead. That way, we can still request this JSON data with regular HTTP requests &mdash; just like we would with a real API server  &mdash; but without having to write any server logic.
+In a production app, the data that we'd fetch would most likely come from a remote API server. To avoid setting up an API server just for this tutorial, we will put some JSON data into the `public` folder instead. That way, we can still request this JSON data with regular HTTP requests&mdash;just like we would with a real API server &mdash;but without having to write any server logic.
 
 But where will the data come from? You can <a href="/downloads/data.zip" download="data.zip">download this data file</a>, where we have prepared some JSON data and bundled it into a `.zip` file format. Extract its content into the `public` folder.
 
@@ -362,7 +362,7 @@ Let's see how.
    </ul>
 ```
 
-We can use the `{{#each}}...{{/each}}` syntax to iterate and loop through the array returned by the model hook. For each iteration through the array &mdash; for each item in the array &mdash; we will render the block that is passed to it once. In our case, the block is our `<Rental>` component, surrounded by `<li>` tags.
+We can use the `{{#each}}...{{/each}}` syntax to iterate and loop through the array returned by the model hook. For each iteration through the array&mdash;for each item in the array&mdash;we will render the block that is passed to it once. In our case, the block is our `<Rental>` component, surrounded by `<li>` tags.
 
 Inside of the block we have access to the item of the *current* iteration with the `{{rental}}` variable. But why `rental`? Well, because we named it that! This variable comes from the `as |rental|` declaration of the `each` loop. We could have just as easily called it something else, like `as |property|`, in which case we would have to access the current item through the `{{property}}` variable.
 

@@ -138,7 +138,7 @@ First, we have a container element for styling purposes.
 
 Then we have an `<img>` tag to request and render the static map image from Mapbox.
 
-Our template contains several values that don't yet exist &mdash; `@lat`, `@lng`, `@zoom`, `@width`, and `@height`. These are *[arguments][TODO: link to arguments]* to the `<Map>` component that we will supply when invoking it.
+Our template contains several values that don't yet exist&mdash;`@lat`, `@lng`, `@zoom`, `@width`, and `@height`. These are *[arguments][TODO: link to arguments]* to the `<Map>` component that we will supply when invoking it.
 
 By *[parameterizing][TODO: link to parameterizing]* our component using arguments, we made a reusable component that can be invoked from different parts of the app and customized to meet the needs for those specific contexts. We have already seen this in action when using the `<LinkTo>` component [earlier](../02-building-pages/); we had to specify a `@route` argument so that it knew what page to navigate to.
 
