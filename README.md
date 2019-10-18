@@ -419,7 +419,7 @@ Indicates a checkpoint where the following steps are performed:
 
 * `yarn lint:hbs`
 * `yarn lint:js`
-* `yarn test`
+* `yarn test --path dist`
 * Optionally, commit the current changes
 * Verify the git tree is clean (i.e. no dirty or untracked files)
 
