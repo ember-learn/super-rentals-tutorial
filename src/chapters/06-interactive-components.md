@@ -37,7 +37,7 @@ ember generate component-class rental/image
 ```
 
 ```run:command hidden=true cwd=super-rentals
-yarn test
+yarn test --path dist
 git add app/components/rental/image.js
 ```
 
@@ -88,7 +88,7 @@ Let's update our template to use this state we just added:
 In the template, we have access to the component's instance variables. The `{{#if ...}}...{{else}}...{{/if}}` *[conditionals][TODO: link to conditionals]* syntax allows us to render different content based on a condition (in this case, the value of the instance variable `this.isLarge`). Combining these two features, we can render either the small or the large version of the image accordingly.
 
 ```run:command hidden=true cwd=super-rentals
-yarn test
+yarn test --path dist
 git add app/components/rental/image.hbs
 git add app/components/rental/image.js
 ```
@@ -130,7 +130,7 @@ Since this pattern of initializing instance variables in the constructor is pret
 This does exactly the same thing as before, but it's much shorter and less to type!
 
 ```run:command hidden=true cwd=super-rentals
-yarn test
+yarn test --path dist
 git add app/components/rental/image.js
 ```
 
@@ -220,7 +220,7 @@ wait  .rentals li:first-of-type article.rental .image.large img
 ```
 
 ```run:command hidden=true cwd=super-rentals
-yarn test
+yarn test --path dist
 git add app/components/rental/image.hbs
 git add app/components/rental/image.js
 ```
@@ -265,7 +265,7 @@ Finally, let's write a test for this new behavior:
 ```
 
 ```run:command hidden=true cwd=super-rentals
-yarn test
+yarn test --path dist
 git add tests/integration/components/rental/image-test.js
 ```
 
@@ -305,7 +305,7 @@ These changes are buried deep within the large amount of duplicated code. We can
 The expression version of `{{if}}` takes two arguments. The first argument is the *[condition][TODO: link to condition]*. The second argument is the expression that should be evaluated if the condition is true.
 
 ```run:command hidden=true cwd=super-rentals
-yarn test
+yarn test --path dist
 git add app/components/rental/image.hbs
 ```
 
@@ -328,7 +328,7 @@ Whether or not this is an improvement in the clarity of our code is mostly a mat
 Run the test suite one last time to confirm our refactor didn't break anything unexpectedly, and we will be ready for the next challenge!
 
 ```run:command hidden=true cwd=super-rentals
-yarn test
+yarn test --path dist
 git add app/components/rental/image.hbs
 ```
 
