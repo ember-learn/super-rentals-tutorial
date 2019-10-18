@@ -15,9 +15,9 @@ During this refactor, you will learn about:
 
 ## Add input
 
-As our app grows and as we add more features to it, one thing that would be really nice to have is some search functionality. It would be great if our users could just type in a word into a search box and our app could just respond with matching and relevant rentals. So how could we go about implementing this feature?
+As our app grows and as we add more features to it, one thing that would be really nice to have is some search functionality. It would be great if our users could just type a word into a search box and our app could just respond with matching and relevant rentals. So how could we go about implementing this feature?
 
-Well, we can start simple. Before we worry about implementing the "search" part of this feature, let's just get something on the page. The first step is to add an `<input>` tag onto our `index` page, and make it look a little pretty with a class.
+Well, we can start simple. Before we worry about implementing the "search" part of this feature, let's just get something on the page. The first step is to add an `<input>` tag to our `index` page, and make it look pretty with a class.
 
 ```run:file:patch lang=handlebars cwd=super-rentals filename=app/templates/index.hbs
 @@ -7,2 +7,7 @@
@@ -30,7 +30,7 @@ Well, we can start simple. Before we worry about implementing the "search" part 
    <ul class="results">
 ```
 
-Now if we refresh the UI, it has an input tag on the page.
+Now if we refresh the UI, it has an `<input>` element on the page.
 
 ```run:command hidden=true cwd=super-rentals
 yarn test
@@ -48,7 +48,7 @@ Awesome, one step done. Now, this input looks great, but it doesn't actually *do
 
 In order to make our search box actually work, we are going to need to retain and store the text that the user types in when they use the search box. This text is the search query, and it is a piece of *[state][TODO: link to state]* that is going to change whenever the user types something into the search box.
 
-But, where are we going to put this newly-introduced piece of state? In order to wire up the search box, we need a place to store the search query. At the moment, our search box lives on the `index.hbs` route template, which doesn't have a good place to store this search query state. Darn, this would be so much easier to do if we had a component, because we could just store the state directly on the component!
+But where are we going to put this newly-introduced piece of state? In order to wire up the search box, we need a place to store the search query. At the moment, our search box lives on the `index.hbs` route template, which doesn't have a good place to store this search query state. Darn, this would be so much easier to do if we had a component, because we could just store the state directly on the component!
 
 Wait...why don't we just refactor the search box into a component? Once we do that, this will all be a bit easier&mdash;hooray!
 
@@ -69,13 +69,38 @@ Let's start simple again and begin our refactor by creating a new template for o
 </div>
 ```
 
-All we're doing here is copy-pasting what was on our `index.hbs` page into our new component template.
+There is one minor change to note here: while extracting our markup into a component, we also renamed the `@model` argument to be `@rentals` instead, just in order to be a little more specific about what we're iterating over in our `#each` loop. Otherwise, all we're doing here is copy-pasting what was on our `index.hbs` page into our new component template. Now we just need to actually use our new component in the index template where we started this whole refactor! Let's render our `<Rentals>` component in our `index.hbs` template.
 
-There is one minor change to note here: while extracting our markup into a component, we also renamed the `@model` argument to be `@rentals` instead, just in order to be a little more specific about what we're iterating over in our `#each` loop.
+```run:file:patch lang=handlebars cwd=super-rentals filename=app/templates/index.hbs
+@@ -6,13 +6,2 @@
 
-This refactor has been fun! Not only did we make it easier on ourselves to add a new feature, but we also ended up learning and using a new concept: the *(provider component pattern)[TODO: link to provider component pattern]*, which we see in action with one component providing data up to its caller.
+-<div class="rentals">
+-  <label>
+-    <span>Where would you like to stay?</span>
+-    <input class="light">
+-  </label>
+-
+-  <ul class="results">
+-    {{#each @model as |rental|}}
+-      <li><Rental @rental={{rental}} /></li>
+-    {{/each}}
+-  </ul>
+-</div>
++<Rentals @rentals={{@model}} />
+```
 
-Now that we've finished our refactor and tested it out in the UI, let's write a test for it as well.
+Remember the small change we made in the markup when we extracted our `<Rentals>` component? We renamed the `@model` argument to be `@rentals`. Because we made that change in our component, we now need to pass the `@model` argument into the `<Rentals>` component as `@rentals`. Once we do this, everything should be wired up properly so that the `@model` is passed into `<Rentals>` as `@rentals`, just as we expect.
+
+Let's check our UI as well to make sure that we didn't break anything during this refactor...
+
+```run:screenshot width=1024 retina=true filename=homepage-with-rentals-component.png alt="The homepage looks exactly the same as before!"
+visit http://localhost:4200/
+wait  .rentals input
+```
+
+Awesome, it looks exactly the same!
+
+Now that we've finished our refactor and tried it out in the UI, let's write a test for it as well.
 
 ```run:file:create lang=js cwd=super-rentals filename=tests/integration/components/rentals-test.js
 import { module, test } from 'qunit';
@@ -150,29 +175,7 @@ module('Integration | Component | rentals', function(hooks) {
 });
 ```
 
-Alright, now we just need to actually make everything link together and use our new component in the index template where we started this whole refactor! Let's render our `<Rentals>` component in our `index.hbs` template.
-
-```run:file:patch lang=handlebars cwd=super-rentals filename=app/templates/index.hbs
-@@ -6,13 +6,2 @@
-
--<div class="rentals">
--  <label>
--    <span>Where would you like to stay?</span>
--    <input class="light">
--  </label>
--
--  <ul class="results">
--    {{#each @model as |rental|}}
--      <li><Rental @rental={{rental}} /></li>
--    {{/each}}
--  </ul>
--</div>
-+<Rentals @rentals={{@model}} />
-```
-
-Remember the small change we made in the markup when we extracted our `<Rentals>` component? We renamed the `@model` argument to be `@rentals`. Because we made that change in our component, we now need to pass the `@model` argument into the `<Rentals>` component as `@rentals`. Once we do this, everything should be wired up properly so that the `@model` is passed into `<Rentals>` as `@rentals`, just as we expect.
-
-Now, if we try running our tests, we should still see them pass after making this change.
+Now, if we try running our tests, they should all pass after making this change.
 
 ```run:command hidden=true cwd=super-rentals
 yarn test
@@ -186,16 +189,7 @@ visit http://localhost:4200/tests?nocontainer&deterministic
 wait  #qunit-banner.qunit-pass
 ```
 
-Let's check our UI as well to make sure that we didn't break anything during this refactor...
-
-```run:screenshot width=1024 retina=true filename=homepage-with-rentals-component.png alt="The homepage looks exactly the same as before!"
-visit http://localhost:4200/
-wait  .rentals input
-```
-
-Awesome, it looks exactly the same!
-
-## Using Ember's <Input>
+## Using Ember's `<Input>`
 
 Now that we have our component all set up, we can finally wire up our search box and store our search query! First things first: let's create a component class to store our query state.
 
@@ -232,7 +226,7 @@ git add app/components/rentals.hbs
 git add app/components/rentals.js
 ```
 
-## Adding the <Rentals::Filter> Component
+## Adding the <Rentals::Filter> Provider Component
 
 Now that our search query is wired up to our `<Rentals>` component, we can get into the really fun stuff! Namely, we can make our component *filter* results based on our search query. In order to encapsulate this functionality, we'll create another component called `<Rentals::Filter>`.
 
@@ -280,11 +274,11 @@ Here, we're invoking `<Rentals::Filter>` similar to how we've invoked other comp
 
 However, the main difference here is the use of `as |results|` when we are invoking our `<Rentals::Filter>` component. Incidentally, this new syntax goes hand-in-hand with the `{{yield this.results}}` syntax we were introduced to in the component template.
 
-The `as |results|` syntax might look a little new to us, but it isn't the first time that we've seen the this feature in action. Back when we first learned about the `{{#each}}` syntax, which we use to loop over a collection, we wrote something like this: `{{#each @items as |item|}}...some content here...{{/each}}`.
+The `as |results|` syntax might look a little new to us, but it isn't the first time that we've seen this feature in action. Back when we first learned about the `{{#each}}` syntax, which we use to loop over a collection, we wrote something like this: `{{#each @items as |item|}}...some content here...{{/each}}`.
 
 When we use this syntax, we are passing a block&mdash;the `...some content here...` in our example&mdash;to `{{#each}}`. Ember will iterate through the array we provided (`@items`) and render our block _once per item_ in the array.
 
-Inside of our block, we need to be able to access the current item _somehow_. The `{{#each}}` helper provides the item to our block via the `as |item|` declaration, which creates a local variable `item`, also known as a *[block parameter][TODO: link to block parameter]*.. In other words, as we iterate through `@items`, we will have access to the current item that we're looping over through the block parameter (`item`) The block parameter is only accessible from within inside of the block. Ember will fill in the block parameter with the current item of the iteration, and it will do this each time that it calls our block.
+Inside of our block, we need to be able to access the current item _somehow_. The `{{#each}}` helper provides the item to our block via the `as |item|` declaration, which creates a local variable `item`, also known as a *[block parameter][TODO: link to block parameter]*. In other words, as we iterate through `@items`, we will have access to the current item that we're looping over through the block parameter (`item`). The block parameter is only accessible from inside the block. Ember will fill in the block parameter with the current item of the iteration, and it will do this each time that it calls our block.
 
 The need to provide some data to a block is not unique to the `{{#each}}` syntax. In this case, our `<Rentals::Filter>` component wants to take the unfiltered list of rental properties and match them against the user's query. Once the component has matched the rentals against the query, it will need to provide a filtered list of rental properties to its caller (the `<Rentals>` component).
 
@@ -294,9 +288,11 @@ In our `<Rentals>` component, we used the `as |results|` syntax when invoking `<
 
 > Zoey says...
 >
-> The local variable name `results` is arbitrary, and isn't special in any way! You could name it anything: `as |data|`, `as |filtered|`, or even `as |banana|`! Really, the important here is that however you name the block param is how you will have access to the yielded data from inside of the block.
+> The local variable name `results` is arbitrary, and isn't special in any way! You could name it anything: `as |data|`, `as |filtered|`, or even `as |banana|`! Really, the important thing here is that however you name the block param is how you will have access to the yielded data from inside the block.
 
 Interestingly, if we take a look at our `<Rentals::Filter>` component template, we see that we don't actually render any content. Instead, this component's only responsibility is to set up some piece of state (`this.results`, the list of filtered rental properties), and then yield that state back up to its caller (`<Rentals>`) in the form of a block parameter (`as |results|`).
+
+This is called the (provider component pattern)[TODO: link to provider component pattern], which we see in action with one component providing data up to its caller.
 
 Ok, now that we have a better sense of which component is rendering what and the theory behind why all of this is happening, let's answer the big unanswered question: does this even work? If we try out our search box in the UI, what happens?
 
@@ -350,11 +346,11 @@ Hooray, it works! Awesome. Now that we've tried this out manually in the UI, let
  });
 ```
 
-Great! In the process of adding this test, we'll notice that we also extracted our setup (`setProperties`) into the before hooks. We also added used the `fillIn` test helper in our newly-added test.
+Great! In the process of adding this test, we'll notice that we also extracted our setup (`setProperties`) into the before hooks. We also used the `fillIn` test helper in our newly-added test.
 
 > Zoey says...
 >
-> This search fucntionality is not perfect. Ideally, it would also be case-insensitive and allow you to search by city, category, type, or description. If you're looking for a challenge, see if you can improve on our search!
+> This search functionality is not perfect. Ideally, it would also be case-insensitive and allow you to search by city, category, type, or description. If you're looking for a challenge, see if you can improve on our search!
 
 ```run:command hidden=true cwd=super-rentals
 yarn test
