@@ -69,7 +69,7 @@ Let's start simple again and begin our refactor by creating a new template for o
 </div>
 ```
 
-There is one minor change to note here: while extracting our markup into a component, we also renamed the `@model` argument to be `@rentals` instead, just in order to be a little more specific about what we're iterating over in our `#each` loop. Otherwise, all we're doing here is copy-pasting what was on our `index.hbs` page into our new component template. Now we just need to actually use our new component in the index template where we started this whole refactor! Let's render our `<Rentals>` component in our `index.hbs` template.
+There is one minor change to note here: while extracting our markup into a component, we also renamed the `@model` argument to be `@rentals` instead, just in order to be a little more specific about what we're iterating over in our `{{#each}}` loop. Otherwise, all we're doing here is copy-pasting what was on our `index.hbs` page into our new component template. Now we just need to actually use our new component in the index template where we started this whole refactor! Let's render our `<Rentals>` component in our `index.hbs` template.
 
 ```run:file:patch lang=handlebars cwd=super-rentals filename=app/templates/index.hbs
 @@ -6,13 +6,2 @@
@@ -92,6 +92,12 @@ There is one minor change to note here: while extracting our markup into a compo
 Remember the small change we made in the markup when we extracted our `<Rentals>` component? We renamed the `@model` argument to be `@rentals`. Because we made that change in our component, we now need to pass the `@model` argument into the `<Rentals>` component as `@rentals`. Once we do this, everything should be wired up properly so that the `@model` is passed into `<Rentals>` as `@rentals`, just as we expect.
 
 Let's check our UI as well to make sure that we didn't break anything during this refactor...
+
+```run:command hidden=true cwd=super-rentals
+yarn test
+git add app/components/rentals.hbs
+git add app/templates/index.hbs
+```
 
 ```run:screenshot width=1024 retina=true filename=homepage-with-rentals-component.png alt="The homepage looks exactly the same as before!"
 visit http://localhost:4200/
@@ -179,8 +185,6 @@ Now, if we try running our tests, they should all pass after making this change.
 
 ```run:command hidden=true cwd=super-rentals
 yarn test
-git add app/components/rentals.hbs
-git add app/templates/index.hbs
 git add tests/integration/components/rentals-test.js
 ```
 
@@ -226,7 +230,7 @@ git add app/components/rentals.hbs
 git add app/components/rentals.js
 ```
 
-## Adding the <Rentals::Filter> Provider Component
+## Adding the `<Rentals::Filter>` Provider Component
 
 Now that our search query is wired up to our `<Rentals>` component, we can get into the really fun stuff! Namely, we can make our component *filter* results based on our search query. In order to encapsulate this functionality, we'll create another component called `<Rentals::Filter>`.
 
@@ -252,9 +256,9 @@ export default class RentalsFilterComponent extends Component {
 
 In the `<Rentals::Filter>` component class, we have created a getter to do the work of filtering through our rentals based on two arguments: `@rentals` and `@query`. Inside of our getter function, we have these arguments accessible to us from `this.args`.
 
-In our component template, we are not actually _rendering_ anything. Instead, we're `yield`ing to something, using the `{{yield}}` keyword, a syntax that [we have seen before](../04-component-basics/). As we might recall, the purpose of `{{yield}}` is to render the *block* that is passed in by the component's *caller*, which is the thing that is invoking the current component (a template or another component, for example). But in this specific case, we don't just have a `{{yield}}` keyword. Instead, we have `this.results` _inside_ of our `{{yield}}` keyword. What is that doing, exactly?
+In our component template, we are not actually _rendering_ anything. Instead, we're yielding to something, using the `{{yield}}` keyword, a syntax that [we have seen before](../04-component-basics/). As we might recall, the purpose of `{{yield}}` is to render the *block* that is passed in by the component's *caller*, which is the thing that is invoking the current component (a template or another component, for example). But in this specific case, we don't just have a `{{yield}}` keyword. Instead, we have `this.results` _inside_ of our `{{yield}}` keyword. What is that doing, exactly?
 
-Well, in order to answer this question, let's take a look at how we use the `{{yield}}` keyword in the `<Rentals>` component.
+Well, in order to answer this question, let's look at how the data that we're yielding is being used in the `<Rentals>` component.
 
 ```run:file:patch lang=handlebars cwd=super-rentals filename=app/components/rentals.hbs
 @@ -7,5 +7,7 @@
@@ -278,17 +282,17 @@ The `as |results|` syntax might look a little new to us, but it isn't the first 
 
 When we use this syntax, we are passing a block&mdash;the `...some content here...` in our example&mdash;to `{{#each}}`. Ember will iterate through the array we provided (`@items`) and render our block _once per item_ in the array.
 
-Inside of our block, we need to be able to access the current item _somehow_. The `{{#each}}` helper provides the item to our block via the `as |item|` declaration, which creates a local variable `item`, also known as a *[block parameter][TODO: link to block parameter]*. In other words, as we iterate through `@items`, we will have access to the current item that we're looping over through the block parameter (`item`). The block parameter is only accessible from inside the block. Ember will fill in the block parameter with the current item of the iteration, and it will do this each time that it calls our block.
+Inside of our block, we need to be able to access the current item _somehow_. The `{{#each}}` syntax provides the item to our block via the `as |item|` declaration, which creates a local variable `item`, also known as a *[block parameter][TODO: link to block parameter]*.. In other words, as we iterate through `@items`, we will have access to the current item that we're looping over through the block parameter (`item`) The block parameter is only accessible from within inside of the block. Ember will fill in the block parameter with the current item of the iteration, and it will do this each time that it renders our block.
 
 The need to provide some data to a block is not unique to the `{{#each}}` syntax. In this case, our `<Rentals::Filter>` component wants to take the unfiltered list of rental properties and match them against the user's query. Once the component has matched the rentals against the query, it will need to provide a filtered list of rental properties to its caller (the `<Rentals>` component).
 
-As it turns out, this ability to provide data is not a superpower that only built-in syntaxes like `{{#each}}` can use. We can do this with our own components as well. In fact, Ember allows us to pass arbitrary data to blocks in the form of passing in additional arguments to the `{{yield}}` keyword. Indeed, this is exactly what we did with `{{yield this.results}}` in the `<Rentals::Filter>` component.
+As it turns out, this ability to provide block params is not a superpower that only built-in syntaxes like `{{#each}}` can use. We can do this with our own components as well. In fact, Ember allows us to pass arbitrary data to blocks in the form of passing in additional arguments to the `{{yield}}` keyword. Indeed, this is exactly what we did with `{{yield this.results}}` in the `<Rentals::Filter>` component.
 
 In our `<Rentals>` component, we used the `as |results|` syntax when invoking `<Rentals::Filter>`. Just like with the `{{#each}}` syntax, this block parameter syntax allowed our block to access the yielded data using the local variable `results`. The yielded data came from `{{yield this.results}}`, where `this.results` is our filtered list of rental properties.
 
 > Zoey says...
 >
-> The local variable name `results` is arbitrary, and isn't special in any way! You could name it anything: `as |data|`, `as |filtered|`, or even `as |banana|`! Really, the important thing here is that however you name the block param is how you will have access to the yielded data from inside the block.
+> The local variable name `results` is arbitrary, and isn't special in any way! You could name it anything: `as |data|`, `as |filtered|`, or even `as |banana|`! In fact, the `as |...|` syntax is the same as declaring a local variable in JavaScript. Just as we can create a variable like `let banana = ...`, and then have access to that variable whenever we call `banana`, we can also have access to the yielded item by using whatever variable name we gave to our black parameter. The important thing here is that however you name the block param is how you will have access to the yielded data from inside the block.
 
 Interestingly, if we take a look at our `<Rentals::Filter>` component template, we see that we don't actually render any content. Instead, this component's only responsibility is to set up some piece of state (`this.results`, the list of filtered rental properties), and then yield that state back up to its caller (`<Rentals>`) in the form of a block parameter (`as |results|`).
 
@@ -350,7 +354,7 @@ Great! In the process of adding this test, we'll notice that we also extracted o
 
 > Zoey says...
 >
-> This search functionality is not perfect. Ideally, it would also be case-insensitive and allow you to search by city, category, type, or description. If you're looking for a challenge, see if you can improve on our search!
+> This search functionality is not perfect. Ideally, it would also be case-insensitive, and also allow you to search by city, category, type, or description. If you're looking for a challenge, see if you can improve on our search!
 
 ```run:command hidden=true cwd=super-rentals
 yarn test
