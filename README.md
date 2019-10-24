@@ -301,11 +301,11 @@ the `filename` argument if they are not already included in the patch.
 
 A good workflow for generating patches:
 
-* Insert `run:pause` at the appropiate spot
+* Insert `run:pause` at the appropriate spot
 * Make sure the file you are editing is clean or staged (`git add file`)
 * Make the changes
 * `git diff -U1 > diff.patch`, play with the context number, tweak the patch by
-  hand until you are happy with how it looks (keeping source-readibility in
+  hand until you are happy with how it looks (keeping source-readability in
   mind)
 * Undo the changes with `git checkout file`
 * Test the patch with `git apply diff.patch`
