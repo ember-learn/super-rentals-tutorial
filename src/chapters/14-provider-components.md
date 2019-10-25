@@ -292,7 +292,8 @@ In our `<Rentals>` component, we used the `as |results|` syntax when invoking `<
 
 > Zoey says...
 >
-> The local variable name `results` is arbitrary, and isn't special in any way! You could name it anything: `as |data|`, `as |filtered|`, or even `as |banana|`! In fact, the `as |...|` syntax is the same as declaring a local variable in JavaScript. Just as we can create a variable like `let banana = ...`, and then have access to that variable whenever we call `banana`, we can also have access to the yielded item by using whatever variable name we gave to our black parameter. The important thing here is that however you name the block param is how you will have access to the yielded data from inside the block.
+> The local variable name `results` is arbitrary, and isn't special in any way! You could name it anything: `as |data|`, `as |filtered|`, or even `as |banana|`! In fact, the `... as |banana|` syntax is the same as declaring a local variable in JavaScript.
+> Just as we can create a variable like `let banana = ...`, and then have access to that variable whenever we call `banana`, we can also have access to the yielded item by using whatever variable name we gave to our black parameter. The important thing here is that however you name the block param is how you will have access to the yielded data from inside the block.
 
 Interestingly, if we take a look at our `<Rentals::Filter>` component template, we see that we don't actually render any content. Instead, this component's only responsibility is to set up some piece of state (`this.results`, the list of filtered rental properties), and then yield that state back up to its caller (`<Rentals>`) in the form of a block parameter (`as |results|`).
 

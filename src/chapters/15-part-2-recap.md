@@ -33,3 +33,7 @@ There was a lot of concent to cover in part two. To recap, here is what you lear
 * Yielding data to caller components
 
 Awesome! The concepts you learned about in part 2 of the tutorial are ones that you'll find in many production-level Ember apps. You've now taken your knowledge to the next level&mdash;and you've also finished the entire tutorial, hooray!
+
+If you're curious to learn more, you can check out the *[Ember guides][TODO: link to Ember guides]* and learn more about the concepts we've covered in even more depth! If you want to practice some of the ideas we've covered, you can also try building your own Ember app.
+
+Happy coding!
