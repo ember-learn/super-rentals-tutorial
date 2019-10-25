@@ -1,3 +1,5 @@
+<!--lint disable no-undefined-references -->
+
 ```run:server:start hidden=true cwd=super-rentals expect="Serving on http://localhost:4200/"
 ember server
 ```
@@ -70,7 +72,7 @@ Let's try it out by editing the index template:
 
 ## Refactoring Existing Code
 
-After saving the changes, your page should automatically reload, and, _voilà_... nothing changed? Well, that's exactly what we wanted to happen this time! We successfully *[refactored][TODO: link to refactored]* our index template to use the `<Jumbo>` component, and everything still works as expected. And the tests still pass!
+After saving the changes, your page should automatically reload, and, *voilà*... nothing changed? Well, that's exactly what we wanted to happen this time! We successfully *[refactored][TODO: link to refactored]* our index template to use the `<Jumbo>` component, and everything still works as expected. And the tests still pass!
 
 ```run:screenshot width=1024 retina=true filename=index.png alt="Index page – nothing changed"
 visit http://localhost:4200/
@@ -259,7 +261,7 @@ git add app/templates/index.hbs
 
 Everything looks great in the browser, but as we know, we can never be too sure. So let's write some tests!
 
-But what kind of test? We _could_ write a component test for the `<NavBar>` by itself, like we just did for the `<Jumbo>` component. However, since the job of `<NavBar>` is to _navigate_ us around the app, it would not make a lot of sense to test this particular component in isolation. So, let's go back to writing some acceptance tests!
+But what kind of test? We *could* write a component test for the `<NavBar>` by itself, like we just did for the `<Jumbo>` component. However, since the job of `<NavBar>` is to *navigate* us around the app, it would not make a lot of sense to test this particular component in isolation. So, let's go back to writing some acceptance tests!
 
 ```run:file:patch lang=js cwd=super-rentals filename=tests/acceptance/super-rentals-test.js
 @@ -11,2 +11,4 @@
@@ -316,7 +318,7 @@ wait  #qunit-banner.qunit-pass
 
 ## Using the Application Template and `{{outlet}}`s
 
-Before we move on to the next feature, there is one more thing we could clean up. Since the `<NavBar>` is used for site-wide navigation, it really needs to be displayed on _every_ page in the app. So far, we have been adding the component on each page manually. This is a bit error-prone, as we could easily forget to do this the next time that we add a new page.
+Before we move on to the next feature, there is one more thing we could clean up. Since the `<NavBar>` is used for site-wide navigation, it really needs to be displayed on *every* page in the app. So far, we have been adding the component on each page manually. This is a bit error-prone, as we could easily forget to do this the next time that we add a new page.
 
 We can solve this problem by moving the nav-bar into a special template called `application.hbs`. You may remember that it was generated for us when we first created the app but we deleted it. Now, it's time for us to bring it back!
 

@@ -4,7 +4,7 @@ In this tutorial, we will use Ember to build an application called Super Rentals
 
 ![The finished Super Rentals app](/screenshots/08-working-with-data/three-properties@2x.png)
 
-Along the way, you will learn everything you need to know to build a basic Ember application. If you get stuck at any point during the tutorial, feel free to download https://github.com/ember-learn/super-rentals/tree/super-rentals-tutorial-output for a complete working example.
+Along the way, you will learn everything you need to know to build a basic Ember application. If you get stuck at any point during the tutorial, feel free to download <https://github.com/ember-learn/super-rentals/tree/super-rentals-tutorial-output> for a complete working example.
 
 This tutorial is structured into two parts. The first part covers the following basic concepts:
 

@@ -1,3 +1,5 @@
+<!--lint disable no-undefined-references -->
+
 In this chapter, you will install *[Ember CLI][TODO: link to Ember CLI]*, use it to generate a new Ember project, and add some basic templates and styles to your new app. By the end of this chapter, you should have a landing page with Professor Tomster's cute little face featured on it:
 
 ![The Super Rentals app by the end of the chapter](/screenshots/01-orientation/styled-with-tomster@2x.png)
@@ -199,7 +201,7 @@ ember server | awk '{ \
 ember server
 ```
 
-The development server is responsible for compiling our app and serving it to the browsers. It may take a while to boot up. Once it's up and running, open your favorite browser and head to http://localhost:4200. You should see the following welcome page:
+The development server is responsible for compiling our app and serving it to the browsers. It may take a while to boot up. Once it's up and running, open your favorite browser and head to <http://localhost:4200>. You should see the following welcome page:
 
 ```run:screenshot width=1024 retina=true filename=welcome.png alt="Welcome to Ember!"
 visit http://localhost:4200/

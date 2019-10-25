@@ -1,3 +1,5 @@
+<!--lint disable no-undefined-references -->
+
 The last missing feature for the `<Rental>` component is a map to show the location of the rental, which is what we're going to work on next:
 
 ![The Super Rentals app by the end of the chapter](/screenshots/07-reusable-components/three-old-mansions@2x.png)
@@ -148,7 +150,7 @@ Next, we used `...attributes` to allow the invoker to further customize the `<im
 
 *The ordering is important here!* Ember applies the attributes in the order that they appear. By assigning the default `alt` attribute first (*before* `...attributes` is applied), we are explicitly providing the invoker the *option* to provide a more tailored `alt` attribute according to their use case.
 
-Since the passed-in `alt` attribute (if any exists) will appear _after_ ours, it will override the value we specified. On the other hand, it is important that we assign `src`, `width`, and `height` after `...attributes`, so that they don't get accidentally overwritten by the invoker.
+Since the passed-in `alt` attribute (if any exists) will appear *after* ours, it will override the value we specified. On the other hand, it is important that we assign `src`, `width`, and `height` after `...attributes`, so that they don't get accidentally overwritten by the invoker.
 
 The `src` attribute interpolates all the required parameters into the URL format for Mapbox's [static map image API](https://docs.mapbox.com/api/maps/#static-images), including the URL-escaped access token from `this.token`.
 
@@ -352,7 +354,7 @@ wait  #qunit-banner.qunit-pass
 
 Note that we did not mark our getter as `@tracked`. Unlike instance variables, getters cannot be "assigned" a new value directly, so it does not make sense for Ember to monitor them for changes.
 
-That being said, the values _produced_ by getters can certainly change. In our case, the value produced by our `src` getter depends on the values of `lat`, `lng`, `width`, `height` and `zoom` from `this.args`. Whenever these *[dependencies][TODO: link to dependencies]* get updated, we would expect `{{this.src}}` from our template to be updated accordingly.
+That being said, the values *produced* by getters can certainly change. In our case, the value produced by our `src` getter depends on the values of `lat`, `lng`, `width`, `height` and `zoom` from `this.args`. Whenever these *[dependencies][TODO: link to dependencies]* get updated, we would expect `{{this.src}}` from our template to be updated accordingly.
 
 Ember does this by automatically tracking any variables that were accessed while computing a getter's value. As long as the dependencies themselves are marked as `@tracked`, Ember knows exactly when to invalidate and re-render any templates that may potentially contain any "stale" and outdated getter values. This feature is also known as *[auto-track][TODO: link to auto-track]*. All arguments that can be accessed from `this.args` (in other words, `this.args.*`) are implicitly marked as `@tracked` by the Glimmer component superclass. Since we inherited from that superclass, everything Just Works&trade;.
 
@@ -408,7 +410,7 @@ Just to be sure, we can add a test for this behavior:
 
 Using the special `this.setProperties` testing API, we can pass arbitrary values into our component.
 
-Note that the value of `this` here does _not_ refer to the component instance. We are not directly accessing or modifying the component's internal states (that would be extremely rude!).
+Note that the value of `this` here does *not* refer to the component instance. We are not directly accessing or modifying the component's internal states (that would be extremely rude!).
 
 Instead, `this` refers to a special *[test context][TODO: link to test context]* object, which we have access to inside the `render` helper. This provides a "bridge" for us to pass dynamic values, in the form of arguments, into our invocation of the component. This allows us to update these values as needed from the test function.
 

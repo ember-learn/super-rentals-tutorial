@@ -1,3 +1,5 @@
+<!--lint disable no-undefined-references -->
+
 ```run:server:start hidden=true cwd=super-rentals expect="Serving on http://localhost:4200/"
 ember server
 ```
@@ -229,7 +231,7 @@ Finally, we should also update the tests for the `<Rental>` component to confirm
    });
 ```
 
-Because we already tested `<Rental::Image>` extensively on its own, we can omit the details here and keep our assertion to the bare minimum. That way, we won't  _also_ have to update the `<Rental>` tests whenever we make changes to `<Rental::Image>`.
+Because we already tested `<Rental::Image>` extensively on its own, we can omit the details here and keep our assertion to the bare minimum. That way, we won't  *also* have to update the `<Rental>` tests whenever we make changes to `<Rental::Image>`.
 
 ```run:command hidden=true cwd=super-rentals
 yarn test --path dist

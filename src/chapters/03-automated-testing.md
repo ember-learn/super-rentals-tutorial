@@ -1,3 +1,5 @@
+<!--lint disable no-undefined-references -->
+
 ```run:server:start hidden=true cwd=super-rentals expect="Serving on http://localhost:4200/"
 ember server
 ```
@@ -19,9 +21,9 @@ In the process, you will learn about:
 
 We accomplished a lot in the last few chapters! Let's recap &mdash; we started with a blank canvas, added a few pages of content, styled everything to look pretty, dropped in a picture of Tomster, added links between our pages and amazingly, everything worked together flawlessly!
 
-But do we _really_ know that everything is actually working? Sure, we clicked around a bit to confirm that things look as expected. But do we feel confident that we checked _every_ page after the most recent change that we made?
+But do we *really* know that everything is actually working? Sure, we clicked around a bit to confirm that things look as expected. But do we feel confident that we checked *every* page after the most recent change that we made?
 
-After all, most of us have experienced (or heard horror stories about) making a Small Tweak™ in one area of the app that inadvertently broke _everything else_ when we weren't looking.
+After all, most of us have experienced (or heard horror stories about) making a Small Tweak™ in one area of the app that inadvertently broke *everything else* when we weren't looking.
 
 Maybe we can write a checklist somewhere of all the things to check after making changes to our site. But surely, this will get out of hand as we add more features to our app. It is also going to get old really quickly &mdash; repetitive tasks like that are best left to robots.
 
@@ -43,7 +45,7 @@ In this case, we generated an *[acceptance test][TODO: link to acceptance test]*
 git add tests/acceptance/super-rentals-test.js
 ```
 
-Generators aren't required; we _could_ have created the file ourselves which would have accomplished the exact same thing. But, generators certainly save us a lot of typing. Go ahead and take a peek at the acceptance test file and see for yourself.
+Generators aren't required; we *could* have created the file ourselves which would have accomplished the exact same thing. But, generators certainly save us a lot of typing. Go ahead and take a peek at the acceptance test file and see for yourself.
 
 > Zoey says...
 >
@@ -80,13 +82,13 @@ Let's open the generated test file and replace the boilerplate test with our own
    });
 ```
 
-First, we instruct the test robot to navigate to the `/` URL of our app by using the `visit` _test helper_ provided by Ember. This is akin to us typing `http://localhost:4200/` in the browser's address bar and hitting the `enter` key.
+First, we instruct the test robot to navigate to the `/` URL of our app by using the `visit` *test helper* provided by Ember. This is akin to us typing `http://localhost:4200/` in the browser's address bar and hitting the `enter` key.
 
-Because the page is going to take some time to load, this is known as an *[async][TODO: link to async]* (short for _asynchronous_) step, so we will need to tell the test robot to wait by using JavaScript's `await` keyword. That way, it will wait until the page completely finishes loading before moving on to the next step.
+Because the page is going to take some time to load, this is known as an *[async][TODO: link to async]* (short for *asynchronous*) step, so we will need to tell the test robot to wait by using JavaScript's `await` keyword. That way, it will wait until the page completely finishes loading before moving on to the next step.
 
 This is almost always the behavior we want, so we will almost always use `await` and `visit` as a pair. This applies to other kinds of simulated interaction too, such as clicking on a button or a link, as they all take time to complete. Even though sometimes these actions may seem imperceptibly fast to us, we have to remember that our test robot has really, really fast hands, as we will see in a moment.
 
-After navigating to the `/` URL and waiting for things to settle, we check that the current URL matches the URL that we expect (`/`). We can use the `currentURL` test helper here, as well as `equal` *[assertion][TODO: link to assertion]*. This is how we encode our "checklist" into code &mdash; by specifying, or *[asserting][TODO: link to asserting]* how things _should_ behave, we will be alerted if our app does _not_ behave in the way that we expect.
+After navigating to the `/` URL and waiting for things to settle, we check that the current URL matches the URL that we expect (`/`). We can use the `currentURL` test helper here, as well as `equal` *[assertion][TODO: link to assertion]*. This is how we encode our "checklist" into code &mdash; by specifying, or *[asserting][TODO: link to asserting]* how things *should* behave, we will be alerted if our app does *not* behave in the way that we expect.
 
 Next, we confirmed that the page has an `<h2>` tag that contains the text "Welcome to Super Rentals!". Knowing this is true means that we can be quite certain that the correct template has been rendered, without errors.
 
@@ -187,7 +189,7 @@ git add tests/acceptance/super-rentals-test.js
 
 For the rest of the tutorial, we will continue to add more automated tests as we develop new features. Testing is optional but highly recommended. Tests don't affect the functionality of your app, they just protect it from *[regressions][TODO: link to regressions]*, which is just a fancy way of saying "accidental breakages."
 
-If you are in a hurry, you can skip over the testing sections in this tutorial and still be able to follow along with everything else. But don't you find it super satisfying &mdash; _oddly satisfying_ &mdash; to watch a robot click on things really, really fast?
+If you are in a hurry, you can skip over the testing sections in this tutorial and still be able to follow along with everything else. But don't you find it super satisfying &mdash; *oddly satisfying* &mdash; to watch a robot click on things really, really fast?
 
 ```run:server:stop
 ember server
