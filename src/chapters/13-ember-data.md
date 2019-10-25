@@ -1,3 +1,5 @@
+<!--lint disable no-undefined-references-->
+
 ```run:server:start hidden=true cwd=super-rentals expect="Serving on http://localhost:4200/"
 ember server
 ```
@@ -25,7 +27,7 @@ A while back, we added the `rental` route. If memory serves us well, we didn't d
 ```run:file:show lang=js cwd=super-rentals filename=app/routes/rental.js
 ```
 
-This duplication incurred a bit of *[technical debt][TODO: link to technical debt]* for us, making our code base harder to maintain in the long run. For example, if we wanted to change something about how our data-fetching logic worked, we'd have to change it in _both_ the `index` and `rental` routes. If we changed things in one place, but forgot about the other spot, we could end up with really subtle bugs in our app! Yikes!
+This duplication incurred a bit of *[technical debt][TODO: link to technical debt]* for us, making our code base harder to maintain in the long run. For example, if we wanted to change something about how our data-fetching logic worked, we'd have to change it in *both* the `index` and `rental` routes. If we changed things in one place, but forgot about the other spot, we could end up with really subtle bugs in our app! Yikes!
 
 Chances are, as we keep working on this app, we will need to add more routes that fetch data from the server. Since all of our server's API endpoints follow the [JSON:API][TODO: link to JSON:API] format, we'd have to keep copying this boilerplate for every single new route we add to the app!
 
@@ -145,7 +147,7 @@ The generator created some boilerplate code for us, which servers as a pretty go
    });
 ```
 
-This model test is also known as a *[unit test][TODO: link to unit test]*. Unlike any of the other tests that we've written thus far, this test doesn't actually _render_ anything. It just instantiates the rental model object and tests the model object directly, manipulating its attributes and asserting their value.
+This model test is also known as a *[unit test][TODO: link to unit test]*. Unlike any of the other tests that we've written thus far, this test doesn't actually *render* anything. It just instantiates the rental model object and tests the model object directly, manipulating its attributes and asserting their value.
 
 It is worth pointing out that Ember Data provides a *[`store` service][TODO: link to Ember Data store]*, also known as the Ember Data store. In our test, we used the `this.owner.lookup('service:store')` API to get access to the Ember Data store. The store provides a `createRecord` method to instantiate our model object for us.
 
@@ -237,7 +239,7 @@ Wow... that removed a lot of code! This is all possible thanks to the power of c
 
 As mentioned above, Ember Data provides a `store` service, which we can inject into our route using the `@service store;` declaration, making the Ember Data store available as `this.store`. It provides the `find` and `findAll` methods for loading records. Specifically, the [`find` method][TODO: link to find] takes a model type (`rental` in our case) and a model ID (for us, that would be `params.rental_id` from the URL) as arguments and fetches a single record from the store. On the other hand, the [`findAll` method][TODO: link to findAll] takes the model type as an argument and fetches all records of that type from the store.
 
-The Ember Data store acts as a kind of intermediary between our app and the server; it does many important things, including caching the responses that were fetched from the server. If we request some records (instances of model classes) that we had _already_ fetched from the server in the past, Ember Data's store ensures that we can access the records immediately, without having to fetch them again unnecessarily and wait for the server to respond. But, if we don't already have that response cached in our store, then it will go off and fetches it from the server. Pretty nice, right?
+The Ember Data store acts as a kind of intermediary between our app and the server; it does many important things, including caching the responses that were fetched from the server. If we request some records (instances of model classes) that we had *already* fetched from the server in the past, Ember Data's store ensures that we can access the records immediately, without having to fetch them again unnecessarily and wait for the server to respond. But, if we don't already have that response cached in our store, then it will go off and fetches it from the server. Pretty nice, right?
 
 That's a lot of theory, but is this going to work in our app? Let's run the tests and find out!
 
@@ -259,7 +261,7 @@ Hm, okay, so we have to teach Ember Data to fetch data from the correct location
 
 Ember Data uses an *[adapter][TODO: link to adapter]* and *[serializer][TODO: link to serializer]* architecture. Adapters deal with *how* and *where* Ember Data should fetch data from your servers, such as whether to use HTTP, HTTPS, WebSockets or local storage, as well as the URLs, headers and parameters to use for these requests. On the other hand, serializers are in charge of converting the data returned by the server into a format Ember Data can understand.
 
-The idea is that, provided that your backend exposes a _consistent_ protocol and interchange format to access its data, we can write a single adapter-serializer pair to handle all data fetches for the entire application. Of course, if your backend's endpoints are not so consistent, don't worry, Ember Data allows you to define more specific, per-model adapters and serializers too!
+The idea is that, provided that your backend exposes a *consistent* protocol and interchange format to access its data, we can write a single adapter-serializer pair to handle all data fetches for the entire application. Of course, if your backend's endpoints are not so consistent, don't worry, Ember Data allows you to define more specific, per-model adapters and serializers too!
 
 As it turns out, JSON:API just happens to be Ember Data's default data protocol and interchange format. Out of the box, Ember Data provides a default JSON:API adapter and serializer. This is great news for us, since that is also what our server has implemented. What a wonderful coincidence!
 
@@ -281,12 +283,12 @@ By convention, adapters are located at `app/adapters`. Furthermore, the adapter 
 
 Inside this newly created file, we defined an `ApplicationAdapter` class, inheriting from the built-in [`JSONAPIAdapter`][TODO: link to docs]. This allows us to inherit all the default JSON:API functionalities, while customizing the things that didn't work for us by default. Specifically:
 
-* Our resource URLs have an extra `/api` _namespace_ prefix.
+* Our resource URLs have an extra `/api` *namespace* prefix.
 * Our resource URLs have a `.json` extension at the end.
 
 Adding a namespace prefix happens to be pretty common across Ember apps, so the `JSONAPIAdapter` has an API to do just that. All we need to do is to set the  `namespace` property to the prefix we want, which is `api` in our case.
 
-Adding the `.json` extension is a bit less common, and doesn't have a declarative configuration API of its own. Instead, we will need to *[override][TODO: link to override]* Ember Data's [`buildURL`][TODO: link to buildURL] method. Inside of `buildURL`, we will call `super.buildURL(...args)` to invoke the `JSONAPIAdapter` default implementation of `buildURL`. This will give us the URL that the adapter _would have built_, which would be something like `/api/rentals` and `/api/rentals/grand-old-mansion` after configuring the `namespace` above. All we have to do is to append `.json` to this URL and return it.
+Adding the `.json` extension is a bit less common, and doesn't have a declarative configuration API of its own. Instead, we will need to *[override][TODO: link to override]* Ember Data's [`buildURL`][TODO: link to buildURL] method. Inside of `buildURL`, we will call `super.buildURL(...args)` to invoke the `JSONAPIAdapter` default implementation of `buildURL`. This will give us the URL that the adapter *would have built*, which would be something like `/api/rentals` and `/api/rentals/grand-old-mansion` after configuring the `namespace` above. All we have to do is to append `.json` to this URL and return it.
 
 > Zoey says...
 >
@@ -318,7 +320,7 @@ visit http://localhost:4200/rentals/grand-old-mansion
 wait  .rental.detailed
 ```
 
-As we mentioned earlier, Ember Data offers many, many features (like managing the _relationships_ between different models) and there's a lot more we can learn about it. We are just scratching the surface here. If you want to learn more about Ember Data, check out [its own dedicated section][TODO: link to Ember Data] in the guides!
+As we mentioned earlier, Ember Data offers many, many features (like managing the *relationships* between different models) and there's a lot more we can learn about it. We are just scratching the surface here. If you want to learn more about Ember Data, check out [its own dedicated section][TODO: link to Ember Data] in the guides!
 
 ```run:server:stop
 ember server

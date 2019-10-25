@@ -1,3 +1,5 @@
+<!--lint disable no-undefined-references-->
+
 ```run:server:start hidden=true cwd=super-rentals expect="Serving on http://localhost:4200/"
 ember server
 ```
@@ -42,7 +44,7 @@ visit http://localhost:4200/
 wait  .rentals input
 ```
 
-Awesome, one step done. Now, this input looks great, but it doesn't actually *do* do anything.
+Awesome, one step done. Now, this input looks great, but it doesn't actually *do* anything.
 
 ## Refactoring the index template into a component
 
@@ -256,7 +258,7 @@ export default class RentalsFilterComponent extends Component {
 
 In the `<Rentals::Filter>` component class, we have created a getter to do the work of filtering through our rentals based on two arguments: `@rentals` and `@query`. Inside of our getter function, we have these arguments accessible to us from `this.args`.
 
-In our component template, we are not actually _rendering_ anything. Instead, we're yielding to something, using the `{{yield}}` keyword, a syntax that [we have seen before](../04-component-basics/). As we might recall, the purpose of `{{yield}}` is to render the *block* that is passed in by the component's *caller*, which is the thing that is invoking the current component (a template or another component, for example). But in this specific case, we don't just have a `{{yield}}` keyword. Instead, we have `this.results` _inside_ of our `{{yield}}` keyword. What is that doing, exactly?
+In our component template, we are not actually *rendering* anything. Instead, we're yielding to something, using the `{{yield}}` keyword, a syntax that [we have seen before](../04-component-basics/). As we might recall, the purpose of `{{yield}}` is to render the *block* that is passed in by the component's *caller*, which is the thing that is invoking the current component (a template or another component, for example). But in this specific case, we don't just have a `{{yield}}` keyword. Instead, we have `this.results` *inside* of our `{{yield}}` keyword. What is that doing, exactly?
 
 Well, in order to answer this question, let's look at how the data that we're yielding is being used in the `<Rentals>` component.
 
@@ -280,9 +282,9 @@ However, the main difference here is the use of `as |results|` when we are invok
 
 The `as |results|` syntax might look a little new to us, but it isn't the first time that we've seen this feature in action. Back when we first learned about the `{{#each}}` syntax, which we use to loop over a collection, we wrote something like this: `{{#each @items as |item|}}...some content here...{{/each}}`.
 
-When we use this syntax, we are passing a block&mdash;the `...some content here...` in our example&mdash;to `{{#each}}`. Ember will iterate through the array we provided (`@items`) and render our block _once per item_ in the array.
+When we use this syntax, we are passing a block&mdash;the `...some content here...` in our example&mdash;to `{{#each}}`. Ember will iterate through the array we provided (`@items`) and render our block *once per item* in the array.
 
-Inside of our block, we need to be able to access the current item _somehow_. The `{{#each}}` syntax provides the item to our block via the `as |item|` declaration, which creates a local variable `item`, also known as a *[block parameter][TODO: link to block parameter]*.. In other words, as we iterate through `@items`, we will have access to the current item that we're looping over through the block parameter (`item`) The block parameter is only accessible from within inside of the block. Ember will fill in the block parameter with the current item of the iteration, and it will do this each time that it renders our block.
+Inside of our block, we need to be able to access the current item *somehow*. The `{{#each}}` syntax provides the item to our block via the `as |item|` declaration, which creates a local variable `item`, also known as a *[block parameter][TODO: link to block parameter]*.. In other words, as we iterate through `@items`, we will have access to the current item that we're looping over through the block parameter (`item`) The block parameter is only accessible from within inside of the block. Ember will fill in the block parameter with the current item of the iteration, and it will do this each time that it renders our block.
 
 The need to provide some data to a block is not unique to the `{{#each}}` syntax. In this case, our `<Rentals::Filter>` component wants to take the unfiltered list of rental properties and match them against the user's query. Once the component has matched the rentals against the query, it will need to provide a filtered list of rental properties to its caller (the `<Rentals>` component).
 
@@ -297,9 +299,9 @@ In our `<Rentals>` component, we used the `as |results|` syntax when invoking `<
 
 Interestingly, if we take a look at our `<Rentals::Filter>` component template, we see that we don't actually render any content. Instead, this component's only responsibility is to set up some piece of state (`this.results`, the list of filtered rental properties), and then yield that state back up to its caller (`<Rentals>`) in the form of a block parameter (`as |results|`).
 
-This is called the (provider component pattern)[TODO: link to provider component pattern], which we see in action with one component providing data up to its caller.
+This is called the *[provider component pattern][TODO: link to provider component pattern]*, which we see in action with one component providing data up to its caller.
 
-Ok, now that we have a better sense of which component is rendering what and the theory behind why all of this is happening, let's answer the big unanswered question: does this even work? If we try out our search box in the UI, what happens?
+Okay, now that we have a better sense of which component is rendering what and the theory behind why all of this is happening, let's answer the big unanswered question: does this even work? If we try out our search box in the UI, what happens?
 
 ```run:screenshot width=1024 retina=true filename=filtered-results.png alt="Trying out the search box."
 visit http://localhost:4200/

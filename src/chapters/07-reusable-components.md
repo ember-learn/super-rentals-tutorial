@@ -1,4 +1,4 @@
-<!--lint disable no-undefined-references -->
+<!--lint disable no-undefined-references-->
 
 The last missing feature for the `<Rental>` component is a map to show the location of the rental, which is what we're going to work on next:
 

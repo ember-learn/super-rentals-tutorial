@@ -1,3 +1,5 @@
+<!--lint disable no-undefined-references-->
+
 ```run:server:start hidden=true cwd=super-rentals expect="Serving on http://localhost:4200/"
 ember server
 ```
@@ -73,7 +75,7 @@ Let's start with the template that was generated for this component. We already 
 
 Notice that we added `...attributes` to our `<a>` tag here. As [we learned earlier](../07-reusable-components/) when working on our `<Map>` component, the order of `...attributes` relative to other attributes is significant. We don't want to allow `href`, `target`, or `rel` to be overridden by the invoker, so we specified those attributes after `...attributes`.
 
-But what happens to the `class` attribute? Well, as it turns out, the `class` attribute is the one exception to how these component attributes are overridden! While all other HTML attributes follow the "last-write wins" rule, the values for the `class` attribute are merged together (concatenated) instead. There is a good reason for this: it allows the component to specify whatever classes that _it_ needs, while allowing the invokers of the component to freely add any extra classes that _they_ need for styling purposes.
+But what happens to the `class` attribute? Well, as it turns out, the `class` attribute is the one exception to how these component attributes are overridden! While all other HTML attributes follow the "last-write wins" rule, the values for the `class` attribute are merged together (concatenated) instead. There is a good reason for this: it allows the component to specify whatever classes that *it* needs, while allowing the invokers of the component to freely add any extra classes that *they* need for styling purposes.
 
 We also have a `{{yield}}` inside of our `<a>` tag so that we can customize the text for the link later when invoking the `<ShareButton>` component.
 
@@ -153,7 +155,7 @@ wait  textarea#status
 
 > Zoey says...
 >
-> Feel free to try sending the tweet! However, keep in mind that your followers cannot access your local server at `http://localhost:4200/`. Don't worry though, at the end of the tutorial, we will deploy the app to the the Internet so you can show everyone what you made!
+> Feel free to try sending the tweet! However, keep in mind that your followers cannot access your local server at `http://localhost:4200/`. Don't worry though, at the end of the tutorial, we will deploy the app to the Internet so you can show everyone what you made!
 
 ```run:command hidden=true cwd=super-rentals
 yarn test
