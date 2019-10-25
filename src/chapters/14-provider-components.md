@@ -8,7 +8,7 @@ In this chapter, we'll work on adding a new search feature, and refactor our `in
 
 During this refactor, you will learn about:
 
-* Using Ember's built-in `<Input>` helper
+* Using Ember's built-in `<Input>` component
 * The provider component pattern
 * Using block parameters when invoking components
 * Yielding data to caller components

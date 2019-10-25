@@ -27,7 +27,7 @@ There was a lot of concent to cover in part two. To recap, here is what you lear
 
 <h3><a href="../14-provider-components/">Chapter 14</a></h3>
 
-* Using Ember's built-in `<Input>` helper
+* Using Ember's built-in `<Input>` component
 * The provider component pattern
 * Using block parameters when invoking components
 * Yielding data to caller components
