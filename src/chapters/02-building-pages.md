@@ -1,3 +1,5 @@
+<!--lint disable no-undefined-references -->
+
 ```run:server:start hidden=true cwd=super-rentals expect="Serving on http://localhost:4200/"
 ember server
 ```
