@@ -84,7 +84,7 @@ Model classes in Ember Data are no different than any other classes we've worked
 Attributes declared with the `@attr` decorator work with the auto-track feature (which we learned about [in a previous chapter](../07-reusable-components/)). Therefore, we are free to reference any model attributes in our getter (`this.category`), and Ember will know when to invalidate its result.
 
 ```run:command hidden=true cwd=super-rentals
-yarn test
+yarn test --path dist
 git add app/models/rental.js
 ```
 
@@ -97,7 +97,7 @@ ember generate model-test rental
 ```
 
 ```run:command hidden=true cwd=super-rentals
-yarn test
+yarn test --path dist
 git add tests/unit/models/rental-test.js
 ```
 
@@ -154,7 +154,7 @@ It is worth pointing out that Ember Data provides a *[`store` service][TODO: lin
 Running the tests in the browser confirms that everything is working as intended:
 
 ```run:command hidden=true cwd=super-rentals
-yarn test
+yarn test --path dist
 git add tests/unit/models/rental-test.js
 ```
 
@@ -297,7 +297,7 @@ Adding the `.json` extension is a bit less common, and doesn't have a declarativ
 With our adapter in place, all our tests should pass again.
 
 ```run:command hidden=true cwd=super-rentals
-yarn test
+yarn test --path dist
 git add app/routes/index.js
 git add app/routes/rental.js
 git add app/adapters/application.js
