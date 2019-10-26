@@ -1,4 +1,4 @@
-<!--lint disable no-undefined-references -->
+<!--lint disable no-undefined-references-->
 
 ```run:server:start hidden=true cwd=super-rentals expect="Serving on http://localhost:4200/"
 ember server
@@ -147,7 +147,7 @@ git add app/components/rental/image.hbs
 git add tests/integration/components/rental/image-test.js
 ```
 
-Components like these are known as *[namespaced](https://en.wikipedia.org/wiki/Namespace)* components. Namespacing allows us to organize our components by folders according to their purpose. This is completely optional &mdash; namespaced components are not special in any way.
+Components like these are known as *[namespaced](https://en.wikipedia.org/wiki/Namespace)* components. Namespacing allows us to organize our components by folders according to their purpose. This is completely optional&mdash;namespaced components are not special in any way.
 
 ## Forwarding HTML Attributes with `...attributes`
 

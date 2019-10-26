@@ -71,21 +71,24 @@ async function main() {
       continue;
     }
 
-    let [action, ...rest] = step.split(/\s+/);
-    let arg = rest.join(' ');
+    let [action, ...rest] = step.split(/(\s+)/);
+    let params = rest.join('').split(/,\s*/);
 
     switch (action) {
       case 'click':
-        script.push(`  await page.click(${js(arg)});`);
+        script.push(`  await page.click(${js(params[0])});`);
+        break;
+      case 'type':
+        script.push(`  await page.type(${js(params[0])}, ${js(params[1])});`);
         break;
       case 'eval':
-        script.push(`  await page.evaluate(${js(arg)});`);
+        script.push(`  await page.evaluate(${js(params[0])});`);
         break;
       case 'visit':
-        script.push(`  await page.goto(${js(arg)}, { waitUtil: 'networkidle0' });`);
+        script.push(`  await page.goto(${js(params[0])}, { waitUtil: 'networkidle0' });`);
         break;
       case 'wait':
-        script.push(`  await page.waitForSelector(${js(arg)});`);
+        script.push(`  await page.waitForSelector(${js(params[0])});`);
         break;
       default:
         throw new Error(`Unknown action: ${action}`);

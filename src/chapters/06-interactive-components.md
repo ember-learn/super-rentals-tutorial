@@ -1,4 +1,4 @@
-<!--lint disable no-undefined-references -->
+<!--lint disable no-undefined-references-->
 
 ```run:server:start hidden=true cwd=super-rentals expect="Serving on http://localhost:4200/"
 ember server
@@ -24,7 +24,7 @@ While doing so, you will learn about:
 
 ## Adding Behavior to Components with Classes
 
-So far, all the components we have written are purely *[presentational][TODO: link to presentational]* &mdash; they are simply reusable snippets of markup. That's pretty cool! But in Ember, components can do so much more.
+So far, all the components we have written are purely *[presentational][TODO: link to presentational]*&mdash;they are simply reusable snippets of markup. That's pretty cool! But in Ember, components can do so much more.
 
 Sometimes, you want to associate some *[behavior][TODO: link to behavior]* with your components so that they can do more interesting things. For example, `<LinkTo>` can respond to clicks by changing the URL and navigating us to a different page.
 

@@ -6,7 +6,7 @@ import BaseWalker from '../../walker';
 const TODO_PREFIX = 'TODO:';
 
 function isLintDirective(node: HTML): boolean {
-  return node.value === '<!--lint disable no-undefined-references -->';
+  return node.value === '<!--lint disable no-undefined-references-->';
 }
 
 function isTodoLink(node: LinkReference): boolean {
