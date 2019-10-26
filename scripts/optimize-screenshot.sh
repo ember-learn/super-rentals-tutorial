@@ -15,8 +15,8 @@ else
 fi
 
 cp "$SRC" "$DEST"
-optipng -q -o5 "$DEST"
-advpng -z -q -4 "$DEST"
+# optipng -q -o5 "$DEST"
+# advpng -z -q -4 "$DEST"
 
 BEFORE=$(wc -c < "$SRC")
 AFTER=$(wc -c < "$DEST")
