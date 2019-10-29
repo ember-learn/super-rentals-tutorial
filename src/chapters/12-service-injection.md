@@ -149,7 +149,7 @@ visit http://localhost:4200/rentals/grand-old-mansion
 wait  .share.button
 # Remove the target attribute so that clicking on the button doesn't open a new page.
 eval  document.querySelector(".share.button").removeAttribute('target')
-click .share.button
+click .share.button, true
 wait  textarea#status
 ```
 

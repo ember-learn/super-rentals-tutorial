@@ -72,11 +72,18 @@ async function main() {
     }
 
     let [action, ...rest] = step.split(/(\s+)/);
-    let params = rest.join('').split(/,\s*/);
+    let params = rest.join('').trimStart().split(/,\s*/);
 
     switch (action) {
       case 'click':
-        script.push(`  await page.click(${js(params[0])});`);
+        if (params[1] === 'true') {
+          script.push(`  await Promise.all([`);
+          script.push(`    page.waitForNavigation({ waitUtil: 'networkidle0' }),`);
+          script.push(`    page.click(${js(params[0])})`);
+          script.push(`  ]);`);
+        } else {
+          script.push(`  await page.click(${js(params[0])});`);
+        }
         break;
       case 'type':
         script.push(`  await page.type(${js(params[0])}, ${js(params[1])});`);
