@@ -56,13 +56,13 @@ Since we know that we're linking to the `rental` route that we just created, we 
 git add app/components/rental.hbs
 ```
 
-Let's see this in action. If we go back to our browser and refresh the page, we should see our links, and they should all link to the correct URLs.
+Let's see this in action. If we go back to our browser and refresh the page, we should see our links, but something isn't quite right yet!
 
 ```run:screenshot width=1024 retina=true filename=broken-links.png alt="Broken links"
 visit http://localhost:4200/
 ```
 
-Wait a second&mdash;we have links, but they are all pointing to `/rentals/undefined`. Yikes! This is because `<LinkTo>` tries to use the `id` property from our model in order to replace the dynamic segment and generate the URL.
+The links are all pointing to `/rentals/undefined`. Yikes! This is because `<LinkTo>` tries to use the `id` property from our model in order to replace the dynamic segment and generate the URL.
 
 So what's the problem here? Well, our model doesn't actually have an `id` property! So *of course* the `<LinkTo>` component isn't going to be able to find it and use it to generate the URL. Oops!
 
