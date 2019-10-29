@@ -56,7 +56,7 @@ Since we know that we're linking to the `rental` route that we just created, we 
 git add app/components/rental.hbs
 ```
 
-Let's see this in action. If we go back to our browser and refresh the page, we should see our links, and they have URLs. But something isn't quite right yet!
+Let's see this in action. If we go back to our browser and refresh the page, we should see our links, but something isn't quite right yet!
 
 ```run:screenshot width=1024 retina=true filename=broken-links.png alt="Broken links"
 visit http://localhost:4200/
