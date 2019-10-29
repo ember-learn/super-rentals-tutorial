@@ -1,0 +1,378 @@
+name: Build
+on:
+  pull_request: {}
+  push:
+    branches:
+      - master
+  schedule:
+    - cron: '* 0 * * *'
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    env:
+      CI: 'true'
+    steps:
+      - name: Set up Git
+        run: |
+          git config --global user.name "Tomster"
+          git config --global user.email "tomster@emberjs.com"
+      - name: Set up Volta
+        uses: rwjblue/setup-volta@v1
+      - name: Set up build cache (yarn)
+        uses: actions/cache@preview
+        with:
+          path: ~/.cache/yarn
+          key: ${{ runner.os }}-yarn-${{ github.ref }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-${{ github.ref }}
+            ${{ runner.os }}-yarn-refs/heads/${{ github.base_ref }}
+            ${{ runner.os }}-yarn-refs/heads/master
+      - name: Checkout
+        uses: actions/checkout@v1
+      - name: Install dependencies (apt-get)
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y tree
+      - name: Install dependencies (yarn)
+        run: |
+          yarn upgrade ember-cli
+          yarn install
+      - name: Lint (markdown source)
+        run: yarn lint:md:src
+      - name: Lint (typescript)
+        run: yarn lint:ts
+      - name: Compile (typescript)
+        run: yarn tsc
+      - name: Generate
+        run: yarn generate
+        env:
+          # This is needed for external PRs to build, since secrets are not
+          # available there. Get your own Mapbox token for local development
+          # at: https://account.mapbox.com/access-tokens
+          MAPBOX_ACCESS_TOKEN: 'pk.eyJ1IjoiZW1iZXJqcyIsImEiOiJjazBydnZjb2wwYXA5M2Rwc3IydGF2eXM0In0.EQiBFsRi9Jm70XFPiXnoHg'
+      - name: Lint (markdown output)
+        run: yarn lint:md:dist
+      - name: Prune artifacts
+        if: always()
+        working-directory: dist/code/super-rentals
+        run: git clean -dfX
+      - name: Upload artifacts (assets)
+        uses: actions/upload-artifact@master
+        if: always()
+        with:
+          name: assets
+          path: dist/assets
+      - name: Upload artifacts (markdown)
+        uses: actions/upload-artifact@master
+        if: always()
+        with:
+          name: markdown
+          path: dist/chapters
+      - name: Upload artifacts (code)
+        uses: actions/upload-artifact@master
+        if: always()
+        with:
+          name: code
+          path: dist/code/super-rentals
+
+  deploy-guides:
+    # This job deploys the markdown output to the super-rentals-tutorial branch
+    # of the ember-learn/guides-source repository, along with the necessary
+    # assets (downloads and screenshots).
+    #
+    # For the markdown, we can simply copy over the output into the appropriate
+    # folder in guides-source. We start by emptying out the folder to account
+    # for any deleted or renamed chapters.
+    #
+    # For the downloads, it is also mostly a matter of copying them into the
+    # right location. As with the markdown content, we empty out the folder
+    # beforehand to account for deleted and renamed files.
+    #
+    # The JSON data used in the tutorial (for mocking an API server) is stored
+    # as loose files in this repository, to make them easier to change and
+    # review. However, we ultimately want to provide it for download as a zip
+    # file, so we need to zip up the contents.
+    #
+    # However, even if the JSON content didn't actually change, the raw bytes
+    # of the zip file may be different from the current version committed to
+    # git, due to differences in compression settings, etc. To ensure we don't
+    # churn the git blobs for no reason, we use the zipcmp utility to compare
+    # the contents before adding the zip file. We also run it through advzip to
+    # improve the compression ratio.
+    #
+    # Finally, screenshots also have the same problems as the zip file. Even
+    # if the screenshot didn't visually change, the raw bytes are likely to be
+    # different due to micro differences in pixel colors, etc. To account for
+    # this, we use the perceptualdiff utility to compare them against what is
+    # in git before adding them. We also run them through optipng and advpng to
+    # improve the compression ratio. This can be quite slow, so only do it if
+    # we detected visual changes in the screenshots.
+    #
+    # Once all the necessary parts are added, we simply commit and push to the
+    # super-rentals-tutorial branch of the ember-learn/guides-source repository
+    # if there are any changes in its content.
+    #
+    name: Deploy to ember-learn/guides-source (super-rentals-tutorial branch)
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/master'
+    steps:
+      - name: Set up Git
+        run: |
+          git config --global user.name "Tomster"
+          git config --global user.email "tomster@emberjs.com"
+      - name: Set up SSH
+        uses: webfactory/ssh-agent@v0.1.1
+        with:
+          ssh-private-key: ${{ secrets.GUIDES_SOURCE_DEPLOY_KEY }}
+      - name: Install dependencies
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y zipcmp advancecomp optipng perceptualdiff
+      - name: Download artifacts (assets)
+        uses: actions/download-artifact@master
+        with:
+          name: assets
+      - name: Download artifacts (markdown)
+        uses: actions/download-artifact@master
+        with:
+          name: markdown
+      - name: Clone
+        run: git clone git@github.com:ember-learn/guides-source --depth 1 -b super-rentals-tutorial
+      - name: Add markdown
+        working-directory: guides-source
+        run: |
+          mkdir -p guides/release/tutorial/
+          rm -rf guides/release/tutorial/*
+          cp -r ../markdown/* guides/release/tutorial/
+          git add guides/release/tutorial
+      - name: Add downloads
+        working-directory: guides-source
+        run: |
+          set -euo pipefail
+          IFS=$'\n\t'
+
+          mkdir -p public/downloads/
+          rm -rf public/downloads/*
+          cp -r ../assets/downloads/* public/downloads/
+
+          pushd public/downloads/data/
+          zip -r current.zip .
+          popd
+
+          if ! (git checkout -- public/downloads/data.zip 2>&1 && zipcmp public/downloads/data.zip public/downloads/data/current.zip); then
+            mv public/downloads/data/current.zip public/downloads/data.zip
+            advzip -z -q -4 public/downloads/data.zip
+          fi
+
+          rm -rf public/downloads/data
+
+          git add public/downloads
+      - name: Add screenshots
+        working-directory: guides-source
+        run: |
+          set -euo pipefail
+          IFS=$'\n\t'
+
+          mkdir -p public/screenshots/
+          rm -rf public/screenshots/*
+
+          function add_screenshot {
+            local src="$1";
+            local dest=$(echo -n "$1" | sed "s|../assets/|public/|");
+
+            if git checkout -- "$dest" > /dev/null 2>&1; then
+              if perceptualdiff -downsample 2 -colorfactor 0.5 "$src" "$dest" > /dev/null; then
+                echo "$dest (unchanged)"
+                return 0
+              fi
+            else
+              mkdir -p "$(dirname "$dest")"
+            fi
+
+            cp "$src" "$dest"
+            optipng -q -o5 "$dest"
+            advpng -z -q -4 "$dest"
+
+            local before=$(wc -c < "$src")
+            local after=$(wc -c < "$dest")
+            local percentage=$(( $after * 100 / $before ))
+
+            echo "$dest ($percentage%)"
+            return 0
+          }
+
+          export -f add_screenshot
+          find ../assets/screenshots -type f -name "*.png" | xargs -n 1 -P 2 -I {} bash -c 'add_screenshot "$@"' _ {}
+
+          git add public/screenshots
+      - name: Commit
+        working-directory: guides-source
+        run: |
+          set -euo pipefail
+          IFS=$'\n\t'
+
+          if [[ "$GITHUB_EVENT_NAME" == "schedule" ]]; then
+            COMMIT_TITLE="[CRON] $(date +"%A %b %d, %Y")"
+          else
+            COMMIT_TITLE="$(
+              echo -n "$ORIGINAL_COMMIT_MESSAGE" | \
+              sed -E "s|^Merge pull request #(.+) from .+$|Merge $GITHUB_REPOSITORY#\1|"
+            )"
+          fi
+
+          COMMIT_MESSAGE="$COMMIT_TITLE
+
+          ---
+
+          Commit:  $GITHUB_REPOSITORY@$GITHUB_SHA
+          Script:  https://github.com/$GITHUB_REPOSITORY/blob/$GITHUB_SHA/.github/workflows/build.yml
+          Logs:    https://github.com/$GITHUB_REPOSITORY/commit/$GITHUB_SHA/checks"
+
+          git commit --allow-empty -m "$COMMIT_MESSAGE"
+        env:
+          ORIGINAL_COMMIT_MESSAGE: ${{ github.event.commits[0].message }}
+      - name: Push
+        working-directory: guides-source
+        run: |
+          set -euo pipefail
+          IFS=$'\n\t'
+
+          if git diff --exit-code origin/super-rentals-tutorial; then
+            echo "Nothing to push"
+          else
+            git push
+          fi
+
+  deploy-code-preserving-history:
+    # This job deploys the built app to the super-rentals-tutorial-output
+    # branch of the ember-learn/super-rentals repository. This branch preserves
+    # the commit history of the tutorial flow (i.e. one git commit per chapter),
+    # and is force-pushed on every build. We add an empty commit on top as sort
+    # of a "cover page" to preserve the metadata (links to the commit, build
+    # logs, etc).
+    #
+    name: Deploy to ember-learn/super-rentals (super-rentals-tutorial-output branch)
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/master'
+    steps:
+      - name: Set up Git
+        run: |
+          git config --global user.name "Tomster"
+          git config --global user.email "tomster@emberjs.com"
+      - name: Set up SSH
+        uses: webfactory/ssh-agent@v0.1.1
+        with:
+          ssh-private-key: ${{ secrets.SUPER_RENTALS_DEPLOY_KEY }}
+      - name: Download artifacts
+        uses: actions/download-artifact@master
+        with:
+          name: code
+          path: .
+      - name: Commit
+        run: |
+          set -euo pipefail
+          IFS=$'\n\t'
+
+          if [[ "$GITHUB_EVENT_NAME" == "schedule" ]]; then
+            COMMIT_TITLE="[CRON] $(date +"%A %b %d, %Y")"
+          else
+            COMMIT_TITLE="$(
+              echo -n "$ORIGINAL_COMMIT_MESSAGE" | \
+              sed -E "s|^Merge pull request #(.+) from .+$|Merge $GITHUB_REPOSITORY#\1|"
+            )"
+          fi
+
+          COMMIT_MESSAGE="$COMMIT_TITLE
+
+          ---
+
+          Commit:  $GITHUB_REPOSITORY@$GITHUB_SHA
+          Script:  https://github.com/$GITHUB_REPOSITORY/blob/$GITHUB_SHA/.github/workflows/build.yml
+          Logs:    https://github.com/$GITHUB_REPOSITORY/commit/$GITHUB_SHA/checks"
+
+          git commit --allow-empty -m "$COMMIT_MESSAGE"
+        env:
+          ORIGINAL_COMMIT_MESSAGE: ${{ github.event.commits[0].message }}
+      - name: Push
+        run: |
+          git remote add super-rentals git@github.com:ember-learn/super-rentals.git
+          git push -f super-rentals master:super-rentals-tutorial-output
+
+  deploy-code-flattened:
+    # This job deploys the built app to the super-rentals-tutorial branch of
+    # the ember-learn/super-rentals repository. This branch does not preserve
+    # the commit history of the tutorial flow. Instead, it squashes the changes
+    # into a single commit on the super-rentals-tutorial branch. This preserves
+    # a linear history of changes to the built app over time, either due to
+    # changes to the generator blueprints, or changes to the tutorial content
+    # itself (e.g. refactoring to use new ember features). A lot of times, the
+    # built app's source code remains stable and so there may be no changes to
+    # push here.
+    #
+    name: Deploy to ember-learn/super-rentals (super-rentals-tutorial branch)
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/master'
+    steps:
+      - name: Set up Git
+        run: |
+          git config --global user.name "Tomster"
+          git config --global user.email "tomster@emberjs.com"
+      - name: Set up SSH
+        uses: webfactory/ssh-agent@v0.1.1
+        with:
+          ssh-private-key: ${{ secrets.SUPER_RENTALS_DEPLOY_KEY }}
+      - name: Download artifacts
+        uses: actions/download-artifact@master
+        with:
+          name: code
+          path: output
+      - name: Clone
+        run: git clone git@github.com:ember-learn/super-rentals --depth 1 -b super-rentals-tutorial
+      - name: Commit
+        working-directory: super-rentals
+        run: |
+          set -euo pipefail
+          IFS=$'\n\t'
+
+          git rm -rf '*'
+
+          if [[ "$GITHUB_EVENT_NAME" == "schedule" ]]; then
+            COMMIT_TITLE="[CRON] $(date +"%A %b %d, %Y")"
+          else
+            COMMIT_TITLE="$(
+              echo -n "$ORIGINAL_COMMIT_MESSAGE" | \
+              sed -E "s|^Merge pull request #(.+) from .+$|Merge $GITHUB_REPOSITORY#\1|"
+            )"
+          fi
+
+          COMMIT_MESSAGE="$COMMIT_TITLE
+
+          ---
+
+          Commit:  $GITHUB_REPOSITORY@$GITHUB_SHA
+          Script:  https://github.com/$GITHUB_REPOSITORY/blob/$GITHUB_SHA/.github/workflows/build.yml
+          Logs:    https://github.com/$GITHUB_REPOSITORY/commit/$GITHUB_SHA/checks"
+
+          git commit --allow-empty -m "$COMMIT_MESSAGE"
+          git remote add output ../output
+          git fetch output
+          git merge --squash --no-commit --allow-unrelated-histories output/master
+          git commit --allow-empty --amend --no-edit
+        env:
+          ORIGINAL_COMMIT_MESSAGE: ${{ github.event.commits[0].message }}
+      - name: Push
+        working-directory: super-rentals
+        run: |
+          set -euo pipefail
+          IFS=$'\n\t'
+
+          if git diff --exit-code origin/super-rentals-tutorial; then
+            echo "Nothing to push"
+          else
+            git push
+          fi

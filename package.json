@@ -7,6 +7,7 @@
   "license": "MIT",
   "private": true,
   "devDependencies": {
+    "@actions/core": "^1.2.0",
     "@types/glob": "^7.1.1",
     "@types/image-size": "^0.7.0",
     "@types/mdast": "^3.0.2",
@@ -16,6 +17,7 @@
     "@types/puppeteer": "^1.20.2",
     "@types/unist": "^2.0.3",
     "@types/vfile": "^3.0.2",
+    "chalk": "^2.4.2",
     "ember-cli": "*",
     "ember-dictionary": "^0.2.3",
     "image-size": "^0.7.4",
@@ -56,11 +58,10 @@
     "lint:md:dist": "yarn lint:md --ignore-pattern src",
     "precompile": "yarn lint:ts",
     "compile": "tsc",
-    "pregenerate": "yarn compile && yarn lint:md:src",
     "generate": "node ./dist/bin/generate.js",
-    "postgenerate": "yarn lint:md:dist",
-    "prebuild": "yarn clean",
-    "build": "yarn generate"
+    "prebuild": "yarn clean && yarn compile && yarn lint:md:src",
+    "build": "yarn generate",
+    "postbuild": "yarn lint:md:dist"
   },
   "volta": {
     "node": "12.8.1",
