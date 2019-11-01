@@ -1,3 +1,5 @@
+import * as github from '@actions/core';
+import chalk from 'chalk';
 import {
   readFile as _readFile,
   writeFile as _writeFile
@@ -18,6 +20,16 @@ const readFile = promisify(_readFile);
 const writeFile = promisify(_writeFile);
 const mkdirp = promisify(_mkdirp);
 const ncp = promisify(_ncp);
+
+// Group a related section of the logs. On CI this makes the section foldable.
+async function group<T>(name: string, callback: () => Promise<T>): Promise<T> {
+  if (process.env.CI) {
+    return github.group(name, callback);
+  } else {
+    console.log(chalk.yellow(name));
+    return callback();
+  }
+}
 
 async function run(processor: Processor, projectPath: string, inputPath: string, outputPath: string): Promise<void> {
   let relativePath = relative(projectPath, inputPath);
@@ -48,13 +60,14 @@ async function main() {
     .use(doNotEdit, { repo: 'ember-learn/super-rentals-tutorial' })
     .use(stringify, { fences: true, listItemIndent: '1' });
 
-  let outputPaths = [];
+  let outputPaths: string[] = [];
 
   for (let inputPath of chapters) {
-    console.log(`Processing ${inputPath}`);
-    let outputPath = join(project, 'dist', 'chapters', basename(inputPath));
-    outputPaths.push(outputPath);
-    await run(processor, project, inputPath, outputPath);
+    await group(`Processing ${inputPath}`, async () => {
+      let outputPath = join(project, 'dist', 'chapters', basename(inputPath));
+      outputPaths.push(outputPath);
+      await run(processor, project, inputPath, outputPath);
+    });
   }
 
   let postProcessor = unified()
@@ -63,8 +76,9 @@ async function main() {
     .use(stringify, { fences: true, listItemIndent: '1' });
 
   for (let outputPath of outputPaths) {
-    console.log(`Post-processing ${outputPath}`);
-    await run(postProcessor, project, outputPath, outputPath);
+    await group(`Post-processing ${relative(project, outputPath)}`, async () =>
+      await run(postProcessor, project, outputPath, outputPath)
+    );
   }
 }
 

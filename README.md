@@ -1,6 +1,6 @@
 # Runnable super-rentals tutorial
 
-[![Build Status](https://travis-ci.org/ember-learn/super-rentals-tutorial.svg?branch=master)](https://travis-ci.org/ember-learn/super-rentals-tutorial)
+[![Build Status](https://github.com/ember-learn/super-rentals-tutorial/workflows/Build/badge.svg?branch=master)](https://github.com/ember-learn/super-rentals-tutorial/actions)
 
 ## What?
 
@@ -602,10 +602,7 @@ Options:
 
 ## Future Work
 
-* `run:screenshot`
 * `run:gif`
-* Setup CI to run the build
-  * Push or PR to `ember-learn/super-rentals` and `ember-learn/guide-source`
 * Improve the build output
 * Extract this from `super-rentals` and make it usable for building arbitrary
   runnable tutorials

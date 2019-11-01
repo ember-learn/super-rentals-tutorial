@@ -61,6 +61,13 @@ rm package.json
 del package.json
 ```
 
+```run:file:patch hidden=true cwd=super-rentals filename=testem.js
+@@ -9,2 +9,3 @@
+   ],
++  browser_start_timeout: process.env.CI ? 60 : null,
+   browser_args: {
+```
+
 ```run:file:patch hidden=true cwd=super-rentals filename=tests/index.html
 @@ -28,2 +28,85 @@
      <script src="{{rootURL}}assets/tests.js"></script>
@@ -152,6 +159,7 @@ del package.json
 
 ```run:command hidden=true cwd=super-rentals
 yarn test
+git add testem.js
 git add tests/index.html
 git commit --amend --no-edit
 ```
