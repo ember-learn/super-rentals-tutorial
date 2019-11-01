@@ -311,12 +311,12 @@ wait  #qunit-banner.qunit-pass
 The UI works exactly the same as before as well, just with much less code!
 
 ```run:screenshot width=1024 retina=true filename=homepage.png alt="The homepage works exactly the same as before, but with much less code!"
-visit http://localhost:4200/
+visit http://localhost:4200/?deterministic
 wait  .rentals li:nth-of-type(3) article.rental
 ```
 
 ```run:screenshot width=1024 retina=true filename=detailed.png alt="The details page works exactly the same as before, but with much less code!"
-visit http://localhost:4200/rentals/grand-old-mansion
+visit http://localhost:4200/rentals/grand-old-mansion?deterministic
 wait  .rental.detailed
 ```
 

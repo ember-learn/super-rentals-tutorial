@@ -40,7 +40,7 @@ git add app/templates/index.hbs
 ```
 
 ```run:screenshot width=1024 retina=true filename=homepage-with-inert-search.png alt="The homepage with a search box, but it doesn't work yet."
-visit http://localhost:4200/
+visit http://localhost:4200/?deterministic
 wait  .rentals input
 ```
 
@@ -102,7 +102,7 @@ git add app/templates/index.hbs
 ```
 
 ```run:screenshot width=1024 retina=true filename=homepage-with-rentals-component.png alt="The homepage looks exactly the same as before!"
-visit http://localhost:4200/
+visit http://localhost:4200/?deterministic
 wait  .rentals input
 ```
 
@@ -304,7 +304,7 @@ This is called the *[provider component pattern][TODO: link to provider componen
 Okay, now that we have a better sense of which component is rendering what and the theory behind why all of this is happening, let's answer the big unanswered question: does this even work? If we try out our search box in the UI, what happens?
 
 ```run:screenshot width=1024 retina=true filename=filtered-results.png alt="Trying out the search box."
-visit http://localhost:4200/
+visit http://localhost:4200/?deterministic
 wait  .rentals input
 type  .rentals input, Downtown
 wait  .rental

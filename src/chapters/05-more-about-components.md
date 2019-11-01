@@ -125,7 +125,7 @@ git add app/templates/index.hbs
 With that, we should see the `<Rental>` component showing our Grand Old Mansion three times on the page:
 
 ```run:screenshot width=1024 retina=true filename=three-old-mansions.png alt="Three Grand Old Mansions"
-visit http://localhost:4200/
+visit http://localhost:4200/?deterministic
 wait  .rentals li:nth-of-type(3) article.rental
 ```
 
@@ -177,7 +177,7 @@ Instead of hard-coding specific values for the `src` and `alt` attributes on the
 We specified a `src` and an `alt` HTML attribute here, which will be passed along to the component and attached to the element where `...attributes` is applied in the component template. You can think of this as being similar to `{{yield}}`, but for HTML attributes specifically, rather than displayed content. In fact, we have already used this feature [earlier](../02-building-pages/) when we passed a `class` attribute to `<LinkTo>`.
 
 ```run:screenshot width=1024 retina=true filename=rental-image.png alt="The <Rental::Image> component in action"
-visit http://localhost:4200/
+visit http://localhost:4200/?deterministic
 wait  .rentals li:nth-of-type(3) article.rental .image img
 ```
 
