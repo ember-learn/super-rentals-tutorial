@@ -140,12 +140,12 @@ Let's put this component to use by invoking it from the `<Rental::Detailed>` com
 With that, we should have a working share button!
 
 ```run:screenshot width=1024 retina=true filename=share-button.png alt="A share button that works!"
-visit http://localhost:4200/rentals/grand-old-mansion
+visit http://localhost:4200/rentals/grand-old-mansion?deterministic
 wait  .share.button
 ```
 
 ```run:screenshot width=1024 retina=true filename=suggested-tweet.png alt="Suggested tweet"
-visit http://localhost:4200/rentals/grand-old-mansion
+visit http://localhost:4200/rentals/grand-old-mansion?deterministic
 wait  .share.button
 # Remove the target attribute so that clicking on the button doesn't open a new page.
 eval  document.querySelector(".share.button").removeAttribute('target')

@@ -273,7 +273,7 @@ Hey, all the tests passed! But does that mean it actually works in practice? Let
 Hey! That's a map!
 
 ```run:screenshot width=1024 retina=true filename=three-old-mansions.png alt="Three Grand Old Mansions"
-visit http://localhost:4200/
+visit http://localhost:4200/?deterministic
 wait  .rentals li:nth-of-type(3) article.rental .map
 ```
 

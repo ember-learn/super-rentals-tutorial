@@ -106,7 +106,7 @@ We can verify this works by temporarily changing the initial value in our JavaSc
 ```
 
 ```run:screenshot width=1024 height=1500 retina=true filename=is-large-true.png alt="<Rental::Image> with this.isLarge set to true"
-visit http://localhost:4200/
+visit http://localhost:4200/?deterministic
 wait  .rentals li:nth-of-type(3) article.rental .image.large img
 ```
 
@@ -210,12 +210,12 @@ With that, we have created our first *[interactive][TODO: link to interactive]* 
 <!-- TODO: make this a gif instead -->
 
 ```run:screenshot width=1024 retina=true filename=rental-image-default.png alt="<Rental::Image> (default size)"
-visit http://localhost:4200/
+visit http://localhost:4200/?deterministic
 wait  .rentals li:nth-of-type(3) article.rental .image img
 ```
 
 ```run:screenshot width=1024 height=1500 retina=true filename=rental-image-large.png alt="<Rental::Image> (large size)"
-visit http://localhost:4200/
+visit http://localhost:4200/?deterministic
 wait  .rentals li:nth-of-type(3) article.rental .image img
 click .rentals li:first-of-type article.rental .image
 wait  .rentals li:first-of-type article.rental .image.large img

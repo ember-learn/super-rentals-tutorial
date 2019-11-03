@@ -68,8 +68,30 @@ del package.json
    browser_args: {
 ```
 
+```run:file:patch hidden=true cwd=super-rentals filename=app/index.html
+@@ -14,2 +14,17 @@
+
++    <script>
++      if (window.location.search.indexOf('deterministic') >= 0) {
++        let style = document.createElement('style');
++
++        style.appendChild(document.createTextNode(`
++          *, *::before, *::after {
++            transition-delay: 0s !important;
++            transition-duration: 0s !important;
++          }
++        `));
++
++        document.head.appendChild(style);
++      }
++    </script>
++
+     {{content-for "head-footer"}}
+
+```
+
 ```run:file:patch hidden=true cwd=super-rentals filename=tests/index.html
-@@ -28,2 +28,85 @@
+@@ -28,2 +28,91 @@
      <script src="{{rootURL}}assets/tests.js"></script>
 +    <script>
 +      if (QUnit.urlParams.deterministic) {
@@ -152,6 +174,12 @@ del package.json
 +        QUnit.config.callbacks.done.unshift(details => {
 +          details.runtime = totalRuntime;
 +        });
++
++        QUnit.begin(function( details ) {
++          let ua = document.getElementById('qunit-userAgent');
++          ua.innerText = ua.innerText.replace(/QUnit [0-9\.]+/g, 'QUnit');
++          ua.innerText = ua.innerText.replace(/(WebKit|Chrome|Safari)\/[0-9\.]+/g, '$1');
++        });
 +      }
 +    </script>
 
@@ -159,6 +187,7 @@ del package.json
 
 ```run:command hidden=true cwd=super-rentals
 yarn test
+git add app/index.html
 git add testem.js
 git add tests/index.html
 git commit --amend --no-edit
@@ -212,7 +241,7 @@ ember server
 The development server is responsible for compiling our app and serving it to the browsers. It may take a while to boot up. Once it's up and running, open your favorite browser and head to <http://localhost:4200>. You should see the following welcome page:
 
 ```run:screenshot width=1024 retina=true filename=welcome.png alt="Welcome to Ember!"
-visit http://localhost:4200/
+visit http://localhost:4200/?deterministic
 ```
 
 > Zoey says...
@@ -241,7 +270,7 @@ As text on the welcome page pointed out, the source code for the page is located
 Soon after saving the file, your browser should automatically refresh and render our greetings to the world. Neat!
 
 ```run:screenshot width=1024 height=250 retina=true filename=hello-world.png alt="Hello World!!!"
-visit http://localhost:4200/
+visit http://localhost:4200/?deterministic
 ```
 
 When you are done experimenting, go ahead and delete the `app/templates/application.hbs` file. We won't be needing this for a while, so let's start afresh. We can add it back later when we have a need for it.
@@ -271,7 +300,7 @@ Of course, unlike HTML, Ember templates can do a lot more than just displaying s
 After saving the file, your browser tab should automatically refresh, showing us the welcome message we just worked on.
 
 ```run:screenshot width=1024 height=250 retina=true filename=unstyled.png alt="Welcome to Super Rentals! (unstyled)"
-visit http://localhost:4200/
+visit http://localhost:4200/?deterministic
 ```
 
 ```run:command hidden=true cwd=super-rentals
@@ -322,7 +351,7 @@ If you are familiar with CSS, feel free to customize these styles to your liking
 When you are ready, save the CSS file; our trusty development server should pick it up and refresh our page right away. No more unstyled content!
 
 ```run:screenshot width=1024 retina=true filename=styled.png alt="Welcome to Super Rentals! (styled)"
-visit http://localhost:4200/
+visit http://localhost:4200/?deterministic
 ```
 
 ```run:command hidden=true cwd=super-rentals
@@ -353,7 +382,7 @@ git add public/assets/images/teaching-tomster.png
 ```
 
 ```run:screenshot width=1024 retina=true filename=styled-with-tomster.png alt="Welcome to Super Rentals! (with Tomster)"
-visit http://localhost:4200/
+visit http://localhost:4200/?deterministic
 ```
 
 ```run:server:stop

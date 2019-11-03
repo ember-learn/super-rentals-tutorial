@@ -59,7 +59,7 @@ git add app/components/rental.hbs
 Let's see this in action. If we go back to our browser and refresh the page, we should see our links, but something isn't quite right yet!
 
 ```run:screenshot width=1024 retina=true filename=broken-links.png alt="Broken links"
-visit http://localhost:4200/
+visit http://localhost:4200/?deterministic
 ```
 
 The links are all pointing to `/rentals/undefined`. Yikes! This is because `<LinkTo>` tries to use the `id` property from our model in order to replace the dynamic segment and generate the URL.
@@ -380,7 +380,7 @@ Finally, let's add a `rental` template to actually *invoke* our `<Rental::Detail
 Now, when we visit `http://localhost:4200/rentals/grand-old-mansion`, this is what we see:
 
 ```run:screenshot width=1024 retina=true filename=grand-old-mansion.png alt="A dedicated page for the Grand Old Mansion"
-visit http://localhost:4200/rentals/grand-old-mansion
+visit http://localhost:4200/rentals/grand-old-mansion?deterministic
 wait  .rental.detailed
 ```
 

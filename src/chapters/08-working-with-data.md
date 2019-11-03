@@ -82,7 +82,7 @@ To test that this is working, let's modify our template and try to render the `t
 If we look at our page in the browser, we should see our model data reflected as a new header.
 
 ```run:screenshot width=1024 height=512 retina=true filename=model-header.png alt="New header using the @model data"
-visit http://localhost:4200/
+visit http://localhost:4200/?deterministic
 wait  .rentals li:nth-of-type(3) article.rental
 ```
 
@@ -165,7 +165,7 @@ By passing in `@model` into the `<Rental>` component as the `@rental` argument, 
 Since the model object contains exactly the same data as the previously-hard-coded "Grand Old Mansion", the page should look exactly the same as before the change.
 
 ```run:screenshot width=1024 height=512 retina=true filename=using-model-data.png alt="New header using the @model data"
-visit http://localhost:4200/
+visit http://localhost:4200/?deterministic
 wait  .rentals li:nth-of-type(3) article.rental
 ```
 
@@ -369,7 +369,7 @@ Inside of the block we have access to the item of the *current* iteration with t
 Now, let's go over to our browser and see what our index route looks like with this change.
 
 ```run:screenshot width=1024 retina=true filename=three-properties.png alt="Three different rental properties"
-visit http://localhost:4200/
+visit http://localhost:4200/?deterministic
 wait  .rentals li:nth-of-type(3) article.rental
 ```
 
