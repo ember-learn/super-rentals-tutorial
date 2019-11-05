@@ -24,11 +24,7 @@ jobs:
         uses: actions/cache@preview
         with:
           path: ~/.cache/yarn
-          key: ${{ runner.os }}-yarn-${{ github.ref }}
-          restore-keys: |
-            ${{ runner.os }}-yarn-${{ github.ref }}
-            ${{ runner.os }}-yarn-refs/heads/${{ github.base_ref }}
-            ${{ runner.os }}-yarn-refs/heads/master
+          key: ${{ runner.os }}-yarn
       - name: Checkout
         uses: actions/checkout@v1
       - name: Install dependencies (apt-get)
@@ -140,7 +136,15 @@ jobs:
         with:
           name: markdown
       - name: Clone
-        run: git clone git@github.com:ember-learn/guides-source --depth 1 -b super-rentals-tutorial
+        run: |
+          set -euo pipefail
+          IFS=$'\n\t'
+
+          if ! git clone git@github.com:ember-learn/guides-source --depth 1 -b super-rentals-tutorial; then
+            git clone git@github.com:ember-learn/guides-source --depth 1 -b octane
+            cd guides-source
+            git checkout -b super-rentals-tutorial
+          fi
       - name: Add markdown
         working-directory: guides-source
         run: |
