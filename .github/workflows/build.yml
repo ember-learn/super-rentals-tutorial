@@ -24,11 +24,7 @@ jobs:
         uses: actions/cache@preview
         with:
           path: ~/.cache/yarn
-          key: ${{ runner.os }}-yarn-${{ github.ref }}
-          restore-keys: |
-            ${{ runner.os }}-yarn-${{ github.ref }}
-            ${{ runner.os }}-yarn-refs/heads/${{ github.base_ref }}
-            ${{ runner.os }}-yarn-refs/heads/master
+          key: ${{ runner.os }}-yarn
       - name: Checkout
         uses: actions/checkout@v1
       - name: Install dependencies (apt-get)
