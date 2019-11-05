@@ -244,7 +244,7 @@ jobs:
           set -euo pipefail
           IFS=$'\n\t'
 
-          if git diff --exit-code origin/super-rentals-tutorial; then
+          if git diff --exit-code HEAD~; then
             echo "Nothing to push"
           else
             git push -u origin super-rentals-tutorial
