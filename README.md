@@ -1,6 +1,6 @@
 # Runnable super-rentals tutorial
 
-[![Build Status](https://github.com/ember-learn/super-rentals-tutorial/workflows/Build/badge.svg?branch=master)](https://github.com/ember-learn/super-rentals-tutorial/actions)
+[![Build Status](https://github.com/ember-learn/super-rentals-tutorial/workflows/Build/badge.svg?branch=master)](https://github.com/ember-learn/super-rentals-tutorial/actions?query=workflow%3ABuild+branch%3Amaster)
 
 ## What?
 
