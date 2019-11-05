@@ -136,7 +136,15 @@ jobs:
         with:
           name: markdown
       - name: Clone
-        run: git clone git@github.com:ember-learn/guides-source --depth 1 -b super-rentals-tutorial
+        run: |
+          set -euo pipefail
+          IFS=$'\n\t'
+
+          if ! git clone git@github.com:ember-learn/guides-source --depth 1 -b super-rentals-tutorial; then
+            git clone git@github.com:ember-learn/guides-source --depth 1 -b octane
+            cd guides-source
+            git checkout -b super-rentals-tutorial
+          fi
       - name: Add markdown
         working-directory: guides-source
         run: |
