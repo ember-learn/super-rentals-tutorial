@@ -6,7 +6,7 @@ ember server
 
 Now that we are fetching real data from our "server", let's add a new feature — dedicated pages for each of our rentals:
 
-<!-- TODO: add screen shot of the end state -->
+![The Super Rentals app (rentals page) by the end of the chapter](/images/tutorial/part-2/route-params/grand-old-mansion@2x.png)
 
 While adding these rental pages, you will learn about:
 * Routes with dynamic segments

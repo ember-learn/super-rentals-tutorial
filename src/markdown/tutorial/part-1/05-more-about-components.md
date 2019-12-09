@@ -6,7 +6,7 @@ ember server
 
 It's time to finally work on the rentals listing:
 
-![The Super Rentals app by the end of the chapter](/screenshots/05-more-about-components/rental-image@2x.png)
+![The Super Rentals app by the end of the chapter](/images/tutorial/part-1/more-about-components/rental-image@2x.png)
 
 While building this list of rental properties, you will learn about:
 
@@ -174,7 +174,7 @@ Instead of hard-coding specific values for the `src` and `alt` attributes on the
    <div class="details">
 ```
 
-We specified a `src` and an `alt` HTML attribute here, which will be passed along to the component and attached to the element where `...attributes` is applied in the component template. You can think of this as being similar to `{{yield}}`, but for HTML attributes specifically, rather than displayed content. In fact, we have already used this feature [earlier](../02-building-pages/) when we passed a `class` attribute to `<LinkTo>`.
+We specified a `src` and an `alt` HTML attribute here, which will be passed along to the component and attached to the element where `...attributes` is applied in the component template. You can think of this as being similar to `{{yield}}`, but for HTML attributes specifically, rather than displayed content. In fact, we have already used this feature [earlier](../building-pages/) when we passed a `class` attribute to `<LinkTo>`.
 
 ```run:screenshot width=1024 retina=true filename=rental-image.png alt="The <Rental::Image> component in action"
 visit http://localhost:4200/?deterministic

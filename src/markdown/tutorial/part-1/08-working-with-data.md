@@ -6,7 +6,7 @@ ember server
 
 In this chapter, we will remove the hard-coded data from our `<Rental>` component. By the end, your app would finally be displaying real data that came from the server:
 
-![The Super Rentals app by the end of the chapter](/screenshots/08-working-with-data/three-properties@2x.png)
+![The Super Rentals app by the end of the chapter](/images/tutorial/part-1/working-with-data/three-properties@2x.png)
 
 In this chapter, you will learn about:
 
@@ -173,7 +173,7 @@ Now, we have one last thing to do: update the tests to reflect this change.
 
 Because component tests are meant to render and test a single component in isolation from the rest of the app, they do not perform any routing, which means we won't have access to the same data returned from the `model` hook.
 
-Therefore, in our `<Rental>` component's test, we will have to feed the data into it some other way. We can do this using the `setProperties` we learned about from the [previous chapter](../07-reusable-components/).
+Therefore, in our `<Rental>` component's test, we will have to feed the data into it some other way. We can do this using the `setProperties` we learned about from the [previous chapter](../reusable-components/).
 
 ```run:file:patch lang=js cwd=super-rentals filename=tests/integration/components/rental-test.js
 @@ -9,3 +9,20 @@

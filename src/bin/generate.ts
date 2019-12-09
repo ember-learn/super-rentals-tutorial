@@ -7,11 +7,14 @@ import {
 import _glob from 'glob';
 import _mkdirp from 'mkdirp';
 import { ncp as _ncp } from 'ncp';
-import { basename, join, relative } from 'path';
+import { basename, dirname, join, relative, sep } from 'path';
+import frontmatter from 'remark-frontmatter';
 import markdown from 'remark-parse';
+import yaml from 'remark-parse-yaml';
 import stringify from 'remark-stringify';
 import unified, { Processor } from 'unified';
 import { promisify } from 'util';
+import { VFileOptions } from 'vfile';
 
 import { doNotEdit, retinaImages, runCodeBlocks, todoLinks, zoeySays } from '../lib';
 
@@ -20,6 +23,13 @@ const readFile = promisify(_readFile);
 const writeFile = promisify(_writeFile);
 const mkdirp = promisify(_mkdirp);
 const ncp = promisify(_ncp);
+
+// 01-orientation.md -> orientation.md
+function unprefix(path: string): string {
+  let parts = path.split(sep);
+  parts = parts.map(p => p.replace(/^[0-9]+-/, ''));
+  return join(...parts);
+}
 
 // Group a related section of the logs. On CI this makes the section foldable.
 async function group<T>(name: string, callback: () => Promise<T>): Promise<T> {
@@ -31,53 +41,70 @@ async function group<T>(name: string, callback: () => Promise<T>): Promise<T> {
   }
 }
 
-async function run(processor: Processor, projectPath: string, inputPath: string, outputPath: string): Promise<void> {
-  let relativePath = relative(projectPath, inputPath);
+async function run(processor: Processor, inputPath: string, outputPath: string, options: VFileOptions): Promise<void> {
   let contents = await readFile(inputPath, { encoding: 'utf8' });
-  let result = await processor.process({ path: relativePath, contents });
+  let result = await processor.process({ ...options, contents });
   await writeFile(outputPath, result, { encoding: 'utf8' });
 }
 
 async function main() {
   let project = process.cwd();
   let assetsDir = join(project, 'dist', 'assets');
-  let outDir = join(project, 'dist', 'chapters');
+  let srcDir = join(project, 'src', 'markdown')
+  let outDir = join(project, 'dist', 'markdown');
   let codeDir = join(project, 'dist', 'code');
 
   await ncp(join(project, 'src', 'assets'), assetsDir);
   await mkdirp(outDir);
   await mkdirp(codeDir);
 
-  let pattern = process.argv[2] || join('src', 'chapters', '*.md');
+  let pattern = process.argv[2] || join('src', 'markdown', '**', '*.md');
 
-  let chapters = await glob(pattern);
+  let inputPaths = await glob(pattern);
 
   let processor = unified()
     .use(markdown)
+    .use(frontmatter)
     .use(runCodeBlocks, { cfg: process.env.CI ? ['ci'] : [], cwd: codeDir, assets: assetsDir })
     .use(todoLinks)
     .use(zoeySays)
     .use(doNotEdit, { repo: 'ember-learn/super-rentals-tutorial' })
-    .use(stringify, { fences: true, listItemIndent: '1' });
+    .use(stringify, { fences: true, listItemIndent: '1' })
+    .use(yaml);
 
-  let outputPaths: string[] = [];
+  let outputPaths: Map<string, VFileOptions> = new Map();
 
-  for (let inputPath of chapters) {
+  for (let inputPath of inputPaths) {
     await group(`Processing ${inputPath}`, async () => {
-      let outputPath = join(project, 'dist', 'chapters', basename(inputPath));
-      outputPaths.push(outputPath);
-      await run(processor, project, inputPath, outputPath);
+      let dir = unprefix(relative(srcDir, dirname(inputPath)));
+      let name = unprefix(basename(inputPath));
+
+      await mkdirp(join(outDir, dir));
+
+      let outputPath = join(outDir, dir, name);
+
+      let options: VFileOptions = {
+        path: join(dir, name),
+        cwd: outDir,
+        data: { originalPath: inputPath }
+      }
+
+      outputPaths.set(outputPath, options);
+
+      await run(processor, inputPath, outputPath, options);
     });
   }
 
   let postProcessor = unified()
     .use(markdown)
+    .use(frontmatter)
     .use(retinaImages, { assets: assetsDir })
-    .use(stringify, { fences: true, listItemIndent: '1' });
+    .use(stringify, { fences: true, listItemIndent: '1' })
+    .use(yaml);
 
-  for (let outputPath of outputPaths) {
+  for (let [outputPath, options] of outputPaths) {
     await group(`Post-processing ${relative(project, outputPath)}`, async () =>
-      await run(postProcessor, project, outputPath, outputPath)
+      await run(postProcessor, outputPath, outputPath, options)
     );
   }
 }

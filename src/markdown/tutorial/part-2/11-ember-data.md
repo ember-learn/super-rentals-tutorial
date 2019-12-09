@@ -6,7 +6,7 @@ ember server
 
 In this chapter, we will work on removing some code duplication in our route handlers, by switching to using Ember Data to manage our data. The end result looks exactly the same before:
 
-<!-- TODO: add screen shot of the end state -->
+![The Super Rentals app by the end of the chapter](/images/tutorial/part-2/ember-data/homepage@2x.png)
 
 During this refactor, you will learn about:
 * Ember Data models
@@ -81,7 +81,7 @@ We can access these attributes for an instance of `RentalModel` using standard d
 
 Model classes in Ember Data are no different than any other classes we've worked with so far, in that they allow for a convenient place for adding custom behavior. We took advantage of this feature to move our `type` logic (which is a major source of unnecessary duplication in our route handlers) into a getter on our model class. Once we have everything working here, we will go back to clean that up.
 
-Attributes declared with the `@attr` decorator work with the auto-track feature (which we learned about [in a previous chapter](../07-reusable-components/)). Therefore, we are free to reference any model attributes in our getter (`this.category`), and Ember will know when to invalidate its result.
+Attributes declared with the `@attr` decorator work with the auto-track feature (which we learned about [in a previous chapter](../../part-1/reusable-components/)). Therefore, we are free to reference any model attributes in our getter (`this.category`), and Ember will know when to invalidate its result.
 
 ```run:command hidden=true cwd=super-rentals
 yarn test --path dist

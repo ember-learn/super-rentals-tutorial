@@ -1,8 +1,11 @@
 import { HTML, Root } from 'mdast';
+import { Option } from 'ts-std';
+import { VFile } from 'vfile';
+
 import BaseWalker from '../../walker';
 import Options from './options';
 
-function comment(repo: string, branch?: string, path?: string): HTML {
+function makeComment(repo: string, branch?: string, path?: string): HTML {
   let url = `https://github.com/${repo}`;
 
   if (path) {
@@ -21,14 +24,42 @@ function comment(repo: string, branch?: string, path?: string): HTML {
 export default class DoNotEditWalker extends BaseWalker<Options> {
   protected async root(node: Root): Promise<Root> {
     let { repo, branch } = this.options;
-    let { path } = this.file;
+    let originalPath = originalPathFor(this.file);
 
-    return {
-      ...node,
-      children: [
-        comment(repo, branch, path),
-        ...node.children
-      ]
-    };
+    if (originalPath === null) {
+      return node;
+    }
+
+    let comment = makeComment(repo, branch, originalPath);
+
+    if (hasFrontMatter(node)) {
+      let [frontMatter, ...rest] = node.children;
+
+      return {
+        ...node,
+        children: [frontMatter, comment, ...rest]
+      };
+    } else {
+      return {
+        ...node,
+        children: [comment, ...node.children]
+      };
+    }
   }
+}
+
+function hasData(file: VFile): file is VFile & { data: { [key: string]: any } } {
+  return typeof file.data === 'object' && file.data !== null;
+}
+
+function originalPathFor(file: VFile): Option<string> {
+  if (hasData(file) && typeof file.data.originalPath === 'string') {
+    return file.data.originalPath;
+  } else {
+    return null;
+  }
+}
+
+function hasFrontMatter(node: Root): boolean {
+  return node.children.length > 0 && node.children[0].type === 'yaml';
 }
