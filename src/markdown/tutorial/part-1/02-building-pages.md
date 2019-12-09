@@ -6,11 +6,11 @@ ember server
 
 In this chapter, you will build the first few pages of your Ember app and set up links between them. By the end of this chapter, you should have two new pages – an about page and a contact page. These pages will be linked to from your landing page:
 
-![The Super Rentals app (homepage) by the end of the chapter](/screenshots/02-building-pages/index-with-link@2x.png)
+![The Super Rentals app (homepage) by the end of the chapter](/images/tutorial/part-1/building-pages/index-with-link@2x.png)
 
-![The Super Rentals app (about page) by the end of the chapter](/screenshots/02-building-pages/about-with-link@2x.png)
+![The Super Rentals app (about page) by the end of the chapter](/images/tutorial/part-1/building-pages/about-with-link@2x.png)
 
-![The Super Rentals app (contact page) by the end of the chapter](/screenshots/02-building-pages/contact-with-link@2x.png)
+![The Super Rentals app (contact page) by the end of the chapter](/images/tutorial/part-1/building-pages/contact-with-link@2x.png)
 
 While building these pages, you will learn about:
 
@@ -22,7 +22,7 @@ While building these pages, you will learn about:
 
 ## Defining Routes
 
-With our [first page](../01-orientation/) down, let's add another one!
+With our [first page](../orientation/) down, let's add another one!
 
 This time, we would like the page to be served on the `/about` URL. In order to do this, we will need to tell Ember about our plan to add a page at that location. Otherwise, Ember will think we have visited an invalid URL!
 

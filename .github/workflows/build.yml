@@ -65,7 +65,7 @@ jobs:
         if: always()
         with:
           name: markdown
-          path: dist/chapters
+          path: dist/markdown
       - name: Upload artifacts (code)
         uses: actions/upload-artifact@master
         if: always()
@@ -180,8 +180,8 @@ jobs:
           set -euo pipefail
           IFS=$'\n\t'
 
-          mkdir -p public/screenshots/
-          rm -rf public/screenshots/*
+          mkdir -p public/images/tutorial
+          rm -rf public/images/tutorial/*
 
           function add_screenshot {
             local src="$1";
@@ -209,9 +209,9 @@ jobs:
           }
 
           export -f add_screenshot
-          find ../assets/screenshots -type f -name "*.png" | xargs -n 1 -P 2 -I {} bash -c 'add_screenshot "$@"' _ {}
+          find ../assets/images -type f -name "*.png" | xargs -n 1 -P 2 -I {} bash -c 'add_screenshot "$@"' _ {}
 
-          git add public/screenshots
+          git add public/images
       - name: Commit
         working-directory: guides-source
         run: |

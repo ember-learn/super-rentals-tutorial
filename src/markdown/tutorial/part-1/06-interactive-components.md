@@ -8,9 +8,9 @@ In this chapter, you will add interactivity to the page, allowing the user to cl
 
 <!-- TODO: make this a gif instead -->
 
-![The Super Rentals app by the end of the chapter (default image size)](/screenshots/06-interactive-components/rental-image-default@2x.png)
+![The Super Rentals app by the end of the chapter (default image size)](/images/tutorial/part-1/interactive-components/rental-image-default@2x.png)
 
-![The Super Rentals app by the end of the chapter (large image size)](/screenshots/06-interactive-components/rental-image-large@2x.png)
+![The Super Rentals app by the end of the chapter (large image size)](/images/tutorial/part-1/interactive-components/rental-image-large@2x.png)
 
 While doing so, you will learn about:
 

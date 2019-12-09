@@ -6,7 +6,7 @@ ember server
 
 In this chapter, you will *[refactor][TODO: link to refactor]* your existing templates to use components. We will also be adding a site-wide navigation bar:
 
-![The Super Rentals app by the end of the chapter](/screenshots/04-component-basics/index-with-nav@2x.png)
+![The Super Rentals app by the end of the chapter](/images/tutorial/part-1/component-basics/index-with-nav@2x.png)
 
 In doing so, you will learn about:
 
@@ -20,7 +20,7 @@ In doing so, you will learn about:
 
 ## Extracting Markup into Components
 
-In a [previous chapter](../02-building-pages/), we got a light introduction to *[components][TODO: link to components]* when using `<LinkTo>` to connect our pages. To recap, we said that components are Ember's way of creating *[custom tags][TODO: link to custom tags]* to supplement the built-in HTML tags from the browser. Now, we are going to create our own components!
+In a [previous chapter](../building-pages/), we got a light introduction to *[components][TODO: link to components]* when using `<LinkTo>` to connect our pages. To recap, we said that components are Ember's way of creating *[custom tags][TODO: link to custom tags]* to supplement the built-in HTML tags from the browser. Now, we are going to create our own components!
 
 During the course of developing an app, it is pretty common to reuse the same UI element across different parts of the app. For example, we have been using the same "jumbo" header in all three pages so far. On every page we worked to follow the same basic structure:
 

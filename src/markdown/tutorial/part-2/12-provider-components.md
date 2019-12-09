@@ -6,7 +6,9 @@ ember server
 
 In this chapter, we'll work on adding a new search feature, and refactor our `index.hbs` template into a new component along the way. We'll learn about a new pattern for passing data around between components, too! Once we're done, our page will look like this:
 
-<!-- TODO: add screen shot of the end state -->
+<!-- TODO: make this a gif instead -->
+
+![The Super Rentals app by the end of the chapter](/images/tutorial/part-2/provider-components/filtered-results@2x.png)
 
 During this refactor, you will learn about:
 
@@ -258,7 +260,7 @@ export default class RentalsFilterComponent extends Component {
 
 In the `<Rentals::Filter>` component class, we have created a getter to do the work of filtering through our rentals based on two arguments: `@rentals` and `@query`. Inside of our getter function, we have these arguments accessible to us from `this.args`.
 
-In our component template, we are not actually *rendering* anything. Instead, we're yielding to something, using the `{{yield}}` keyword, a syntax that [we have seen before](../04-component-basics/). As we might recall, the purpose of `{{yield}}` is to render the *block* that is passed in by the component's *caller*, which is the thing that is invoking the current component (a template or another component, for example). But in this specific case, we don't just have a `{{yield}}` keyword. Instead, we have `this.results` *inside* of our `{{yield}}` keyword. What is that doing, exactly?
+In our component template, we are not actually *rendering* anything. Instead, we're yielding to something, using the `{{yield}}` keyword, a syntax that [we have seen before](../../part-1/component-basics/). As we might recall, the purpose of `{{yield}}` is to render the *block* that is passed in by the component's *caller*, which is the thing that is invoking the current component (a template or another component, for example). But in this specific case, we don't just have a `{{yield}}` keyword. Instead, we have `this.results` *inside* of our `{{yield}}` keyword. What is that doing, exactly?
 
 Well, in order to answer this question, let's look at how the data that we're yielding is being used in the `<Rentals>` component.
 

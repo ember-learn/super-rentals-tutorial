@@ -6,7 +6,9 @@ ember server
 
 As promised, we will now work on implementing the share button!
 
-<!-- TODO: add screen shot of the end state -->
+<!-- TODO: make this a gif instead -->
+
+![The working share button by the end of the chapter](/images/tutorial/part-2/service-injection/suggested-tweet@2x.png)
 
 While adding the share button, you will learn about:
 * Splattributes and the `class` attribute
@@ -73,7 +75,7 @@ Let's start with the template that was generated for this component. We already 
 +</a>
 ```
 
-Notice that we added `...attributes` to our `<a>` tag here. As [we learned earlier](../07-reusable-components/) when working on our `<Map>` component, the order of `...attributes` relative to other attributes is significant. We don't want to allow `href`, `target`, or `rel` to be overridden by the invoker, so we specified those attributes after `...attributes`.
+Notice that we added `...attributes` to our `<a>` tag here. As [we learned earlier](../../part-1/reusable-components/) when working on our `<Map>` component, the order of `...attributes` relative to other attributes is significant. We don't want to allow `href`, `target`, or `rel` to be overridden by the invoker, so we specified those attributes after `...attributes`.
 
 But what happens to the `class` attribute? Well, as it turns out, the `class` attribute is the one exception to how these component attributes are overridden! While all other HTML attributes follow the "last-write wins" rule, the values for the `class` attribute are merged together (concatenated) instead. There is a good reason for this: it allows the component to specify whatever classes that *it* needs, while allowing the invokers of the component to freely add any extra classes that *they* need for styling purposes.
 

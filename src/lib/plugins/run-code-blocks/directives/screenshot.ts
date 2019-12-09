@@ -1,7 +1,7 @@
 import { exec as _exec } from 'child_process';
 import { Code, Image } from 'mdast';
 import _mkdirp from 'mkdirp';
-import { basename, extname, join } from 'path';
+import { basename, extname, join, sep } from 'path';
 import { ScreenshotOptions, Viewport } from 'puppeteer';
 import { JSONObject, JSONValue, assert } from 'ts-std';
 import { promisify } from 'util';
@@ -141,13 +141,14 @@ export default async function screenshot(node: Code, options: Options, vfile: VF
     optional('retina', ToBool, false)
   ]);
 
+  assert(!!vfile.dirname, 'unknown dirname');
   assert(!!vfile.basename, 'unknown basename');
   assert(extname(args.filename) === '.png', `filename must have .png extnsion (${args.filename})`);
   assert(args.width > 0, `width must be positive`);
   assert(args.height !== 0 || (args.x === 0 && args.y === 0), `cannot specify x and y for fullscreen screenshots (height=0)`);
 
-  let namespace = basename(vfile.basename!, '.md');
-  let dir = join(options.assets, 'screenshots', namespace);
+  let dirs = [...vfile.dirname!.split(sep), basename(vfile.basename!, '.md')];
+  let dir = join(options.assets, 'images', ...dirs);
 
   let { filename } = args;
 
@@ -170,7 +171,7 @@ export default async function screenshot(node: Code, options: Options, vfile: VF
 
   await p;
 
-  let src = `/screenshots/${namespace}/${filename}`;
+  let src = `/images/${dirs.join('/')}/${filename}`;
   let { alt } = args;
   let { position, data } = node;
 

@@ -2,7 +2,7 @@
 
 In this chapter, you will install *[Ember CLI][TODO: link to Ember CLI]*, use it to generate a new Ember project, and add some basic templates and styles to your new app. By the end of this chapter, you should have a landing page with Professor Tomster's cute little face featured on it:
 
-![The Super Rentals app by the end of the chapter](/screenshots/01-orientation/styled-with-tomster@2x.png)
+![The Super Rentals app by the end of the chapter](/images/tutorial/part-1/orientation/styled-with-tomster@2x.png)
 
 While building your landing page, you will learn about:
 
@@ -64,7 +64,7 @@ del package.json
 ```run:file:patch hidden=true cwd=super-rentals filename=testem.js
 @@ -9,2 +9,3 @@
    ],
-+  browser_start_timeout: process.env.CI ? 60 : null,
++  browser_start_timeout: process.env.CI ? 60 : undefined,
    browser_args: {
 ```
 

@@ -2,7 +2,7 @@
 
 The last missing feature for the `<Rental>` component is a map to show the location of the rental, which is what we're going to work on next:
 
-![The Super Rentals app by the end of the chapter](/screenshots/07-reusable-components/three-old-mansions@2x.png)
+![The Super Rentals app by the end of the chapter](/images/tutorial/part-1/reusable-components/three-old-mansions@2x.png)
 
 While adding the map, you will learn about:
 
@@ -140,7 +140,7 @@ Then we have an `<img>` tag to request and render the static map image from Mapb
 
 Our template contains several values that don't yet exist&mdash;`@lat`, `@lng`, `@zoom`, `@width`, and `@height`. These are *[arguments][TODO: link to arguments]* to the `<Map>` component that we will supply when invoking it.
 
-By *[parameterizing][TODO: link to parameterizing]* our component using arguments, we made a reusable component that can be invoked from different parts of the app and customized to meet the needs for those specific contexts. We have already seen this in action when using the `<LinkTo>` component [earlier](../02-building-pages/); we had to specify a `@route` argument so that it knew what page to navigate to.
+By *[parameterizing][TODO: link to parameterizing]* our component using arguments, we made a reusable component that can be invoked from different parts of the app and customized to meet the needs for those specific contexts. We have already seen this in action when using the `<LinkTo>` component [earlier](../building-pages/); we had to specify a `@route` argument so that it knew what page to navigate to.
 
 We supplied a reasonable default value for the `alt` attribute based on the values of the `@lat` and `@lng` arguments. You may notice that we are directly *[interpolating][TODO: link to interpolating]* values into the `alt` attribute's value. Ember will automatically concatenate these interpolated values into a final string value for us, including doing any necessary HTML-escaping.
 
