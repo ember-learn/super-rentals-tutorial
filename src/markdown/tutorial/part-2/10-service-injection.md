@@ -416,5 +416,5 @@ ember server
 ```
 
 ```run:checkpoint cwd=super-rentals
-Chapter 12
+Chapter 10
 ```

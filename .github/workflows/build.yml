@@ -150,8 +150,8 @@ jobs:
         run: |
           mkdir -p guides/release/tutorial/
           rm -rf guides/release/tutorial/*
-          cp -r ../markdown/* guides/release/tutorial/
-          git add guides/release/tutorial
+          cp -r ../markdown/* guides/release/
+          git add guides/release
       - name: Add downloads
         working-directory: guides-source
         run: |
