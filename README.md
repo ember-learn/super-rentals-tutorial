@@ -28,14 +28,14 @@ Run one or more commands.
 Example:
 
     ```run:command
-    ember new super-rentals -b @ember/octane-app-blueprint
+    ember new super-rentals
     ```
 
 Result:
 
     ```
-    > ember new super-rentals -b @ember/octane-app-blueprint
-    installing octane-app-blueprint
+    > ember new super-rentals
+    installing
       create .editorconfig
       create .ember-cli.js
       create .eslintignore
