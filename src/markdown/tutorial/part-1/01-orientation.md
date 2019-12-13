@@ -257,13 +257,13 @@ The development server has a feature called *live reload*, which monitors your a
 As text on the welcome page pointed out, the source code for the page is located in `app/templates/application.hbs`. Let's try to edit that file and replace it with our own content:
 
 ```run:file:patch lang=handlebars cwd=super-rentals filename=app/templates/application.hbs
-@@ -1,6 +1 @@
+@@ -1,5 +1 @@
 -{{!-- The following component displays Ember's default welcome message. --}}
 -<WelcomePage />
 -{{!-- Feel free to remove this! --}}
 -
 -{{outlet}}
--
+\ No newline at end of file
 +Hello World!!!
 ```
 
