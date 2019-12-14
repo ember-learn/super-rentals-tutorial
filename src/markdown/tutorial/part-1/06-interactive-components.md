@@ -176,7 +176,7 @@ Finally, we added the `@action` decorator to our method. This indicates to Ember
 
 > Zoey says...
 >
-> If you forget to do add the `@action` decorator, you will also get a helpful error when clicking on the button in development mode!
+> If you forget to add the `@action` decorator, you will also get a helpful error when clicking on the button in development mode!
 
 With that, it's time to wire this up in the template:
 
