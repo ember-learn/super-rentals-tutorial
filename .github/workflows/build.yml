@@ -33,9 +33,7 @@ jobs:
           sudo apt-get install -y tree
       - name: Install dependencies (yarn)
         run: |
-          # getting at least 3.15.0-beta.3 for now, to ensure we
-          # are testing the Octane beta prerelease
-          yarn upgrade ember-cli@^3.15.0-beta.3
+          yarn upgrade ember-cli
           yarn install
       - name: Lint (markdown source)
         run: yarn lint:md:src
