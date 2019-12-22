@@ -193,7 +193,7 @@ git add tests/integration/components/rentals-test.js
 ```
 
 ```run:screenshot width=1024 height=1024 retina=true filename=pass-1.png alt="The new test is passing."
-visit http://localhost:4200/tests?nocontainer&deterministic
+visit http://localhost:4200/tests?nocontainer&nolint&deterministic
 wait  #qunit-banner.qunit-pass
 ```
 
@@ -370,7 +370,7 @@ git add tests/integration/components/rentals-test.js
 ```
 
 ```run:screenshot width=1024 height=1024 retina=true filename=pass-2.png alt="The new test is passing."
-visit http://localhost:4200/tests?nocontainer&deterministic
+visit http://localhost:4200/tests?nocontainer&nolint&deterministic
 wait  #qunit-banner.qunit-pass
 ```
 

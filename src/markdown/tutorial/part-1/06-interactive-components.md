@@ -272,7 +272,7 @@ git add tests/integration/components/rental/image-test.js
 ```
 
 ```run:screenshot width=1024 height=512 retina=true filename=pass.png alt="Tests passing with the new <Rental::Image> test"
-visit http://localhost:4200/tests?nocontainer&deterministic
+visit http://localhost:4200/tests?nocontainer&nolint&deterministic
 wait  #qunit-banner.qunit-pass
 ```
 
@@ -335,7 +335,7 @@ git add app/components/rental/image.hbs
 ```
 
 ```run:screenshot width=1024 height=512 retina=true filename=pass-2.png alt="Tests still passing after the refactor"
-visit http://localhost:4200/tests?nocontainer&deterministic
+visit http://localhost:4200/tests?nocontainer&nolint&deterministic
 wait  #qunit-banner.qunit-pass
 ```
 

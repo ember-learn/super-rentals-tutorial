@@ -204,7 +204,7 @@ The main event here is that we wanted to confirm the Twitter Intent URL includes
 If we run the tests in the browser, everything should...
 
 ```run:screenshot width=1024 height=768 retina=true filename=fail.png alt="The test failed"
-visit http://localhost:4200/tests?nocontainer&deterministic
+visit http://localhost:4200/tests?nocontainer&nolint&deterministic
 wait  #qunit-banner.qunit-fail
 ```
 
@@ -247,7 +247,7 @@ git add tests/acceptance/super-rentals-test.js
 ```
 
 ```run:screenshot width=1024 height=960 retina=true filename=pass-1.png alt="The previously failing test is now green"
-visit http://localhost:4200/tests?nocontainer&deterministic
+visit http://localhost:4200/tests?nocontainer&nolint&deterministic
 wait  #qunit-banner.qunit-pass
 ```
 
@@ -407,7 +407,7 @@ git add tests/integration/components/share-button-test.js
 ```
 
 ```run:screenshot width=1024 height=960 retina=true filename=pass-2.png alt="All the tests pass!"
-visit http://localhost:4200/tests?nocontainer&deterministic
+visit http://localhost:4200/tests?nocontainer&nolint&deterministic
 wait  #qunit-banner.qunit-pass
 ```
 
