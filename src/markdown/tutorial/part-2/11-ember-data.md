@@ -159,7 +159,7 @@ git add tests/unit/models/rental-test.js
 ```
 
 ```run:screenshot width=1024 height=1024 retina=true filename=pass-1.png alt="All the tests pass!"
-visit http://localhost:4200/tests?nocontainer&deterministic
+visit http://localhost:4200/tests?nocontainer&nolint&deterministic
 wait  #qunit-banner.qunit-pass
 ```
 
@@ -244,7 +244,7 @@ The Ember Data store acts as a kind of intermediary between our app and the serv
 That's a lot of theory, but is this going to work in our app? Let's run the tests and find out!
 
 ```run:screenshot width=1024 height=960 retina=true filename=fail-1.png alt="A few tests failed!"
-visit http://localhost:4200/tests?nocontainer&deterministic
+visit http://localhost:4200/tests?nocontainer&nolint&deterministic
 wait  #qunit-banner.qunit-fail
 ```
 
@@ -304,7 +304,7 @@ git add app/adapters/application.js
 ```
 
 ```run:screenshot width=1024 height=1024 retina=true filename=pass-2.png alt="Once again, all the tests are passing again!"
-visit http://localhost:4200/tests?nocontainer&deterministic
+visit http://localhost:4200/tests?nocontainer&nolint&deterministic
 wait  #qunit-banner.qunit-pass
 ```
 

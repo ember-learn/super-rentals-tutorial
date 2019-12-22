@@ -114,7 +114,7 @@ If you watch really carefully, you can see our test robot roaming around our app
 <!-- TODO: make this a gif instead -->
 
 ```run:screenshot width=1024 height=512 retina=true filename=pass.png alt="All tests passing"
-visit http://localhost:4200/tests?nocontainer&deterministic
+visit http://localhost:4200/tests?nocontainer&nolint&deterministic
 wait  #qunit-banner.qunit-pass
 ```
 
@@ -130,7 +130,7 @@ As much as I enjoy watching this robot hard at work, the important thing here is
 ```
 
 ```run:screenshot width=1024 height=768 retina=true filename=fail.png alt="A failing test"
-visit http://localhost:4200/tests?nocontainer&deterministic
+visit http://localhost:4200/tests?nocontainer&nolint&deterministic
 wait  #qunit-banner.qunit-fail
 ```
 
@@ -178,7 +178,7 @@ Let's practice what we learned by adding tests for the remaining pages:
 As with the development server, the test UI should automatically reload and rerun the entire test suite as you save the files. It is recommended that you keep this page open as you develop your app. That way, you will get immediate feedback if you accidentally break something.
 
 ```run:screenshot width=1024 height=512 retina=true filename=pass-2.png alt="Tests still passing with the new tests"
-visit http://localhost:4200/tests?nocontainer&deterministic
+visit http://localhost:4200/tests?nocontainer&nolint&deterministic
 wait  #qunit-banner.qunit-pass
 ```
 

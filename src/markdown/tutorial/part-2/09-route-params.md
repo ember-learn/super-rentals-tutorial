@@ -115,7 +115,7 @@ git add tests/integration/components/rental-test.js
 If we run the tests in the browser, everything should...
 
 ```run:screenshot width=1024 height=768 retina=true filename=fail.png alt="The test failed"
-visit http://localhost:4200/tests?nocontainer&deterministic
+visit http://localhost:4200/tests?nocontainer&nolint&deterministic
 wait  #qunit-banner.qunit-fail
 ```
 
@@ -149,7 +149,7 @@ git add tests/integration/components/rental-test.js
 ```
 
 ```run:screenshot width=1024 height=768 retina=true filename=pass.png alt="Tests are passing after our modifications"
-visit http://localhost:4200/tests?nocontainer&deterministic
+visit http://localhost:4200/tests?nocontainer&nolint&deterministic
 wait  #qunit-banner.qunit-pass
 ```
 
@@ -341,7 +341,7 @@ git add tests/integration/components/rental/detailed-test.js
 ```
 
 ```run:screenshot width=1024 height=768 retina=true filename=pass-2.png alt="Tests are passing as expected"
-visit http://localhost:4200/tests?nocontainer&deterministic
+visit http://localhost:4200/tests?nocontainer&nolint&deterministic
 wait  #qunit-banner.qunit-pass
 ```
 
@@ -393,7 +393,7 @@ git add tests/acceptance/super-rentals-test.js
 ```
 
 ```run:screenshot width=1024 height=768 retina=true filename=pass-3.png alt="All tests passing!"
-visit http://localhost:4200/tests?nocontainer&deterministic
+visit http://localhost:4200/tests?nocontainer&nolint&deterministic
 wait  #qunit-banner.qunit-pass
 ```
 

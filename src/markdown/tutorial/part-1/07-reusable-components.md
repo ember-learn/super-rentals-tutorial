@@ -250,7 +250,7 @@ git add tests/integration/components/map-test.js
 ```
 
 ```run:screenshot width=1024 height=768 retina=true filename=pass.png alt="Tests passing with the new <Map> tests"
-visit http://localhost:4200/tests?nocontainer&deterministic
+visit http://localhost:4200/tests?nocontainer&nolint&deterministic
 wait  #qunit-banner.qunit-pass
 ```
 
@@ -348,7 +348,7 @@ git add app/components/map.js
 ```
 
 ```run:screenshot width=1024 height=768 retina=true filename=pass-2.png alt="Tests passing after the src getter refactor"
-visit http://localhost:4200/tests?nocontainer&deterministic
+visit http://localhost:4200/tests?nocontainer&nolint&deterministic
 wait  #qunit-banner.qunit-pass
 ```
 
@@ -422,7 +422,7 @@ git add tests/integration/components/map-test.js
 ```
 
 ```run:screenshot width=1024 height=768 retina=true filename=pass-3.png alt="All our tests are passing"
-visit http://localhost:4200/tests?nocontainer&deterministic
+visit http://localhost:4200/tests?nocontainer&nolint&deterministic
 wait  #qunit-banner.qunit-pass
 ```
 
