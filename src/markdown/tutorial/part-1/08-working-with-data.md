@@ -292,7 +292,7 @@ git add app/routes/index.js
 
 ## Adapting Server Data
 
-Before we go any further, let's pause for a second to look at the our server's data again.
+Before we go any further, let's pause for a second to look at the server's data again.
 
 ```run:file:show lang=json cwd=super-rentals filename=public/api/rentals.json
 ```

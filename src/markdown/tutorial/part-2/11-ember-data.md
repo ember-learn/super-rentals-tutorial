@@ -105,7 +105,7 @@ git add tests/unit/models/rental-test.js
 >
 > We could also have used the `ember generate model rental` command in the first place, which would have created both the model and test file for us.
 
-The generator created some boilerplate code for us, which servers as a pretty good starting point for writing our test:
+The generator created some boilerplate code for us, which serves as a pretty good starting point for writing our test:
 
 ```run:file:patch lang=js cwd=super-rentals filename=tests/unit/models/rental-test.js
 @@ -6,7 +6,32 @@
