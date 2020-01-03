@@ -180,20 +180,31 @@ jobs:
           set -euo pipefail
           IFS=$'\n\t'
 
+          mkdir -p tmp/prev
+          git checkout-index -f -a --prefix=tmp/prev/
+
           mkdir -p public/images/tutorial
           rm -rf public/images/tutorial/*
 
           function add_screenshot {
             local src="$1";
+            local prev=$(echo -n "$1" | sed "s|../assets/|tmp/prev/public/|");
             local dest=$(echo -n "$1" | sed "s|../assets/|public/|");
+            local diff=$(echo -n "$1" | sed "s|../assets/|tmp/perceptualdiff/|" | sed "s|@2x.png|.ppm|");
 
-            if git checkout -- "$dest" > /dev/null 2>&1; then
-              if perceptualdiff -downsample 3 -colorfactor 0.5 "$src" "$dest" > /dev/null; then
+            mkdir -p "$(dirname "$dest")"
+            mkdir -p "$(dirname "$diff")"
+
+            if [[ -f "$prev" ]]; then
+              if git diff --no-index -- "$prev" "$src" > /dev/null 2>&1; then
                 echo "$dest (unchanged)"
+                cp "$prev" "$dest"
+                return 0
+              elif perceptualdiff --output "$diff" --downsample 2 --colorfactor 0.5 "$prev" "$src" > /dev/null; then
+                echo "$dest (unchanged)"
+                cp "$prev" "$dest"
                 return 0
               fi
-            else
-              mkdir -p "$(dirname "$dest")"
             fi
 
             cp "$src" "$dest"
@@ -212,6 +223,12 @@ jobs:
           find ../assets/images -type f -name "*.png" | xargs -n 1 -P 2 -I {} bash -c 'add_screenshot "$@"' _ {}
 
           git add public/images
+      - name: Upload artifacts (perceptualdiff)
+        uses: actions/upload-artifact@master
+        if: always()
+        with:
+          name: perceptualdiff
+          path: guides-source/tmp/perceptualdiff
       - name: Commit
         working-directory: guides-source
         run: |
