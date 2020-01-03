@@ -389,7 +389,7 @@ While we are here, let's add some more tests for the various functionalities of 
 +  });
 +
 +  test('the target, rel and href attributes cannot be overridden', async function(assert) {
-+    await render(hbs`<ShareButton targe="_self" rel="" href="/">Not a Tweet!</ShareButton>`);
++    await render(hbs`<ShareButton target="_self" rel="" href="/">Not a Tweet!</ShareButton>`);
 +
 +    assert.dom('a').hasAttribute('target', '_blank');
 +    assert.dom('a').hasAttribute('rel', 'external nofollow noopener noreferrer');
