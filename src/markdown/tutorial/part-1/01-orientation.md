@@ -61,13 +61,6 @@ rm package.json
 del package.json
 ```
 
-```run:file:patch hidden=true cwd=super-rentals filename=testem.js
-@@ -9,2 +9,3 @@
-   ],
-+  browser_start_timeout: process.env.CI ? 60 : undefined,
-   browser_args: {
-```
-
 ```run:file:patch hidden=true cwd=super-rentals filename=app/index.html
 @@ -14,2 +14,17 @@
 
