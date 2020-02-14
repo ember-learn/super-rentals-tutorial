@@ -83,6 +83,13 @@ del package.json
 
 ```
 
+```run:file:patch hidden=true cwd=super-rentals filename=config/environment.js
+@@ -22,2 +22,3 @@
+       // when it is created
++      RAISE_ON_DEPRECATION: true,
+     }
+```
+
 ```run:file:patch hidden=true cwd=super-rentals filename=tests/index.html
 @@ -28,2 +28,91 @@
      <script src="{{rootURL}}assets/tests.js"></script>
@@ -181,6 +188,7 @@ del package.json
 ```run:command hidden=true cwd=super-rentals
 yarn test
 git add app/index.html
+git add config/environment.js
 git add testem.js
 git add tests/index.html
 git commit --amend --no-edit
