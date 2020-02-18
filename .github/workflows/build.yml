@@ -324,17 +324,17 @@ jobs:
           git push -f super-rentals master:super-rentals-tutorial-output
 
   deploy-code-flattened:
-    # This job deploys the built app to the super-rentals-tutorial branch of
-    # the ember-learn/super-rentals repository. This branch does not preserve
+    # This job deploys the built app to the master branch of the
+    # ember-learn/super-rentals repository. This branch does not preserve
     # the commit history of the tutorial flow. Instead, it squashes the changes
-    # into a single commit on the super-rentals-tutorial branch. This preserves
+    # into a single commit on the master branch. This preserves
     # a linear history of changes to the built app over time, either due to
     # changes to the generator blueprints, or changes to the tutorial content
     # itself (e.g. refactoring to use new ember features). A lot of times, the
     # built app's source code remains stable and so there may be no changes to
     # push here.
     #
-    name: Deploy to ember-learn/super-rentals (super-rentals-tutorial branch)
+    name: Deploy to ember-learn/super-rentals (master branch)
     needs: build
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/master'
@@ -353,7 +353,7 @@ jobs:
           name: code
           path: output
       - name: Clone
-        run: git clone git@github.com:ember-learn/super-rentals --depth 1 -b super-rentals-tutorial
+        run: git clone git@github.com:ember-learn/super-rentals --depth 1
       - name: Commit
         working-directory: super-rentals
         run: |
@@ -383,6 +383,7 @@ jobs:
           git remote add output ../output
           git fetch output
           git merge --squash --no-commit --allow-unrelated-histories output/master
+          git reset HEAD~ -- README.md app.json
           git commit --allow-empty --amend --no-edit
         env:
           ORIGINAL_COMMIT_MESSAGE: ${{ github.event.commits[0].message }}
@@ -392,7 +393,7 @@ jobs:
           set -euo pipefail
           IFS=$'\n\t'
 
-          if git diff --exit-code origin/super-rentals-tutorial; then
+          if git diff --exit-code origin/master; then
             echo "Nothing to push"
           else
             git push
