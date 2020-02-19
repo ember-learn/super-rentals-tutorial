@@ -143,10 +143,12 @@ jobs:
         uses: actions/download-artifact@master
         with:
           name: assets (release)
+          path: assets
       - name: Download artifacts (markdown)
         uses: actions/download-artifact@master
         with:
           name: markdown (release)
+          path: markdown
       - name: Clone
         run: |
           set -euo pipefail
