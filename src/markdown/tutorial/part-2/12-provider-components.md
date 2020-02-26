@@ -37,7 +37,7 @@ Well, we can start simple. Before we worry about implementing the "search" part 
 Now if we refresh the UI, it has an `<input>` element on the page.
 
 ```run:command hidden=true cwd=super-rentals
-yarn test --path dist
+ember test --path dist
 git add app/templates/index.hbs
 ```
 
@@ -98,7 +98,7 @@ Remember the small change we made in the markup when we extracted our `<Rentals>
 Let's check our UI as well to make sure that we didn't break anything during this refactor...
 
 ```run:command hidden=true cwd=super-rentals
-yarn test --path dist
+ember test --path dist
 git add app/components/rentals.hbs
 git add app/templates/index.hbs
 ```
@@ -188,7 +188,7 @@ module('Integration | Component | rentals', function(hooks) {
 Now, if we try running our tests, they should all pass after making this change.
 
 ```run:command hidden=true cwd=super-rentals
-yarn test --path dist
+ember test --path dist
 git add tests/integration/components/rentals-test.js
 ```
 
@@ -229,7 +229,7 @@ Ember's `<Input>` component is pretty neat; it will wire up things behind the sc
 > If you want to see this in action, try adding `<p>{{this.query}}</p>` to the component template and watch it update live as you type!
 
 ```run:command hidden=true cwd=super-rentals
-yarn test --path dist
+ember test --path dist
 git add app/components/rentals.hbs
 git add app/components/rentals.js
 ```
@@ -362,7 +362,7 @@ Great! In the process of adding this test, we'll notice that we also extracted o
 > This search functionality is not perfect. Ideally, it would also be case-insensitive, and also allow you to search by city, category, type, or description. If you're looking for a challenge, see if you can improve on our search!
 
 ```run:command hidden=true cwd=super-rentals
-yarn test --path dist
+ember test --path dist
 git add app/components/rentals.hbs
 git add app/components/rentals/filter.hbs
 git add app/components/rentals/filter.js

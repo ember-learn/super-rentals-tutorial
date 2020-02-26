@@ -120,7 +120,7 @@ Let's do the same for our other two pages as well.
 After saving, everything should look exactly the same as before, and all the tests should still pass. Very nice!
 
 ```run:command hidden=true cwd=super-rentals
-yarn test --path dist
+ember test --path dist
 git add app/templates/index.hbs
 git add app/templates/about.hbs
 git add app/templates/contact.hbs
@@ -190,7 +190,7 @@ Instead of navigating to a URL, we start the test by rendering our `<Jumbo>` com
 Just like visit and click, which we used earlier, render is also an async step, so we need to pair it with the `await` keyword. Other than that, the rest of the test is very similar to the acceptance tests we wrote in the previous chapter. Make sure the test is passing by checking the tests UI in the browser.
 
 ```run:command hidden=true cwd=super-rentals
-yarn test --path dist
+ember test --path dist
 git add tests/integration/components/jumbo-test.js
 ```
 
@@ -307,7 +307,7 @@ We updated the existing tests to assert that a `<nav>` element exists on each pa
 All tests should pass at this point!
 
 ```run:command hidden=true cwd=super-rentals
-yarn test --path dist
+ember test --path dist
 git add tests/acceptance/super-rentals-test.js
 ```
 
@@ -359,7 +359,7 @@ The `{{outlet}}` keyword denotes the place where our site's pages should be rend
 This is much nicer! We can run our test suite, which confirms that everything still works after our refactor. We are ready to move on to the next feature!
 
 ```run:command hidden=true cwd=super-rentals
-yarn test --path dist
+ember test --path dist
 git add app/templates/application.hbs
 git add app/templates/index.hbs
 git add app/templates/contact.hbs

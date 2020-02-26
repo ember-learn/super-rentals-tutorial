@@ -92,7 +92,7 @@ However, in the case of our `<Map>` component, we are pretty sure that we are go
 > Too much typing? Use `ember g component map -gc` instead. The `-gc` flag stands for **G**limmer **c**omponent, but you may also remember it as **g**enerate **c**lass.
 
 ```run:command hidden=true cwd=super-rentals
-yarn test --path dist
+ember test --path dist
 git add app/components/map.hbs
 git add app/components/map.js
 git add tests/integration/components/map-test.js
@@ -243,7 +243,7 @@ Note that the `hasAttribute` test helper from [`qunit-dom`][TODO: link to qunit-
 *Fingers crossed...* Let's run our tests.
 
 ```run:command hidden=true cwd=super-rentals
-yarn test --path dist
+ember test --path dist
 git add app/components/map.hbs
 git add app/components/map.js
 git add tests/integration/components/map-test.js
@@ -293,7 +293,7 @@ For good measure, we will also add an assertion to the `<Rental>` tests to make 
 ```
 
 ```run:command hidden=true cwd=super-rentals
-yarn test --path dist
+ember test --path dist
 git add app/components/rental.hbs
 git add tests/integration/components/rental-test.js
 ```
@@ -342,7 +342,7 @@ index 78e765f..1cad468 100644
 Much nicer! And all of our tests still pass!
 
 ```run:command hidden=true cwd=super-rentals
-yarn test --path dist
+ember test --path dist
 git add app/components/map.hbs
 git add app/components/map.js
 ```
@@ -417,7 +417,7 @@ Instead, `this` refers to a special *[test context][TODO: link to test context]*
 With all our tests passing, we are ready to move on!
 
 ```run:command hidden=true cwd=super-rentals
-yarn test --path dist
+ember test --path dist
 git add tests/integration/components/map-test.js
 ```
 
