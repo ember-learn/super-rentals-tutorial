@@ -90,6 +90,10 @@ del package.json
      }
 ```
 
+```run:file:create hidden=true cwd=super-rentals filename=public/_redirects
+/* /index.html 200
+```
+
 ```run:file:patch hidden=true cwd=super-rentals filename=tests/index.html
 @@ -28,2 +28,91 @@
      <script src="{{rootURL}}assets/tests.js"></script>
@@ -189,7 +193,7 @@ del package.json
 yarn test
 git add app/index.html
 git add config/environment.js
-git add testem.js
+git add public/_redirects
 git add tests/index.html
 git commit --amend --no-edit
 ```
