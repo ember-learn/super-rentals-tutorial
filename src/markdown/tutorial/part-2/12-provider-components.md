@@ -312,7 +312,7 @@ type  .rentals input, Downtown
 wait  .rental
 ```
 
-Hooray, it works! Awesome. Now that we've tried this out manually in the UI, let's write a tests for this new behavior as well.
+Hooray, it works! Awesome. Now that we've tried this out manually in the UI, let's write a test for this new behavior as well.
 
 ```run:file:patch lang=js cwd=super-rentals filename=tests/integration/components/rentals-test.js
 @@ -2,3 +2,3 @@
