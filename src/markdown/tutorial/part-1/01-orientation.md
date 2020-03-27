@@ -214,7 +214,7 @@ For the rest of the tutorial, all commands should be run within the `super-renta
 # Also, try to hide yarn.lock from view and fake a package-lock.json
 
 #[cfg(unix)]
-tree super-rentals -a -I "node_modules|.git|yarn.lock" --dirsfirst \
+tree super-rentals -a -I "node_modules|.git|yarn.lock|_redirects" --dirsfirst \
   | sed 's/\xC2\xA0/ /g' \
   | awk \
     '/package\.json/ { print $1 " package.json"; print $1 " package-lock.json" } \
