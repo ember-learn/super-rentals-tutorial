@@ -233,7 +233,7 @@ When you are done, your `public` folder should now have the following content:
 # that further turns them into &amp;nbsp;
 
 #[cfg(unix)]
-tree public --dirsfirst | sed 's/\xC2\xA0/ /g'
+tree public -I "_redirects" --dirsfirst | sed 's/\xC2\xA0/ /g'
 
 #[cfg(windows)]
 tree public /F
