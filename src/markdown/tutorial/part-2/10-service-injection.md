@@ -146,15 +146,6 @@ visit http://localhost:4200/rentals/grand-old-mansion?deterministic
 wait  .share.button
 ```
 
-```run:screenshot width=1024 retina=true filename=suggested-tweet.png alt="Suggested tweet"
-visit http://localhost:4200/rentals/grand-old-mansion?deterministic
-wait  .share.button
-# Remove the target attribute so that clicking on the button doesn't open a new page.
-eval  document.querySelector(".share.button").removeAttribute('target')
-click .share.button, true
-wait  textarea#status
-```
-
 > Zoey says...
 >
 > Feel free to try sending the tweet! However, keep in mind that your followers cannot access your local server at `http://localhost:4200/`. Don't worry though, at the end of the tutorial, we will deploy the app to the Internet so you can show everyone what you made!
