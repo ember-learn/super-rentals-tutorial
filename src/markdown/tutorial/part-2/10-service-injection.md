@@ -8,7 +8,7 @@ As promised, we will now work on implementing the share button!
 
 <!-- TODO: make this a gif instead -->
 
-![The working share button by the end of the chapter](/images/tutorial/part-2/service-injection/suggested-tweet@2x.png)
+![The working share button by the end of the chapter](/images/tutorial/part-2/service-injection/share-button@2x.png)
 
 While adding the share button, you will learn about:
 * Splattributes and the `class` attribute
