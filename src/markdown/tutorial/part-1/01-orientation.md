@@ -84,10 +84,10 @@ del package.json
 ```
 
 ```run:file:patch hidden=true cwd=super-rentals filename=config/environment.js
-@@ -22,2 +22,3 @@
-       // when it is created
+@@ -9,2 +9,3 @@
+     EmberENV: {
 +      RAISE_ON_DEPRECATION: true,
-     }
+       FEATURES: {
 ```
 
 ```run:file:create hidden=true cwd=super-rentals filename=public/_redirects
