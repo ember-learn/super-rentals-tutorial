@@ -28,14 +28,6 @@ export default async function checkpoint(node: Code, options: Options): Promise<
     cwd = join(cwd, args.cwd);
   }
 
-  console.log(`$ yarn lint:hbs`);
-
-  await exec('yarn lint:hbs', { cwd });
-
-  console.log(`$ yarn lint:js`);
-
-  await exec('yarn lint:js', { cwd });
-
   console.log(`$ yarn test`);
 
   await exec('yarn test', { cwd });

@@ -417,8 +417,6 @@ Options:
 
 Indicates a checkpoint where the following steps are performed:
 
-* `yarn lint:hbs`
-* `yarn lint:js`
 * `yarn test`
 * Optionally, commit the current changes
 * Verify the git tree is clean (i.e. no dirty or untracked files)

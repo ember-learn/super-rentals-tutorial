@@ -32,9 +32,12 @@ If a version number is shown, you're ready to go.
 
 We can create a new project using Ember CLI's `new` command. It follows the pattern `ember new <project-name>`. In our case, the project name would be `super-rentals`:
 
-```run:command hidden=true
-# Hack: convince ember-cli we are really not in a project. Otherwise, we will get the "You cannot use the new command inside an ember-cli project." error when running `ember new`.
-echo "{}" > package.json
+```run:ignore
+Hack: make an empty package.json to convince ember-cli we are really not in an Ember project. Otherwise, we will get the "You cannot use the new command inside an ember-cli project." error when running `ember new`.
+```
+
+```run:file:create hidden=true filename=package.json
+{}
 ```
 
 ```run:command
@@ -221,7 +224,7 @@ tree super-rentals -a -I "node_modules|.git|yarn.lock|_redirects" --dirsfirst \
     !/package\.json/ { print }'
 
 #[cfg(windows)]
-tree super-rentals /F
+npx --quiet tree-cli --base super-rentals --ignore node_modules --ignore .git --ignore yarn.lock --ignore _redirects --directoryFirst -a -l 99
 ```
 
 We'll learn about the purposes of these files and folders as we go. For now, just know that we'll spend most of our time working within the `app` folder.
