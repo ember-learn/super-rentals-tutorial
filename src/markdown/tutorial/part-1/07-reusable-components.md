@@ -39,7 +39,7 @@ As its name implies, `config/environment.js` is used to *configure* our app and 
 > If you prefer, you can [create different Mapbox access tokens](https://account.mapbox.com/access-tokens/) for use in different environments. At a minimum, the tokens will each need to have the "styles:tiles" scope in order to use Mapbox's static images API.
 
 ```run:command hidden=true cwd=super-rentals
-yarn test
+yarn ember test
 git add config/environment.js
 ```
 
@@ -52,7 +52,7 @@ git add config/environment.js
 ```
 
 ```run:command hidden=true cwd=super-rentals
-yarn test
+yarn ember test
 git add config/environment.js
 ```
 
