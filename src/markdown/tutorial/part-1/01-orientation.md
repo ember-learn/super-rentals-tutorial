@@ -224,7 +224,7 @@ tree super-rentals -a -I "node_modules|.git|yarn.lock|_redirects" --dirsfirst \
     !/package\.json/ { print }'
 
 #[cfg(windows)]
-tree super-rentals /F
+npx --quiet tree-cli --base super-rentals --ignore node_modules --ignore .git --ignore yarn.lock --ignore _redirects --directoryFirst -a -l 99
 ```
 
 We'll learn about the purposes of these files and folders as we go. For now, just know that we'll spend most of our time working within the `app` folder.
