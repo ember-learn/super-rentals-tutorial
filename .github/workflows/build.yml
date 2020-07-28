@@ -32,7 +32,7 @@ jobs:
           path: ~/.cache/yarn
           key: ${{ runner.os }}-yarn
       - name: Checkout
-        uses: actions/checkout@v1
+        uses: actions/checkout@v2
       - name: Install dependencies (apt-get)
         run: |
           sudo apt-get update -y
@@ -68,19 +68,19 @@ jobs:
         working-directory: dist/code/super-rentals
         run: git clean -dfX
       - name: Upload artifacts (assets)
-        uses: actions/upload-artifact@master
+        uses: actions/upload-artifact@v2
         if: always()
         with:
           name: assets (${{ matrix.channel }})
           path: dist/assets
       - name: Upload artifacts (markdown)
-        uses: actions/upload-artifact@master
+        uses: actions/upload-artifact@v2
         if: always()
         with:
           name: markdown (${{ matrix.channel }})
           path: dist/markdown
       - name: Upload artifacts (code)
-        uses: actions/upload-artifact@master
+        uses: actions/upload-artifact@v2
         if: always()
         with:
           name: code (${{ matrix.channel }})
@@ -141,12 +141,12 @@ jobs:
           sudo apt-get update -y
           sudo apt-get install -y zipcmp advancecomp optipng perceptualdiff
       - name: Download artifacts (assets)
-        uses: actions/download-artifact@master
+        uses: actions/download-artifact@v2
         with:
           name: assets (release)
           path: assets
       - name: Download artifacts (markdown)
-        uses: actions/download-artifact@master
+        uses: actions/download-artifact@v2
         with:
           name: markdown (release)
           path: markdown
@@ -239,7 +239,7 @@ jobs:
 
           git add public/images
       - name: Upload artifacts (perceptualdiff)
-        uses: actions/upload-artifact@master
+        uses: actions/upload-artifact@v2
         if: always()
         with:
           name: perceptualdiff (release)
@@ -304,7 +304,7 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.SUPER_RENTALS_DEPLOY_KEY }}
       - name: Download artifacts
-        uses: actions/download-artifact@master
+        uses: actions/download-artifact@v2
         with:
           name: code (release)
           path: .
@@ -363,7 +363,7 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.SUPER_RENTALS_DEPLOY_KEY }}
       - name: Download artifacts
-        uses: actions/download-artifact@master
+        uses: actions/download-artifact@v2
         with:
           name: code (release)
           path: output
