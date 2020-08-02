@@ -319,6 +319,12 @@ Before we do anything else, let's add some styling to our app. We spend enough t
 
 Fortunately, our designer sent us some CSS to use, so we can <a href="/downloads/style.css" download="app.css">download the stylesheet file</a> and copy it into `app/styles/app.css`. This file has all the styles we need for building the rest of the app.
 
+```
+Note: /* ...snip/ denotes that below CSS is snippet only and doesn't gurantee complete matching styles as compared to documentation.
+
+❕Recommendation: Copy app.css from above link, and then continue to match your local styles with output being displayed in documentation
+```
+
 ```run:file:copy lang=css src=downloads/style.css cwd=super-rentals filename=app/styles/app.css
 @import url(https://fonts.googleapis.com/css?family=Lato:300,300italic,400,700,700italic);
 
