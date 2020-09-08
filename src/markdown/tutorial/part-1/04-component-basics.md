@@ -286,7 +286,7 @@ But what kind of test? We *could* write a component test for the `<NavBar>` by i
 +    await visit('/');
 +
 +    assert.dom('nav').exists();
-+    assert.dom('nav a.menu-index').hasText('SuperRentals')
++    assert.dom('nav a.menu-index').hasText('SuperRentals');
 +    assert.dom('nav a.menu-about').hasText('About');
 +    assert.dom('nav a.menu-contact').hasText('Contact');
 +
