@@ -255,7 +255,7 @@ Finally, let's write a test for this new behavior:
 +
 +    await click('button.image');
 +
-+    assert.dom('.image').hasClass('large')
++    assert.dom('.image').hasClass('large');
 +    assert.dom('.image small').hasText('View Smaller');
 +
 +    await click('button.image');
