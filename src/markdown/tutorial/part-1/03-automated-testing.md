@@ -167,7 +167,7 @@ Let's practice what we learned by adding tests for the remaining pages:
 +    assert.equal(currentURL(), '/getting-in-touch');
 +    assert.dom('h2').hasText('Contact Us');
 +
-+    assert.dom('a.button').hasText('About');
++    assert.dom('.jumbo a.button').hasText('About');
 +    await click('.jumbo a.button');
 +
 +    assert.equal(currentURL(), '/about');
