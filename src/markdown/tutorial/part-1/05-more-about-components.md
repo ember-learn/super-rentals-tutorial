@@ -162,7 +162,7 @@ Let's edit the component's template:
 +</div>
 ```
 
-Instead of hard-coding specific values for the `src` and `alt` attributes on the `<img>` tag, we opted for the `...attributes` keyword instead, which is also sometimes referred to as the *["splattributes"][TODO: link to splattributes]* syntax. This allows arbitrary HTML attributes to be passed in when invoking this component, like so:
+Instead of hard-coding specific values for the `src` and `alt` attributes on the `<img>` tag, we opted for the `...attributes` keyword instead, which is also sometimes referred to as the *["splattributes"](https://guides.emberjs.com/release/components/component-arguments-and-html-attributes/#toc_html-attributes)* syntax. This allows arbitrary HTML attributes to be passed in when invoking this component, like so:
 
 ```run:file:patch lang=handlebars cwd=super-rentals filename=app/components/rental.hbs
 @@ -1,2 +1,6 @@

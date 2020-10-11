@@ -4,7 +4,7 @@
 ember server
 ```
 
-In this chapter, you will *[refactor][TODO: link to refactor]* your existing templates to use components. We will also be adding a site-wide navigation bar:
+In this chapter, you will *[refactor](https://guides.emberjs.com/release/components/introducing-components/#toc_breaking-it-into-pieces)* your existing templates to use components. We will also be adding a site-wide navigation bar:
 
 ![The Super Rentals app by the end of the chapter](/images/tutorial/part-1/component-basics/index-with-nav@2x.png)
 
@@ -20,7 +20,7 @@ In doing so, you will learn about:
 
 ## Extracting Markup into Components
 
-In a [previous chapter](../building-pages/), we got a light introduction to *[components][TODO: link to components]* when using `<LinkTo>` to connect our pages. To recap, we said that components are Ember's way of creating *[custom tags][TODO: link to custom tags]* to supplement the built-in HTML tags from the browser. Now, we are going to create our own components!
+In a [previous chapter](../building-pages/), we got a light introduction to *[components][(https://guides.emberjs.com/release/components/introducing-components/)* when using `<LinkTo>` to connect our pages. To recap, we said that components are Ember's way of creating *[custom tags][TODO: link to custom tags]* to supplement the built-in HTML tags from the browser. Now, we are going to create our own components!
 
 During the course of developing an app, it is pretty common to reuse the same UI element across different parts of the app. For example, we have been using the same "jumbo" header in all three pages so far. On every page we worked to follow the same basic structure:
 
@@ -54,7 +54,7 @@ That's it, we have created our first component! We can now *[invoke][TODO: link 
 
 ## Passing Content to Components with `{{yield}}`
 
-When invoking a component, Ember will replace the component tag with the content found in the component's template. Just like regular HTML tags, it is common to pass *[content][TODO: link to content]* to components, like `<Jumbo>some content</Jumbo>`. We can enable this using the `{{yield}}` keyword, which will be replaced with the content that was passed to the component.
+When invoking a component, Ember will replace the component tag with the content found in the component's template. Just like regular HTML tags, it is common to pass *[content](https://guides.emberjs.com/release/components/block-content/)* to components, like `<Jumbo>some content</Jumbo>`. We can enable this using the `{{yield}}` keyword, which will be replaced with the content that was passed to the component.
 
 Let's try it out by editing the index template:
 
@@ -72,7 +72,7 @@ Let's try it out by editing the index template:
 
 ## Refactoring Existing Code
 
-After saving the changes, your page should automatically reload, and, *voilà*... nothing changed? Well, that's exactly what we wanted to happen this time! We successfully *[refactored][TODO: link to refactored]* our index template to use the `<Jumbo>` component, and everything still works as expected. And the tests still pass!
+After saving the changes, your page should automatically reload, and, *voilà*... nothing changed? Well, that's exactly what we wanted to happen this time! We successfully *[refactored](https://guides.emberjs.com/release/components/introducing-components/#toc_breaking-components-down-further)* our index template to use the `<Jumbo>` component, and everything still works as expected. And the tests still pass!
 
 ```run:screenshot width=1024 retina=true filename=index.png alt="Index page – nothing changed"
 visit http://localhost:4200/?deterministic
@@ -139,7 +139,7 @@ visit http://localhost:4200/tests?nocontainer&nolint&deterministic
 wait  #qunit-banner.qunit-pass
 ```
 
-While it may not save you a lot of characters in this case, *[encapsulating][TODO: link to encapsulating]* the implementation of the "jumbo" header into its own component makes the template slightly easier to read, as it allows the reader to focus on things that are unique to just that page. Further, if we need to make a change to the header, we can make it in a single place. Feel free to give that a try!
+While it may not save you a lot of characters in this case, *[encapsulating](https://guides.emberjs.com/release/components/component-arguments-and-html-attributes/)* the implementation of the "jumbo" header into its own component makes the template slightly easier to read, as it allows the reader to focus on things that are unique to just that page. Further, if we need to make a change to the header, we can make it in a single place. Feel free to give that a try!
 
 ## Writing Component Tests
 
@@ -153,7 +153,7 @@ ember generate component-test jumbo
 git add tests/integration/components/jumbo-test.js
 ```
 
-Here, we used the generator to generate a *[component test][TODO: link to component test]*, also known as a *[rendering test][TODO: link to rendering test]*. These are used to render and test a single component at a time. This is in contrast to the acceptance tests that we wrote earlier, which have to navigate and render entire pages worth of content.
+Here, we used the generator to generate a *[component test](https://guides.emberjs.com/release/testing/testing-components/)*, also known as a rendering test. These are used to render and test a single component at a time. This is in contrast to the acceptance tests that we wrote earlier, which have to navigate and render entire pages worth of content.
 
 Let's replace the boilerplate code that was generated for us with our own test:
 
@@ -354,7 +354,7 @@ While we are at it, we will also add a container element that wraps around the w
  <Jumbo>
 ```
 
-The `{{outlet}}` keyword denotes the place where our site's pages should be rendered into, similar to the `{{yield}}` keyword we saw [earlier][TODO: add anchor link back to where we first mentioned it].
+The `{{outlet}}` keyword denotes the place where our site's pages should be rendered into, similar to the `{{yield}}` keyword we saw [earlier]#toc_passing-content-to-components-with-yield.
 
 This is much nicer! We can run our test suite, which confirms that everything still works after our refactor. We are ready to move on to the next feature!
 

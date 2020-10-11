@@ -26,11 +26,11 @@ While doing so, you will learn about:
 
 So far, all the components we have written are purely *[presentational][TODO: link to presentational]*&mdash;they are simply reusable snippets of markup. That's pretty cool! But in Ember, components can do so much more.
 
-Sometimes, you want to associate some *[behavior][TODO: link to behavior]* with your components so that they can do more interesting things. For example, `<LinkTo>` can respond to clicks by changing the URL and navigating us to a different page.
+Sometimes, you want to associate some *[behavior](https://developer.mozilla.org/docs/Learn/JavaScript/Building_blocks/Events)* with your components so that they can do more interesting things. For example, `<LinkTo>` can respond to clicks by changing the URL and navigating us to a different page.
 
 Here, we are going to do just that! We are going to implement the "View Larger" and "View Smaller" functionality, which will allow our users to click on a property's image to view a larger version, and click on it again to return to the smaller version.
 
-In other words, we want a way to *toggle* the image between one of the two *[states][TODO: link to states]*. In order to do that, we need a way for the component to store two possible states, and to be aware of which state it is currently in.
+In other words, we want a way to *toggle* the image between one of the two *[states](https://guides.emberjs.com/release/components/component-state-and-actions/)*. In order to do that, we need a way for the component to store two possible states, and to be aware of which state it is currently in.
 
 Ember optionally allows us to associate JavaScript code with a component for exactly this purpose. We can add a JavaScript file for our `<Rental::Image>` component by running the `component-class` generator:
 
@@ -43,13 +43,13 @@ ember test --path dist
 git add app/components/rental/image.js
 ```
 
-This generated a JavaScript file with the same name as our component's template at `app/components/rentals/image.js`. It contains a *[JavaScript class][TODO: link to JavaScript class]*, *[inheriting][TODO: link to inheriting]* from `@glimmer/component`.
+This generated a JavaScript file with the same name as our component's template at `app/components/rental/image.js`. It contains a *[JavaScript class](https://javascript.info/class)*, *[inheriting](https://javascript.info/class-inheritance)* from `@glimmer/component`.
 
 > Zoey says...
 >
-> `@glimmer/component`, or *[Glimmer component][TODO: link to Glimmer component]*, is one of the several component classes available to use. They are a great starting point whenever you want to add behavior to your components. In this tutorial, we will be using Glimmer components exclusively.
+> `@glimmer/component`, or *[Glimmer component](https://guides.emberjs.com/release/upgrading/current-edition/glimmer-components)*, is one of the several component classes available to use. They are a great starting point whenever you want to add behavior to your components. In this tutorial, we will be using Glimmer components exclusively.
 >
-> In general, Glimmer components should be used whenever possible. However, you may also see `@ember/components`, or *[classic components][TODO: link to classic components]*, used in older apps. You can tell them apart by looking at their import path (which is helpful for looking up the respective documentation, as they have different and incompatible APIs).
+> In general, Glimmer components should be used whenever possible. However, you may also see `@ember/components`, or *[classic components](https://ember-learn.github.io/ember-octane-vs-classic-cheat-sheet/)*, used in older apps. You can tell them apart by looking at their import path (which is helpful for looking up the respective documentation, as they have different and incompatible APIs).
 
 Ember will create an *[instance][TODO: link to instance]* of the class whenever our component is invoked. We can use that instance to store our state:
 
@@ -87,7 +87,7 @@ Let's update our template to use this state we just added:
 +{{/if}}
 ```
 
-In the template, we have access to the component's instance variables. The `{{#if ...}}...{{else}}...{{/if}}` *[conditionals][TODO: link to conditionals]* syntax allows us to render different content based on a condition (in this case, the value of the instance variable `this.isLarge`). Combining these two features, we can render either the small or the large version of the image accordingly.
+In the template, we have access to the component's instance variables. The `{{#if ...}}...{{else}}...{{/if}}` *[conditionals](https://guides.emberjs.com/release/components/conditional-content/)* syntax allows us to render different content based on a condition (in this case, the value of the instance variable `this.isLarge`). Combining these two features, we can render either the small or the large version of the image accordingly.
 
 ```run:command hidden=true cwd=super-rentals
 ember test --path dist
@@ -140,7 +140,7 @@ Of course, our users cannot edit our source code, so we need a way for them to t
 
 ## Managing State with Tracked Properties
 
-Let's modify our class to add a *[method][TODO: link to method]* for toggling the size:
+Let's modify our class to add a *[method](https://guides.emberjs.com/release/in-depth-topics/native-classes-in-depth/#toc_methods)* for toggling the size:
 
 ```run:file:patch lang=js cwd=super-rentals filename=app/components/rental/image.js
 @@ -1,5 +1,11 @@
@@ -160,9 +160,9 @@ Let's modify our class to add a *[method][TODO: link to method]* for toggling th
 
 We did a few things here, so let's break it down.
 
-First, we added the `@tracked` *[decorator][TODO: link to decorator]* to the `isLarge` instance variable. This annotation tells Ember to monitor this variable for updates. Whenever this variable's value changes, Ember will automatically re-render any templates that depend on its value.
+First, we added the `@tracked` *[decorator](https://guides.emberjs.com/release/in-depth-topics/native-classes-in-depth/#toc_decorators)* to the `isLarge` instance variable. This annotation tells Ember to monitor this variable for updates. Whenever this variable's value changes, Ember will automatically re-render any templates that depend on its value.
 
-In our case, whenever we assign a new value to `this.isLarge`, the `@tracked` annotation will cause Ember to re-evaluate the `{{#if this.isLarge}}` conditional in our template, and will switch between the two *[blocks][TODO: link to blocks]* accordingly.
+In our case, whenever we assign a new value to `this.isLarge`, the `@tracked` annotation will cause Ember to re-evaluate the `{{#if this.isLarge}}` conditional in our template, and will switch between the two *[blocks](https://guides.emberjs.com/release/components/conditional-content/#toc_block-if)* accordingly.
 
 > Zoey says...
 >
@@ -203,7 +203,7 @@ We changed two things here.
 
 First, since we wanted to make our component interactive, we switched the containing tag from `<div>` to `<button>` (this is important for accessibility reasons). By using the correct semantic tag, we will also get focusability and keyboard interaction handling "for free".
 
-Next, we used the `{{on}}` *[modifier][TODO: link to modifier]* to attach `this.toggleSize` as a click handler on the button.
+Next, we used the `{{on}}` *[modifier](https://guides.emberjs.com/release/components/template-lifecycle-dom-and-modifiers/#toc_event-handlers)* to attach `this.toggleSize` as a click handler on the button.
 
 With that, we have created our first *[interactive][TODO: link to interactive]* component. Go ahead and try it in the browser!
 
@@ -281,7 +281,7 @@ Let's clean up our template before moving on. We introduced a lot of duplication
 1. The presence of the `"large"` CSS class on the `<button>` tag.
 2. The "View Larger" and "View Smaller" text.
 
-These changes are buried deep within the large amount of duplicated code. We can reduce the duplication by using an `{{if}}` *[expression][TODO: link to expression]* instead:
+These changes are buried deep within the large amount of duplicated code. We can reduce the duplication by using an `{{if}}` *[expression]\(https://guides.emberjs.com/release/components/conditional-content/#toc_inline-if)* instead:
 
 ```run:file:patch lang=handlebars cwd=super-rentals filename=app/components/rental/image.hbs
 @@ -1,11 +1,8 @@
@@ -304,7 +304,7 @@ These changes are buried deep within the large amount of duplicated code. We can
 +</button>
 ```
 
-The expression version of `{{if}}` takes two arguments. The first argument is the *[condition][TODO: link to condition]*. The second argument is the expression that should be evaluated if the condition is true.
+The expression version of `{{if}}` takes two arguments. The first argument is the condition. The second argument is the expression that should be evaluated if the condition is true.
 
 ```run:command hidden=true cwd=super-rentals
 ember test --path dist
