@@ -88,7 +88,7 @@ Because the page is going to take some time to load, this is known as an [async]
 
 This is almost always the behavior we want, so we will almost always use `await` and `visit` as a pair. This applies to other kinds of simulated interaction too, such as clicking on a button or a link, as they all take time to complete. Even though sometimes these actions may seem imperceptibly fast to us, we have to remember that our test robot has really, really fast hands, as we will see in a moment.
 
-After navigating to the `/` URL and waiting for things to settle, we check that the current URL matches the URL that we expect (`/`). We can use the `currentURL` test helper here, as well as `equal` [asserting](https://github.com/emberjs/ember-test-helpers/blob/master/API.md). This is how we encode our "checklist" into code&mdash;by specifying, or *[asserting][TODO: link to asserting]* how things *should* behave, we will be alerted if our app does *not* behave in the way that we expect.
+After navigating to the `/` URL and waiting for things to settle, we check that the current URL matches the URL that we expect (`/`). We can use the `currentURL` test helper here, as well as `equal` [assertion](https://github.com/emberjs/ember-test-helpers/blob/master/API.md). This is how we encode our "checklist" into code&mdash;by specifying, or asserting how things *should* behave, we will be alerted if our app does *not* behave in the way that we expect.
 
 Next, we confirmed that the page has an `<h2>` tag that contains the text "Welcome to Super Rentals!". Knowing this is true means that we can be quite certain that the correct template has been rendered, without errors.
 
