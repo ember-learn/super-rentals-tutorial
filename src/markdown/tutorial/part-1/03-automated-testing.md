@@ -27,7 +27,7 @@ After all, most of us have experienced (or heard horror stories about) making a 
 
 Maybe we can write a checklist somewhere of all the things to check after making changes to our site. But surely, this will get out of hand as we add more features to our app. It is also going to get old really quickly&mdash;repetitive tasks like that are best left to robots.
 
-Hmm, robots. That's an idea. What if we can write this checklist and just get the computer to check everything for us? I think we just invented the idea of *[automated testing][TODO: link to automated testing]*! Okay, maybe we were not the first to come up with the concept, but we independently discovered it so we still deserve some credit.
+Hmm, robots. That's an idea. What if we can write this checklist and just get the computer to check everything for us? I think we just invented the idea of [automated testing](../../../testing/)! Okay, maybe we were not the first to come up with the concept, but we independently discovered it so we still deserve some credit.
 
 ## Adding Acceptance Tests with Generators
 
@@ -37,9 +37,9 @@ Once we are done patting ourselves on the back, go ahead and run the following c
 ember generate acceptance-test super-rentals
 ```
 
-This is called a *[generator][TODO: link to generators]* command in Ember CLI. Generators automatically create files for us based on Ember's conventions and populate them with the appropriate boilerplate content, similar to how `ember new` initially created a skeleton app for us. It typically follows the pattern `ember generate <type> <name>`, where `<type>` is the kind of thing we are generating, and `<name>` is what we want to call it.
+This is called a [generator](https://cli.emberjs.com/release/basic-use/cli-commands/#generatemorefiles) command in Ember CLI. Generators automatically create files for us based on Ember's conventions and populate them with the appropriate boilerplate content, similar to how `ember new` initially created a skeleton app for us. It typically follows the pattern `ember generate <type> <name>`, where `<type>` is the kind of thing we are generating, and `<name>` is what we want to call it.
 
-In this case, we generated an *[acceptance test][TODO: link to acceptance test]* located at `tests/acceptance/super-rentals-test.js`.
+In this case, we generated an [acceptance test](../../../testing/test-types/#toc_application-tests) located at `tests/acceptance/super-rentals-test.js`.
 
 ```run:command hidden=true cwd=super-rentals
 git add tests/acceptance/super-rentals-test.js
@@ -84,15 +84,15 @@ Let's open the generated test file and replace the boilerplate test with our own
 
 First, we instruct the test robot to navigate to the `/` URL of our app by using the `visit` *test helper* provided by Ember. This is akin to us typing `http://localhost:4200/` in the browser's address bar and hitting the `enter` key.
 
-Because the page is going to take some time to load, this is known as an *[async][TODO: link to async]* (short for *asynchronous*) step, so we will need to tell the test robot to wait by using JavaScript's `await` keyword. That way, it will wait until the page completely finishes loading before moving on to the next step.
+Because the page is going to take some time to load, this is known as an [async](https://developer.mozilla.org/docs/Learn/JavaScript/Asynchronous/Concepts) (short for *asynchronous*) step, so we will need to tell the test robot to wait by using JavaScript's `await` keyword. That way, it will wait until the page completely finishes loading before moving on to the next step.
 
 This is almost always the behavior we want, so we will almost always use `await` and `visit` as a pair. This applies to other kinds of simulated interaction too, such as clicking on a button or a link, as they all take time to complete. Even though sometimes these actions may seem imperceptibly fast to us, we have to remember that our test robot has really, really fast hands, as we will see in a moment.
 
-After navigating to the `/` URL and waiting for things to settle, we check that the current URL matches the URL that we expect (`/`). We can use the `currentURL` test helper here, as well as `equal` *[assertion][TODO: link to assertion]*. This is how we encode our "checklist" into code&mdash;by specifying, or *[asserting][TODO: link to asserting]* how things *should* behave, we will be alerted if our app does *not* behave in the way that we expect.
+After navigating to the `/` URL and waiting for things to settle, we check that the current URL matches the URL that we expect (`/`). We can use the `currentURL` test helper here, as well as `equal` [asserting](https://github.com/emberjs/ember-test-helpers/blob/master/API.md). This is how we encode our "checklist" into code&mdash;by specifying, or *[asserting][TODO: link to asserting]* how things *should* behave, we will be alerted if our app does *not* behave in the way that we expect.
 
 Next, we confirmed that the page has an `<h2>` tag that contains the text "Welcome to Super Rentals!". Knowing this is true means that we can be quite certain that the correct template has been rendered, without errors.
 
-Then, we looked for a link with the text `About Us`, located using the *[CSS selector][TODO: link to CSS selector]* `.jumbo a.button`. This is the same syntax we used in our stylesheet, which means "look inside the tag with the `jumbo` class for an `<a>` tag with the `button` class." This matches up with the HTML structure in our template.
+Then, we looked for a link with the text `About Us`, located using the [CSS selector](https://developer.mozilla.org/docs/Learn/CSS/Building_blocks/Selectors) `.jumbo a.button`. This is the same syntax we used in our stylesheet, which means "look inside the tag with the `jumbo` class for an `<a>` tag with the `button` class." This matches up with the HTML structure in our template.
 
 Once the existence of this element on the page was confirmed, we told the test robot to click on this link. As mentioned above, this is a user interaction, so it needs to be `await`-ed.
 
