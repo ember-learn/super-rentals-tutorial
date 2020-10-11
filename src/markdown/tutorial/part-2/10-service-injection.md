@@ -118,7 +118,7 @@ Whew! Let's look at the JavaScript class next.
  }
 ```
 
-The key functionality of this class is to build the appropriate URL for the Twitter Web Intent API, which is exposed to the template via the `this.shareURL` getter. It mainly involves "gluing together" the component's arguments and setting the appropriate query params on the resulting URL. Conveniently, the browser provides a handy [`URL` class](https://developer.mozilla.org/en-US/docs/Web/API/URL) that handles escaping and joining of query params for us.
+The key functionality of this class is to build the appropriate URL for the Twitter Web Intent API, which is exposed to the template via the `this.shareURL` getter. It mainly involves "gluing together" the component's arguments and setting the appropriate query params on the resulting URL. Conveniently, the browser provides a handy [`URL` class](https://javascript.info/url) that handles escaping and joining of query params for us.
 
 The other notable functionality of this class has to do with getting the current page's URL and automatically adding it to the Twitter Intent URL. To accomplish this, we defined a `currentURL` getter that simply used the browser's global [`Location` object](https://developer.mozilla.org/en-US/docs/Web/API/Window/location), which we could access at `window.location`. Among other things, it has a `href` property (`window.location.href`) that reports the current page's URL.
 
@@ -211,7 +211,7 @@ However, during tests, the router is configured to maintain the "logical" URL in
 
 ## The Router Service
 
-To fix our problem, we would need to do the same. Ember exposes this internal state through the *[router service](../../part-2/service-injection/#toc_the-router-service)*, which we can *[inject](https://guides.emberjs.com/release/applications/dependency-injection/)* into our component:
+To fix our problem, we would need to do the same. Ember exposes this internal state through the *[router service](../../part-2/service-injection/#toc_the-router-service)*, which we can *[inject](https://guides.emberjs.com/release/services/#toc_accessing-services)* into our component:
 
 ```run:file:patch lang=js cwd=super-rentals filename=app/components/share-button.js
 @@ -1 +1,2 @@
