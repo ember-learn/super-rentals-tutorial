@@ -205,13 +205,13 @@ Looking at the failure closely, the problem seems to be that the component had c
 
 This brings up an interesting question – why does the `currentURL()` test helper not have the same problem? In our test, we have been writing assertions like `assert.equal(currentURL(), '/about');`, and those assertions did not fail.
 
-It turns out that this is something Ember's router handled for us. In an Ember app, the router is responsible for handling navigation and maintaining the URL. For example, when you click on a `<LinkTo>` component, it will ask the router to execute a *[route transition](https://guides.emberjs.com/release/routing/preventing-and-retrying-transitions/)*. Normally, the router is set up to update the browser's address bar whenever it transitions into a new route. That way, your users will be able to use the browser's back button and bookmark functionality just like any other webpage.
+It turns out that this is something Ember's router handled for us. In an Ember app, the router is responsible for handling navigation and maintaining the URL. For example, when you click on a `<LinkTo>` component, it will ask the router to execute a *[route transition](../../release/routing/preventing-and-retrying-transitions/)*. Normally, the router is set up to update the browser's address bar whenever it transitions into a new route. That way, your users will be able to use the browser's back button and bookmark functionality just like any other webpage.
 
 However, during tests, the router is configured to maintain the "logical" URL internally, without updating the browser's address bar and history entries. This way, the router won't confuse the browser and its back button with hundreds of history entries as you run through your tests. The `currentURL()` taps into this piece of internal state in the router, instead of checking directly against the actual URL in the address bar using `window.location.href`.
 
 ## The Router Service
 
-To fix our problem, we would need to do the same. Ember exposes this internal state through the *[router service](../../part-2/service-injection/#toc_the-router-service)*, which we can *[inject](https://guides.emberjs.com/release/services/#toc_accessing-services)* into our component:
+To fix our problem, we would need to do the same. Ember exposes this internal state through the *[router service](../../ember/release/classes/RouterService)*, which we can *[inject](../../release/services/#toc_accessing-services)* into our component:
 
 ```run:file:patch lang=js cwd=super-rentals filename=app/components/share-button.js
 @@ -1 +1,2 @@
@@ -309,11 +309,11 @@ We will take advantage of this capability in our component test:
    });
 ```
 
-In this component test, we *[registered](https://guides.emberjs.com/release/applications/dependency-injection/#toc_factory-registrations)* our own router service with Ember in the `beforeEach` hook. When our component is rendered and requests the router service to be injected, it will get an instance of our `MockRouterService` instead of the built-in router service.
+In this component test, we *[registered](../../release/applications/dependency-injection/#toc_factory-registrations)* our own router service with Ember in the `beforeEach` hook. When our component is rendered and requests the router service to be injected, it will get an instance of our `MockRouterService` instead of the built-in router service.
 
 This is a pretty common testing technique called *mocking* or *stubbing*. Our `MockRouterService` implements the same interface as the built-in router service – the part that we care about anyway; which is that it has a `currentURL` property that reports the current "logical" URL. This allows us to fix the URL at a pre-determined value, making it possible to easily test our component without having to navigate to a different page. As far as our component can tell, we are currently on the page `/foo/bar/baz?some=page#anchor`, because that's the result it would get when querying the router service.
 
-By using service injections and mocks, Ember allows us to build *[loosely coupled](../../part-2/service-injection/#toc_mocking-services-in-tests)* components that can each be tested in isolation, while acceptance tests provide end-to-end coverage that ensures that these components do indeed work well together.
+By using service injections and mocks, Ember allows us to build *[loosely coupled][TODO: link to loosely coupled]* components that can each be tested in isolation, while acceptance tests provide end-to-end coverage that ensures that these components do indeed work well together.
 
 ```run:command hidden=true cwd=super-rentals
 ember test --path dist
