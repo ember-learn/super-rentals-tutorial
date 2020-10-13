@@ -37,7 +37,7 @@ There's a lot to learn about Ember Data, but let's start by uncovering features 
 
 ## Ember Data Models
 
-Ember Data is built around the idea of organizing your app's data into *[model objects](../../../release/models/defining-models/)*. These objects represent units of information that our application presents to the user. For example, the rental property data we have been working with would be a good candidate.
+Ember Data is built around the idea of organizing your app's data into *[model objects](../../../models/defining-models/)*. These objects represent units of information that our application presents to the user. For example, the rental property data we have been working with would be a good candidate.
 
 Enough talking, why don't we give that a try!
 
