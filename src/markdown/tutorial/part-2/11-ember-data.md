@@ -31,7 +31,7 @@ This duplication incurred a bit of *[technical debt][TODO: link to technical deb
 
 Chances are, as we keep working on this app, we will need to add more routes that fetch data from the server. Since all of our server's API endpoints follow the [JSON:API](https://jsonapi.org/) format, we'd have to keep copying this boilerplate for every single new route we add to the app!
 
-Fortunately, we're not going to do any of that. As it turns out, there's a much better solution here: we can use Ember Data! As its name implies, [Ember Data](../../../release/models/) is a library that helps manage data and *[application state][TODO: link to application state]* in Ember applications.
+Fortunately, we're not going to do any of that. As it turns out, there's a much better solution here: we can use Ember Data! As its name implies, [Ember Data](../../../models/) is a library that helps manage data and *[application state][TODO: link to application state]* in Ember applications.
 
 There's a lot to learn about Ember Data, but let's start by uncovering features that help with our immediate problem.
 
