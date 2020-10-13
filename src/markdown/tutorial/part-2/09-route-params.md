@@ -28,7 +28,7 @@ But first things first: we need to add a route for this new page. We can do that
  });
 ```
 
-Notice that we are doing something a little different here. Instead of using the default path (`/rental`), we're specifying a custom path. Not only are we using a custom path, but we're also passing in a `:rental_id`, which is what we call a *[dynamic segment][TODO: link to dynamic segment]*. When these routes are evaluated, the `rental_id` will be substituted with the `id` of the individual rental property that we are trying to navigate to.
+Notice that we are doing something a little different here. Instead of using the default path (`/rental`), we're specifying a custom path. Not only are we using a custom path, but we're also passing in a `:rental_id`, which is what we call a *[dynamic segment](https://guides.emberjs.com/release/routing/defining-your-routes/#toc_dynamic-segments)*. When these routes are evaluated, the `rental_id` will be substituted with the `id` of the individual rental property that we are trying to navigate to.
 
 ```run:command hidden=true cwd=super-rentals
 git add app/router.js
