@@ -259,7 +259,7 @@ Hm, okay, so we have to teach Ember Data to fetch data from the correct location
 
 ## Working with Adapters and Serializers
 
-Ember Data uses an *[adapter](../../../release/models/customizing-adapters/)* and *[serializer](../../../release/models/customizing-serializers/)* architecture. Adapters deal with *how* and *where* Ember Data should fetch data from your servers, such as whether to use HTTP, HTTPS, WebSockets or local storage, as well as the URLs, headers and parameters to use for these requests. On the other hand, serializers are in charge of converting the data returned by the server into a format Ember Data can understand.
+Ember Data uses an *[adapter](../../../models/customizing-adapters/)* and *[serializer](../../../models/customizing-serializers/)* architecture. Adapters deal with *how* and *where* Ember Data should fetch data from your servers, such as whether to use HTTP, HTTPS, WebSockets or local storage, as well as the URLs, headers and parameters to use for these requests. On the other hand, serializers are in charge of converting the data returned by the server into a format Ember Data can understand.
 
 The idea is that, provided that your backend exposes a *consistent* protocol and interchange format to access its data, we can write a single adapter-serializer pair to handle all data fetches for the entire application.
 
@@ -326,7 +326,7 @@ visit http://localhost:4200/rentals/grand-old-mansion?deterministic
 wait  .rental.detailed
 ```
 
-Ember Data offers many, many features (like managing the *relationships* between different models) and there's a lot more we can learn about it. For example, if your backend's have some inconsistencies across different endpoints, Ember Data allows you to define more specific, per-model adapters and serializers too! We are just scratching the surface here. If you want to learn more about Ember Data, check out [its own dedicated section](../../../release/models/) in the guides!
+Ember Data offers many, many features (like managing the *relationships* between different models) and there's a lot more we can learn about it. For example, if your backend's have some inconsistencies across different endpoints, Ember Data allows you to define more specific, per-model adapters and serializers too! We are just scratching the surface here. If you want to learn more about Ember Data, check out [its own dedicated section](../../../models/) in the guides!
 
 ```run:server:stop
 ember server
