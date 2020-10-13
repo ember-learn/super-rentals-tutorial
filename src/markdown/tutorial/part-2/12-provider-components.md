@@ -50,7 +50,7 @@ Awesome, one step done. Now, this input looks great, but it doesn't actually *do
 
 ## Refactoring the index template into a component
 
-In order to make our search box actually work, we are going to need to retain and store the text that the user types in when they use the search box. This text is the search query, and it is a piece of *[state](../../../../components/component-state-and-actions/)* that is going to change whenever the user types something into the search box.
+In order to make our search box actually work, we are going to need to retain and store the text that the user types in when they use the search box. This text is the search query, and it is a piece of *[state](../../../components/component-state-and-actions/)* that is going to change whenever the user types something into the search box.
 
 But where are we going to put this newly-introduced piece of state? In order to wire up the search box, we need a place to store the search query. At the moment, our search box lives on the `index.hbs` route template, which doesn't have a good place to store this search query state. Darn, this would be so much easier to do if we had a component, because we could just store the state directly on the component!
 
