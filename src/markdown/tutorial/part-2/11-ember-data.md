@@ -81,7 +81,7 @@ We can access these attributes for an instance of `RentalModel` using standard d
 
 Model classes in Ember Data are no different than any other classes we've worked with so far, in that they allow for a convenient place for adding custom behavior. We took advantage of this feature to move our `type` logic (which is a major source of unnecessary duplication in our route handlers) into a getter on our model class. Once we have everything working here, we will go back to clean that up.
 
-Attributes declared with the `@attr` decorator work with the auto-track feature (which we learned about [in a previous chapter](../../../part-1/reusable-components/)). Therefore, we are free to reference any model attributes in our getter (`this.category`), and Ember will know when to invalidate its result.
+Attributes declared with the `@attr` decorator work with the auto-track feature (which we learned about [in a previous chapter](../../part-1/reusable-components/)). Therefore, we are free to reference any model attributes in our getter (`this.category`), and Ember will know when to invalidate its result.
 
 ```run:command hidden=true cwd=super-rentals
 ember test --path dist
