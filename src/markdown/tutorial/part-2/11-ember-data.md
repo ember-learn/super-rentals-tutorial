@@ -31,13 +31,13 @@ This duplication incurred a bit of *[technical debt][TODO: link to technical deb
 
 Chances are, as we keep working on this app, we will need to add more routes that fetch data from the server. Since all of our server's API endpoints follow the [JSON:API](https://jsonapi.org/) format, we'd have to keep copying this boilerplate for every single new route we add to the app!
 
-Fortunately, we're not going to do any of that. As it turns out, there's a much better solution here: we can use Ember Data! As its name implies, [Ember Data](../../../release/models/) is a library that helps manage data and *[application state][TODO: link to application state]* in Ember applications.
+Fortunately, we're not going to do any of that. As it turns out, there's a much better solution here: we can use Ember Data! As its name implies, [Ember Data](../../../models/) is a library that helps manage data and *[application state][TODO: link to application state]* in Ember applications.
 
 There's a lot to learn about Ember Data, but let's start by uncovering features that help with our immediate problem.
 
 ## Ember Data Models
 
-Ember Data is built around the idea of organizing your app's data into *[model objects](../../../release/models/defining-models/)*. These objects represent units of information that our application presents to the user. For example, the rental property data we have been working with would be a good candidate.
+Ember Data is built around the idea of organizing your app's data into *[model objects](../../../models/defining-models/)*. These objects represent units of information that our application presents to the user. For example, the rental property data we have been working with would be a good candidate.
 
 Enough talking, why don't we give that a try!
 
@@ -70,7 +70,7 @@ export default class RentalModel extends Model {
 }
 ```
 
-Here, we created a `RentalModel` class that extends Ember Data's `Model` superclass. When fetching the listing data from the server, each individual rental property will be represented by an instance (also known as a *[record](../../release/models/finding-records/)* of our `RentalModel` class.
+Here, we created a `RentalModel` class that extends Ember Data's `Model` superclass. When fetching the listing data from the server, each individual rental property will be represented by an instance (also known as a *[record](../../../models/finding-records/)* of our `RentalModel` class.
 
 We used the `@attr` decorator to declare the attributes of a rental property. These attributes correspond directly to the `attributes` data we expect the server to provide in its responses:
 
@@ -81,7 +81,7 @@ We can access these attributes for an instance of `RentalModel` using standard d
 
 Model classes in Ember Data are no different than any other classes we've worked with so far, in that they allow for a convenient place for adding custom behavior. We took advantage of this feature to move our `type` logic (which is a major source of unnecessary duplication in our route handlers) into a getter on our model class. Once we have everything working here, we will go back to clean that up.
 
-Attributes declared with the `@attr` decorator work with the auto-track feature (which we learned about [in a previous chapter](../../../part-1/reusable-components/)). Therefore, we are free to reference any model attributes in our getter (`this.category`), and Ember will know when to invalidate its result.
+Attributes declared with the `@attr` decorator work with the auto-track feature (which we learned about [in a previous chapter](../../part-1/reusable-components/)). Therefore, we are free to reference any model attributes in our getter (`this.category`), and Ember will know when to invalidate its result.
 
 ```run:command hidden=true cwd=super-rentals
 ember test --path dist
@@ -147,9 +147,9 @@ The generator created some boilerplate code for us, which serves as a pretty goo
    });
 ```
 
-This model test is also known as a *[unit test](../../../release/testing/testing-models/)*. Unlike any of the other tests that we've written thus far, this test doesn't actually *render* anything. It just instantiates the rental model object and tests the model object directly, manipulating its attributes and asserting their value.
+This model test is also known as a *[unit test](../../../testing/testing-models/)*. Unlike any of the other tests that we've written thus far, this test doesn't actually *render* anything. It just instantiates the rental model object and tests the model object directly, manipulating its attributes and asserting their value.
 
-It is worth pointing out that Ember Data provides a `store` *[service](../../../release/services/)*, also known as the Ember Data store. In our test, we used the `this.owner.lookup('service:store')` API to get access to the Ember Data store. The store provides a `createRecord` method to instantiate our model object for us.
+It is worth pointing out that Ember Data provides a `store` *[service](../../../services/)*, also known as the Ember Data store. In our test, we used the `this.owner.lookup('service:store')` API to get access to the Ember Data store. The store provides a `createRecord` method to instantiate our model object for us.
 
 Running the tests in the browser confirms that everything is working as intended:
 
@@ -237,7 +237,7 @@ Wow... that removed a lot of code! This is all possible thanks to the power of c
 
 ## The Ember Data Store
 
-As mentioned above, Ember Data provides a `store` service, which we can inject into our route using the `@service store;` declaration, making the Ember Data store available as `this.store`. It provides the `find` and `findAll` methods for loading records. Specifically, the [`findRecord` method](../../../release/models/finding-records/#toc_retrieving-a-single-record) takes a model type (`rental` in our case) and a model ID (for us, that would be `params.rental_id` from the URL) as arguments and fetches a single record from the store. On the other hand, the [`findAll` method](../../../release/models/finding-records/#toc_retrieving-multiple-records) takes the model type as an argument and fetches all records of that type from the store.
+As mentioned above, Ember Data provides a `store` service, which we can inject into our route using the `@service store;` declaration, making the Ember Data store available as `this.store`. It provides the `find` and `findAll` methods for loading records. Specifically, the [`findRecord` method](../../../models/finding-records/#toc_retrieving-a-single-record) takes a model type (`rental` in our case) and a model ID (for us, that would be `params.rental_id` from the URL) as arguments and fetches a single record from the store. On the other hand, the [`findAll` method](../../../models/finding-records/#toc_retrieving-multiple-records) takes the model type as an argument and fetches all records of that type from the store.
 
 The Ember Data store acts as a kind of intermediary between our app and the server; it does many important things, including caching the responses that were fetched from the server. If we request some records (instances of model classes) that we had *already* fetched from the server in the past, Ember Data's store ensures that we can access the records immediately, without having to fetch them again unnecessarily and wait for the server to respond. But, if we don't already have that response cached in our store, then it will go off and fetches it from the server. Pretty nice, right?
 
