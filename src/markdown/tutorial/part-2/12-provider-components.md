@@ -50,7 +50,7 @@ Awesome, one step done. Now, this input looks great, but it doesn't actually *do
 
 ## Refactoring the index template into a component
 
-In order to make our search box actually work, we are going to need to retain and store the text that the user types in when they use the search box. This text is the search query, and it is a piece of *[state](../../../components/component-state-and-actions/)* that is going to change whenever the user types something into the search box.
+In order to make our search box actually work, we are going to need to retain and store the text that the user types in when they use the search box. This text is the search query, and it is a piece of *[state](../../../../components/component-state-and-actions/)* that is going to change whenever the user types something into the search box.
 
 But where are we going to put this newly-introduced piece of state? In order to wire up the search box, we need a place to store the search query. At the moment, our search box lives on the `index.hbs` route template, which doesn't have a good place to store this search query state. Darn, this would be so much easier to do if we had a component, because we could just store the state directly on the component!
 
@@ -220,7 +220,7 @@ Next, we'll wire up our query state in the component template.
    </label>
 ```
 
-Interesting! There are a few things happening in this one-line template change. First, we're moving from using a plain HTML `<input>` tag to using an `<Input>` tag instead! As it turns out, Ember provides us with a helpful little *[`<Input>` component](../../release/components/built-in-components/#toc_input)* for this exact use case. The `<Input>` component is actually just a wrapper around the `<input>` element.
+Interesting! There are a few things happening in this one-line template change. First, we're moving from using a plain HTML `<input>` tag to using an `<Input>` tag instead! As it turns out, Ember provides us with a helpful little *[`<Input>` component](../../../release/components/built-in-components/#toc_input)* for this exact use case. The `<Input>` component is actually just a wrapper around the `<input>` element.
 
 Ember's `<Input>` component is pretty neat; it will wire up things behind the scenes such that, whenever the user types something into the input box, `this.query` changes accordingly. In other words, `this.query` is kept in sync with the value of what is being searched; we finally have the perfect way of storing the state of our search query!
 
@@ -260,7 +260,7 @@ export default class RentalsFilterComponent extends Component {
 
 In the `<Rentals::Filter>` component class, we have created a getter to do the work of filtering through our rentals based on two arguments: `@rentals` and `@query`. Inside of our getter function, we have these arguments accessible to us from `this.args`.
 
-In our component template, we are not actually *rendering* anything. Instead, we're yielding to something, using the `{{yield}}` keyword, a syntax that [we have seen before](../../part-1/component-basics/). As we might recall, the purpose of `{{yield}}` is to render the *block* that is passed in by the component's *caller*, which is the thing that is invoking the current component (a template or another component, for example). But in this specific case, we don't just have a `{{yield}}` keyword. Instead, we have `this.results` *inside* of our `{{yield}}` keyword. What is that doing, exactly?
+In our component template, we are not actually *rendering* anything. Instead, we're yielding to something, using the `{{yield}}` keyword, a syntax that [we have seen before](../../../part-1/component-basics/). As we might recall, the purpose of `{{yield}}` is to render the *block* that is passed in by the component's *caller*, which is the thing that is invoking the current component (a template or another component, for example). But in this specific case, we don't just have a `{{yield}}` keyword. Instead, we have `this.results` *inside* of our `{{yield}}` keyword. What is that doing, exactly?
 
 Well, in order to answer this question, let's look at how the data that we're yielding is being used in the `<Rentals>` component.
 
