@@ -309,7 +309,7 @@ We will take advantage of this capability in our component test:
    });
 ```
 
-In this component test, we *[registered](../../../release/applications/dependency-injection/#toc_factory-registrations)* our own router service with Ember in the `beforeEach` hook. When our component is rendered and requests the router service to be injected, it will get an instance of our `MockRouterService` instead of the built-in router service.
+In this component test, we *[registered](../../../applications/dependency-injection/#toc_factory-registrations)* our own router service with Ember in the `beforeEach` hook. When our component is rendered and requests the router service to be injected, it will get an instance of our `MockRouterService` instead of the built-in router service.
 
 This is a pretty common testing technique called *mocking* or *stubbing*. Our `MockRouterService` implements the same interface as the built-in router service – the part that we care about anyway; which is that it has a `currentURL` property that reports the current "logical" URL. This allows us to fix the URL at a pre-determined value, making it possible to easily test our component without having to navigate to a different page. As far as our component can tell, we are currently on the page `/foo/bar/baz?some=page#anchor`, because that's the result it would get when querying the router service.
 
