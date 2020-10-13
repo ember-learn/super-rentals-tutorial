@@ -138,7 +138,7 @@ First, we have a container element for styling purposes.
 
 Then we have an `<img>` tag to request and render the static map image from Mapbox.
 
-Our template contains several values that don't yet exist&mdash;`@lat`, `@lng`, `@zoom`, `@width`, and `@height`. These are *[arguments](https://guides.emberjs.com/release/components/component-arguments-and-html-attributes/#toc_arguments)* to the `<Map>` component that we will supply when invoking it.
+Our template contains several values that don't yet exist&mdash;`@lat`, `@lng`, `@zoom`, `@width`, and `@height`. These are *[arguments](../../../components/component-arguments-and-html-attributes/#toc_arguments)* to the `<Map>` component that we will supply when invoking it.
 
 By *[parameterizing][TODO: link to parameterizing]* our component using arguments, we made a reusable component that can be invoked from different parts of the app and customized to meet the needs for those specific contexts. We have already seen this in action when using the `<LinkTo>` component [earlier](../building-pages/); we had to specify a `@route` argument so that it knew what page to navigate to.
 
@@ -156,7 +156,7 @@ The `src` attribute interpolates all the required parameters into the URL format
 
 Finally, since we are using the `@2x` "retina" image, we should specify the `width` and `height` attributes. Otherwise, the `<img>` will be rendered at twice the size than what we expected!
 
-We just added a lot of behavior into a single component, so let's write some tests! In particular, we should make sure to have some *[test coverage](https://guides.emberjs.com/release/testing/)* for the overriding-HTML-attributes behavior we discussed above.
+We just added a lot of behavior into a single component, so let's write some tests! In particular, we should make sure to have some *[test coverage](../../../testing/)* for the overriding-HTML-attributes behavior we discussed above.
 
 ```run:file:patch lang=js cwd=super-rentals filename=tests/integration/components/map-test.js
 @@ -2,4 +2,5 @@
@@ -356,7 +356,7 @@ Note that we did not mark our getter as `@tracked`. Unlike instance variables, g
 
 That being said, the values *produced* by getters can certainly change. In our case, the value produced by our `src` getter depends on the values of `lat`, `lng`, `width`, `height` and `zoom` from `this.args`. Whenever these *[dependencies][TODO: link to dependencies]* get updated, we would expect `{{this.src}}` from our template to be updated accordingly.
 
-Ember does this by automatically tracking any variables that were accessed while computing a getter's value. As long as the dependencies themselves are marked as `@tracked`, Ember knows exactly when to invalidate and re-render any templates that may potentially contain any "stale" and outdated getter values. This feature is also known as *[auto-track](https://guides.emberjs.com/release/in-depth-topics/autotracking-in-depth/)*. All arguments that can be accessed from `this.args` (in other words, `this.args.*`) are implicitly marked as `@tracked` by the Glimmer component superclass. Since we inherited from that superclass, everything Just Works&trade;.
+Ember does this by automatically tracking any variables that were accessed while computing a getter's value. As long as the dependencies themselves are marked as `@tracked`, Ember knows exactly when to invalidate and re-render any templates that may potentially contain any "stale" and outdated getter values. This feature is also known as *[auto-track](../../../in-depth-topics/autotracking-in-depth/)*. All arguments that can be accessed from `this.args` (in other words, `this.args.*`) are implicitly marked as `@tracked` by the Glimmer component superclass. Since we inherited from that superclass, everything Just Works&trade;.
 
 ## Getting JavaScript Values into the Test Context
 
