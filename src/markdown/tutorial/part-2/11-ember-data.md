@@ -259,7 +259,7 @@ Hm, okay, so we have to teach Ember Data to fetch data from the correct location
 
 ## Working with Adapters and Serializers
 
-Ember Data uses an *[adapter](../../../release/models/customizing-adapters/)* and *[serializer](../../../release/models/customizing-serializers/)* architecture. Adapters deal with *how* and *where* Ember Data should fetch data from your servers, such as whether to use HTTP, HTTPS, WebSockets or local storage, as well as the URLs, headers and parameters to use for these requests. On the other hand, serializers are in charge of converting the data returned by the server into a format Ember Data can understand.
+Ember Data uses an *[adapter](../../../models/customizing-adapters/)* and *[serializer](../../../models/customizing-serializers/)* architecture. Adapters deal with *how* and *where* Ember Data should fetch data from your servers, such as whether to use HTTP, HTTPS, WebSockets or local storage, as well as the URLs, headers and parameters to use for these requests. On the other hand, serializers are in charge of converting the data returned by the server into a format Ember Data can understand.
 
 The idea is that, provided that your backend exposes a *consistent* protocol and interchange format to access its data, we can write a single adapter-serializer pair to handle all data fetches for the entire application.
 
