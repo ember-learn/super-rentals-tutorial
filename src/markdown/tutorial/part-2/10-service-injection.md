@@ -211,7 +211,7 @@ However, during tests, the router is configured to maintain the "logical" URL in
 
 ## The Router Service
 
-To fix our problem, we would need to do the same. Ember exposes this internal state through the *[router service](https://api.emberjs.com/ember/release/classes/RouterService)*, which we can *[inject](../../../release/services/#toc_accessing-services)* into our component:
+To fix our problem, we would need to do the same. Ember exposes this internal state through the *[router service](https://api.emberjs.com/ember/release/classes/RouterService)*, which we can *[inject](../../../services/#toc_accessing-services)* into our component:
 
 ```run:file:patch lang=js cwd=super-rentals filename=app/components/share-button.js
 @@ -1 +1,2 @@
