@@ -149,7 +149,7 @@ The generator created some boilerplate code for us, which serves as a pretty goo
 
 This model test is also known as a *[unit test](../../../testing/testing-models/)*. Unlike any of the other tests that we've written thus far, this test doesn't actually *render* anything. It just instantiates the rental model object and tests the model object directly, manipulating its attributes and asserting their value.
 
-It is worth pointing out that Ember Data provides a `store` *[service](../../../release/services/)*, also known as the Ember Data store. In our test, we used the `this.owner.lookup('service:store')` API to get access to the Ember Data store. The store provides a `createRecord` method to instantiate our model object for us.
+It is worth pointing out that Ember Data provides a `store` *[service](../../../services/)*, also known as the Ember Data store. In our test, we used the `this.owner.lookup('service:store')` API to get access to the Ember Data store. The store provides a `createRecord` method to instantiate our model object for us.
 
 Running the tests in the browser confirms that everything is working as intended:
 
