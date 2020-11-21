@@ -133,7 +133,7 @@ jobs:
           git config --global user.name "Tomster"
           git config --global user.email "tomster@emberjs.com"
       - name: Set up SSH
-        uses: webfactory/ssh-agent@v0.1.1
+        uses: webfactory/ssh-agent@v0.4.1
         with:
           ssh-private-key: ${{ secrets.GUIDES_SOURCE_DEPLOY_KEY }}
       - name: Install dependencies
@@ -300,7 +300,7 @@ jobs:
           git config --global user.name "Tomster"
           git config --global user.email "tomster@emberjs.com"
       - name: Set up SSH
-        uses: webfactory/ssh-agent@v0.1.1
+        uses: webfactory/ssh-agent@v0.4.1
         with:
           ssh-private-key: ${{ secrets.SUPER_RENTALS_DEPLOY_KEY }}
       - name: Download artifacts
@@ -359,7 +359,7 @@ jobs:
           git config --global user.name "Tomster"
           git config --global user.email "tomster@emberjs.com"
       - name: Set up SSH
-        uses: webfactory/ssh-agent@v0.1.1
+        uses: webfactory/ssh-agent@v0.4.1
         with:
           ssh-private-key: ${{ secrets.SUPER_RENTALS_DEPLOY_KEY }}
       - name: Download artifacts
