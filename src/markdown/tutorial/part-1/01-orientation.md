@@ -182,7 +182,7 @@ del package.json
 +          details.runtime = totalRuntime;
 +        });
 +
-+        QUnit.begin(function( details ) {
++        QUnit.begin(details => {
 +          let ua = document.getElementById('qunit-userAgent');
 +          ua.innerText = ua.innerText.replace(/QUnit [0-9\.]+/g, 'QUnit');
 +          ua.innerText = ua.innerText.replace(/(WebKit|Chrome|Safari)\/[0-9\.]+/g, '$1');

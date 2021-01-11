@@ -118,56 +118,64 @@ import { setupRenderingTest } from 'ember-qunit';
 import { render } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 
-module('Integration | Component | rentals', function(hooks) {
+module('Integration | Component | rentals', function (hooks) {
   setupRenderingTest(hooks);
 
-  test('it renders all given rental properties by default', async function(assert) {
+  test('it renders all given rental properties by default', async function (assert) {
     this.setProperties({
-      rentals: [{
-        id: 'grand-old-mansion',
-        title: 'Grand Old Mansion',
-        owner: 'Veruca Salt',
-        city: 'San Francisco',
-        location: {
-          lat: 37.7749,
-          lng: -122.4194
+      rentals: [
+        {
+          id: 'grand-old-mansion',
+          title: 'Grand Old Mansion',
+          owner: 'Veruca Salt',
+          city: 'San Francisco',
+          location: {
+            lat: 37.7749,
+            lng: -122.4194,
+          },
+          category: 'Estate',
+          type: 'Standalone',
+          bedrooms: 15,
+          image:
+            'https://upload.wikimedia.org/wikipedia/commons/c/cb/Crane_estate_(5).jpg',
+          description:
+            'This grand old mansion sits on over 100 acres of rolling hills and dense redwood forests.',
         },
-        category: 'Estate',
-        type: 'Standalone',
-        bedrooms: 15,
-        image: 'https://upload.wikimedia.org/wikipedia/commons/c/cb/Crane_estate_(5).jpg',
-        description: 'This grand old mansion sits on over 100 acres of rolling hills and dense redwood forests.'
-      },
-      {
-        id: 'urban-living',
-        title: 'Urban Living',
-        owner: 'Mike Teavee',
-        city: 'Seattle',
-        location: {
-          lat: 47.6062,
-          lng: -122.3321
+        {
+          id: 'urban-living',
+          title: 'Urban Living',
+          owner: 'Mike Teavee',
+          city: 'Seattle',
+          location: {
+            lat: 47.6062,
+            lng: -122.3321,
+          },
+          category: 'Condo',
+          type: 'Community',
+          bedrooms: 1,
+          image:
+            'https://upload.wikimedia.org/wikipedia/commons/0/0e/Alfonso_13_Highrise_Tegucigalpa.jpg',
+          description:
+            'A commuters dream. This rental is within walking distance of 2 bus stops and the Metro.',
         },
-        category: 'Condo',
-        type: 'Community',
-        bedrooms: 1,
-        image: 'https://upload.wikimedia.org/wikipedia/commons/0/0e/Alfonso_13_Highrise_Tegucigalpa.jpg',
-        description: 'A commuters dream. This rental is within walking distance of 2 bus stops and the Metro.'
-      },
-      {
-        id: 'downtown-charm',
-        title: 'Downtown Charm',
-        owner: 'Violet Beauregarde',
-        city: 'Portland',
-        location: {
-          lat: 45.5175,
-          lng: -122.6801
+        {
+          id: 'downtown-charm',
+          title: 'Downtown Charm',
+          owner: 'Violet Beauregarde',
+          city: 'Portland',
+          location: {
+            lat: 45.5175,
+            lng: -122.6801,
+          },
+          category: 'Apartment',
+          type: 'Community',
+          bedrooms: 3,
+          image:
+            'https://upload.wikimedia.org/wikipedia/commons/f/f7/Wheeldon_Apartment_Building_-_Portland_Oregon.jpg',
+          description:
+            'Convenience is at your doorstep with this charming downtown rental. Great restaurants and active night life are within a few feet.',
         },
-        category: 'Apartment',
-        type: 'Community',
-        bedrooms: 3,
-        image: 'https://upload.wikimedia.org/wikipedia/commons/f/f7/Wheeldon_Apartment_Building_-_Portland_Oregon.jpg',
-        description: 'Convenience is at your doorstep with this charming downtown rental. Great restaurants and active night life are within a few feet.'
-      }]
+      ],
     });
 
     await render(hbs`<Rentals @rentals={{this.rentals}} />`);
@@ -178,9 +186,17 @@ module('Integration | Component | rentals', function(hooks) {
     assert.dom('.rentals .results').exists();
     assert.dom('.rentals .results li').exists({ count: 3 });
 
-    assert.dom('.rentals .results li:nth-of-type(1)').containsText('Grand Old Mansion');
-    assert.dom('.rentals .results li:nth-of-type(2)').containsText('Urban Living');
-    assert.dom('.rentals .results li:nth-of-type(3)').containsText('Downtown Charm');
+    assert
+      .dom('.rentals .results li:nth-of-type(1)')
+      .containsText('Grand Old Mansion');
+
+    assert
+      .dom('.rentals .results li:nth-of-type(2)')
+      .containsText('Urban Living');
+
+    assert
+      .dom('.rentals .results li:nth-of-type(3)')
+      .containsText('Downtown Charm');
   });
 });
 ```
@@ -246,7 +262,7 @@ export default class RentalsFilterComponent extends Component {
     let { rentals, query } = this.args;
 
     if (query) {
-      rentals = rentals.filter(rental => rental.title.includes(query));
+      rentals = rentals.filter((rental) => rental.title.includes(query));
     }
 
     return rentals;
@@ -322,19 +338,19 @@ Hooray, it works! Awesome. Now that we've tried this out manually in the UI, let
  import { hbs } from 'ember-cli-htmlbars';
 @@ -8,3 +8,3 @@
 
--  test('it renders all given rental properties by default', async function(assert) {
-+  hooks.beforeEach(function() {
+-  test('it renders all given rental properties by default', async function (assert) {
++  hooks.beforeEach(function () {
      this.setProperties({
-@@ -56,3 +56,5 @@
+@@ -64,3 +64,5 @@
      });
 +  });
 
-+  test('it renders all given rental properties by default', async function(assert) {
++  test('it renders all given rental properties by default', async function (assert) {
      await render(hbs`<Rentals @rentals={{this.rentals}} />`);
-@@ -69,2 +71,21 @@
+@@ -85,2 +87,21 @@
    });
 +
-+  test('it updates the results according to the search query', async function(assert) {
++  test('it updates the results according to the search query', async function (assert) {
 +    await render(hbs`<Rentals @rentals={{this.rentals}} />`);
 +
 +    assert.dom('.rentals').exists();

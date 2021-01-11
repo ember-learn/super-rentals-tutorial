@@ -240,7 +240,7 @@ Finally, let's write a test for this new behavior:
 @@ -20,2 +21,26 @@
    });
 +
-+  test('clicking on the component toggles its size', async function(assert) {
++  test('clicking on the component toggles its size', async function (assert) {
 +    await render(hbs`
 +      <Rental::Image
 +        src="/assets/images/teaching-tomster.png"

@@ -76,7 +76,7 @@ If we look at the JSON data here, we can see that the `id` is included right alo
 
 ```run:file:patch lang=js cwd=super-rentals filename=app/routes/index.js
 @@ -14,3 +14,3 @@
-     return data.map(model => {
+     return data.map((model) => {
 -      let { attributes } = model;
 +      let { id, attributes } = model;
        let type;
@@ -102,9 +102,11 @@ Alright, we have just one more step left here: updating the tests. We can add an
        rental: {
 +        id: 'grand-old-mansion',
          title: 'Grand Old Mansion',
-@@ -30,2 +31,3 @@
+@@ -30,2 +31,5 @@
      assert.dom('article h3').hasText('Grand Old Mansion');
-+    assert.dom('article h3 a').hasAttribute('href', '/rentals/grand-old-mansion');
++    assert
++      .dom('article h3 a')
++      .hasAttribute('href', '/rentals/grand-old-mansion');
      assert.dom('article .detail.owner').includesText('Veruca Salt');
 ```
 
@@ -130,11 +132,11 @@ In this situation, we essentially need to *specifically* opt-in to explicitly us
 ```run:file:patch lang=js cwd=super-rentals filename=tests/integration/components/rental-test.js
 @@ -8,2 +8,6 @@
 
-+  hooks.beforeEach(function() {
++  hooks.beforeEach(function () {
 +    this.owner.setupRouter();
 +  });
 +
-   test('it renders information about a rental property', async function(assert) {
+   test('it renders information about a rental property', async function (assert) {
 ```
 
 > Zoey says...
@@ -162,11 +164,7 @@ Now that we have our `rental` route, let's finish up our `rental` page. The firs
 ```run:file:create lang=js cwd=super-rentals filename=app/routes/rental.js
 import Route from '@ember/routing/route';
 
-const COMMUNITY_CATEGORIES = [
-  'Condo',
-  'Townhouse',
-  'Apartment'
-];
+const COMMUNITY_CATEGORIES = ['Condo', 'Townhouse', 'Apartment'];
 
 export default class RentalRoute extends Route {
   async model(params) {
@@ -212,6 +210,30 @@ ember test --path dist
 git add app/components/rental/detailed.hbs
 git add tests/integration/components/rental/detailed-test.js
 ```
+
+<!-- patch for https://github.com/emberjs/ember.js/issues/19333 -->
+
+```run:file:patch hidden=true cwd=super-rentals filename=tests/integration/components/rental/detailed-test.js
+@@ -5,8 +5,8 @@
+
+-module('Integration | Component | rental/detailed', function(hooks) {
++module('Integration | Component | rental/detailed', function (hooks) {
+   setupRenderingTest(hooks);
+
+-  test('it renders', async function(assert) {
++  test('it renders', async function (assert) {
+     // Set any properties with this.set('myProperty', 'value');
+-    // Handle any actions with this.set('myAction', function(val) { ... });
++    // Handle any actions with this.set('myAction', function (val) { ... });
+
+```
+
+```run:command hidden=true cwd=super-rentals
+git add tests/integration/components/rental/detailed-test.js
+```
+
+<!-- end patch for https://github.com/emberjs/ember.js/issues/19333 -->
+
 
 ```run:file:patch lang=handlebars cwd=super-rentals filename=app/components/rental/detailed.hbs
 @@ -1 +1,44 @@
@@ -275,12 +297,12 @@ This component is similar to our `<Rental>` component, except for the following 
 Now that we have this template in place, we can add some tests for this new component of ours.
 
 ```run:file:patch lang=handlebars cwd=super-rentals filename=tests/integration/components/rental/detailed-test.js
-@@ -8,18 +8,42 @@
+@@ -8,18 +8,46 @@
 
--  test('it renders', async function(assert) {
+-  test('it renders', async function (assert) {
 -    // Set any properties with this.set('myProperty', 'value');
--    // Handle any actions with this.set('myAction', function(val) { ... });
-+  hooks.beforeEach(function() {
+-    // Handle any actions with this.set('myAction', function (val) { ... });
++  hooks.beforeEach(function () {
 +    this.setProperties({
 +      rental: {
 +        id: 'grand-old-mansion',
@@ -294,20 +316,24 @@ Now that we have this template in place, we can add some tests for this new comp
 +        category: 'Estate',
 +        type: 'Standalone',
 +        bedrooms: 15,
-+        image: 'https://upload.wikimedia.org/wikipedia/commons/c/cb/Crane_estate_(5).jpg',
-+        description: 'This grand old mansion sits on over 100 acres of rolling hills and dense redwood forests.',
-+      }
++        image:
++          'https://upload.wikimedia.org/wikipedia/commons/c/cb/Crane_estate_(5).jpg',
++        description:
++          'This grand old mansion sits on over 100 acres of rolling hills and dense redwood forests.',
++      },
 +    });
 +  });
 
 -    await render(hbs`<Rental::Detailed />`);
-+  test('it renders a header with a share button', async function(assert) {
++  test('it renders a header with a share button', async function (assert) {
 +    await render(hbs`<Rental::Detailed @rental={{this.rental}} />`);
 
 -    assert.equal(this.element.textContent.trim(), '');
 +    assert.dom('.jumbo').exists();
 +    assert.dom('.jumbo h2').containsText('Grand Old Mansion');
-+    assert.dom('.jumbo p').containsText('a nice place to stay near San Francisco');
++    assert
++      .dom('.jumbo p')
++      .containsText('a nice place to stay near San Francisco');
 +    assert.dom('.jumbo a.button').containsText('Share on Twitter');
 +  });
 
@@ -317,7 +343,7 @@ Now that we have this template in place, we can add some tests for this new comp
 -        template block text
 -      </Rental::Detailed>
 -    `);
-+  test('it renders detailed information about a rental property', async function(assert) {
++  test('it renders detailed information about a rental property', async function (assert) {
 +    await render(hbs`<Rental::Detailed @rental={{this.rental}} />`);
 
 -    assert.equal(this.element.textContent.trim(), 'template block text');
@@ -356,7 +382,7 @@ Finally, let's add a `rental` template to actually *invoke* our `<Rental::Detail
 ```run:file:patch lang=js cwd=super-rentals filename=tests/acceptance/super-rentals-test.js
 @@ -21,2 +21,20 @@
 
-+  test('viewing the details of a rental property', async function(assert) {
++  test('viewing the details of a rental property', async function (assert) {
 +    await visit('/');
 +    assert.dom('.rental').exists({ count: 3 });
 +
@@ -364,7 +390,7 @@ Finally, let's add a `rental` template to actually *invoke* our `<Rental::Detail
 +    assert.equal(currentURL(), '/rentals/grand-old-mansion');
 +  });
 +
-+  test('visiting /rentals/grand-old-mansion', async function(assert) {
++  test('visiting /rentals/grand-old-mansion', async function (assert) {
 +    await visit('/rentals/grand-old-mansion');
 +
 +    assert.equal(currentURL(), '/rentals/grand-old-mansion');
@@ -374,7 +400,7 @@ Finally, let's add a `rental` template to actually *invoke* our `<Rental::Detail
 +    assert.dom('.rental.detailed').exists();
 +  });
 +
-   test('visiting /about', async function(assert) {
+   test('visiting /about', async function (assert) {
 ```
 
 Now, when we visit `http://localhost:4200/rentals/grand-old-mansion`, this is what we see:

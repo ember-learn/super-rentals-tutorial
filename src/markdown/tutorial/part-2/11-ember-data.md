@@ -44,11 +44,7 @@ Enough talking, why don't we give that a try!
 ```run:file:create lang=js cwd=super-rentals filename=app/models/rental.js
 import Model, { attr } from '@ember-data/model';
 
-const COMMUNITY_CATEGORIES = [
-  'Condo',
-  'Townhouse',
-  'Apartment'
-];
+const COMMUNITY_CATEGORIES = ['Condo', 'Townhouse', 'Apartment'];
 
 export default class RentalModel extends Model {
   @attr title;
@@ -101,6 +97,27 @@ ember test --path dist
 git add tests/unit/models/rental-test.js
 ```
 
+<!-- patch for https://github.com/emberjs/data/issues/7418 -->
+
+```run:file:patch hidden=true cwd=super-rentals filename=tests/unit/models/rental-test.js
+@@ -3,3 +3,3 @@
+
+-module('Unit | Model | rental', function(hooks) {
++module('Unit | Model | rental', function (hooks) {
+   setupTest(hooks);
+@@ -7,3 +7,3 @@
+   // Replace this with your real tests.
+-  test('it exists', function(assert) {
++  test('it exists', function (assert) {
+     let store = this.owner.lookup('service:store');
+```
+
+```run:command hidden=true cwd=super-rentals
+git add tests/unit/models/rental-test.js
+```
+
+<!-- end patch for https://github.com/emberjs/data/issues/7418 -->
+
 > Zoey says...
 >
 > We could also have used the `ember generate model rental` command in the first place, which would have created both the model and test file for us.
@@ -108,11 +125,11 @@ git add tests/unit/models/rental-test.js
 The generator created some boilerplate code for us, which serves as a pretty good starting point for writing our test:
 
 ```run:file:patch lang=js cwd=super-rentals filename=tests/unit/models/rental-test.js
-@@ -6,7 +6,32 @@
+@@ -6,7 +6,34 @@
 
 -  // Replace this with your real tests.
--  test('it exists', function(assert) {
-+  test('it has the right type', function(assert) {
+-  test('it exists', function (assert) {
++  test('it has the right type', function (assert) {
      let store = this.owner.lookup('service:store');
 -    let model = store.createRecord('rental', {});
 -    assert.ok(model);
@@ -127,8 +144,10 @@ The generator created some boilerplate code for us, which serves as a pretty goo
 +      },
 +      category: 'Estate',
 +      bedrooms: 15,
-+      image: 'https://upload.wikimedia.org/wikipedia/commons/c/cb/Crane_estate_(5).jpg',
-+      description: 'This grand old mansion sits on over 100 acres of rolling hills and dense redwood forests.',
++      image:
++        'https://upload.wikimedia.org/wikipedia/commons/c/cb/Crane_estate_(5).jpg',
++      description:
++        'This grand old mansion sits on over 100 acres of rolling hills and dense redwood forests.',
 +    });
 +
 +    assert.equal(rental.type, 'Standalone');
@@ -168,14 +187,10 @@ wait  #qunit-banner.qunit-pass
 Alright, now that we have our model set up, it's time to refactor our route handlers to use Ember Data and remove the duplication!
 
 ```run:file:patch lang=js cwd=super-rentals filename=app/routes/index.js
-@@ -1,26 +1,9 @@
+@@ -1,22 +1,9 @@
  import Route from '@ember/routing/route';
 -
--const COMMUNITY_CATEGORIES = [
--  'Condo',
--  'Townhouse',
--  'Apartment'
--];
+-const COMMUNITY_CATEGORIES = ['Condo', 'Townhouse', 'Apartment'];
 +import { inject as service } from '@ember/service';
 
  export default class IndexRoute extends Route {
@@ -183,7 +198,7 @@ Alright, now that we have our model set up, it's time to refactor our route hand
 -    let response = await fetch('/api/rentals.json');
 -    let { data } = await response.json();
 -
--    return data.map(model => {
+-    return data.map((model) => {
 -      let { id, attributes } = model;
 -      let type;
 +  @service store;
@@ -202,14 +217,10 @@ Alright, now that we have our model set up, it's time to refactor our route hand
 ```
 
 ```run:file:patch lang=js cwd=super-rentals filename=app/routes/rental.js
-@@ -1,24 +1,9 @@
+@@ -1,20 +1,9 @@
  import Route from '@ember/routing/route';
 -
--const COMMUNITY_CATEGORIES = [
--  'Condo',
--  'Townhouse',
--  'Apartment'
--];
+-const COMMUNITY_CATEGORIES = ['Condo', 'Townhouse', 'Apartment'];
 +import { inject as service } from '@ember/service';
 
  export default class RentalRoute extends Route {
@@ -282,8 +293,7 @@ export default class ApplicationAdapter extends JSONAPIAdapter {
 ```run:file:create lang=js cwd=super-rentals filename=app/serializers/application.js
 import JSONAPISerializer from '@ember-data/serializer/json-api';
 
-export default class ApplicationSerializer extends JSONAPISerializer {
-}
+export default class ApplicationSerializer extends JSONAPISerializer {}
 ```
 
 By convention, adapters are located at `app/adapters`. Furthermore, the adapter named `application` is called the *application adapter*, which will be used to fetch data for all models in our app.
