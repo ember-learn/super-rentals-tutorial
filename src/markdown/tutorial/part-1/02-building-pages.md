@@ -29,10 +29,12 @@ This time, we would like the page to be served on the `/about` URL. In order to 
 The place to manage what pages are available is the *[router][TODO: link to router]*. Go ahead and open `app/router.js` and make the following change:
 
 ```run:file:patch lang=js cwd=super-rentals filename=app/router.js
-@@ -9,2 +9,3 @@
- Router.map(function() {
+@@ -8,2 +8,4 @@
+
+-Router.map(function () {});
++Router.map(function () {
 +  this.route('about');
- });
++});
 ```
 
 This adds a *[route](../../../routing/defining-your-routes/)* named "about", which is served at the `/about` URL by default.

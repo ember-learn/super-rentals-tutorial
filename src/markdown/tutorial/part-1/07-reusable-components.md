@@ -98,6 +98,29 @@ git add app/components/map.js
 git add tests/integration/components/map-test.js
 ```
 
+<!-- patch for https://github.com/emberjs/ember.js/issues/19333 -->
+
+```run:file:patch hidden=true cwd=super-rentals filename=tests/integration/components/map-test.js
+@@ -5,8 +5,8 @@
+
+-module('Integration | Component | map', function(hooks) {
++module('Integration | Component | map', function (hooks) {
+   setupRenderingTest(hooks);
+
+-  test('it renders', async function(assert) {
++  test('it renders', async function (assert) {
+     // Set any properties with this.set('myProperty', 'value');
+-    // Handle any actions with this.set('myAction', function(val) { ... });
++    // Handle any actions with this.set('myAction', function (val) { ... });
+
+```
+
+```run:command hidden=true cwd=super-rentals
+git add tests/integration/components/map-test.js
+```
+
+<!-- end patch for https://github.com/emberjs/ember.js/issues/19333 -->
+
 ## Parameterizing Components with Arguments
 
 Let's start with our JavaScript file:
@@ -166,25 +189,12 @@ We just added a lot of behavior into a single component, so let's write some tes
  import { hbs } from 'ember-cli-htmlbars';
 +import ENV from 'super-rentals/config/environment';
 
-@@ -8,18 +9,53 @@
+@@ -8,18 +9,73 @@
 
--  test('it renders', async function(assert) {
+-  test('it renders', async function (assert) {
 -    // Set any properties with this.set('myProperty', 'value');
--    // Handle any actions with this.set('myAction', function(val) { ... });
--
--    await render(hbs`<Map />`);
--
--    assert.equal(this.element.textContent.trim(), '');
--
--    // Template block usage:
--    await render(hbs`
--      <Map>
--        template block text
--      </Map>
--    `);
--
--    assert.equal(this.element.textContent.trim(), 'template block text');
-+  test('it renders a map image for the specified parameters', async function(assert) {
+-    // Handle any actions with this.set('myAction', function (val) { ... });
++  test('it renders a map image for the specified parameters', async function (assert) {
 +    await render(hbs`<Map
 +      @lat="37.7797"
 +      @lng="-122.4184"
@@ -192,22 +202,49 @@ We just added a lot of behavior into a single component, so let's write some tes
 +      @width="150"
 +      @height="120"
 +    />`);
-+
-+    assert.dom('.map').exists();
-+    assert.dom('.map img').hasAttribute('alt', 'Map image at coordinates 37.7797,-122.4184');
-+    assert.dom('.map img').hasAttribute('src', /^https:\/\/api\.mapbox\.com/, 'the src starts with "https://api.mapbox.com"');
-+    assert.dom('.map img').hasAttribute('width', '150');
-+    assert.dom('.map img').hasAttribute('height', '120');
-+
+
+-    await render(hbs`<Map />`);
++    assert
++      .dom('.map img')
++      .exists()
++      .hasAttribute('alt', 'Map image at coordinates 37.7797,-122.4184')
++      .hasAttribute('src')
++      .hasAttribute('width', '150')
++      .hasAttribute('height', '120');
+
+-    assert.equal(this.element.textContent.trim(), '');
 +    let { src } = find('.map img');
 +    let token = encodeURIComponent(ENV.MAPBOX_ACCESS_TOKEN);
+
+-    // Template block usage:
+-    await render(hbs`
+-      <Map>
+-        template block text
+-      </Map>
+-    `);
++    assert.ok(
++      src.startsWith('https://api.mapbox.com/'),
++      'the src starts with "https://api.mapbox.com/"'
++    );
+
+-    assert.equal(this.element.textContent.trim(), 'template block text');
++    assert.ok(
++      src.includes('-122.4184,37.7797,10'),
++      'the src should include the lng,lat,zoom parameter'
++    );
 +
-+    assert.ok(src.includes('-122.4184,37.7797,10'), 'the src should include the lng,lat,zoom parameter');
-+    assert.ok(src.includes('150x120@2x'), 'the src should include the width,height and @2x parameter');
-+    assert.ok(src.includes(`access_token=${token}`), 'the src should include the escaped access token');
++    assert.ok(
++      src.includes('150x120@2x'),
++      'the src should include the width,height and @2x parameter'
++    );
++
++    assert.ok(
++      src.includes(`access_token=${token}`),
++      'the src should include the escaped access token'
++    );
 +  });
 +
-+  test('the default alt attribute can be overridden', async function(assert) {
++  test('the default alt attribute can be overridden', async function (assert) {
 +    await render(hbs`<Map
 +      @lat="37.7797"
 +      @lng="-122.4184"
@@ -220,7 +257,7 @@ We just added a lot of behavior into a single component, so let's write some tes
 +    assert.dom('.map img').hasAttribute('alt', 'A map of San Francisco');
 +  });
 +
-+  test('the src, width and height attributes cannot be overridden', async function(assert) {
++  test('the src, width and height attributes cannot be overridden', async function (assert) {
 +    await render(hbs`<Map
 +      @lat="37.7797"
 +      @lng="-122.4184"
@@ -232,9 +269,11 @@ We just added a lot of behavior into a single component, so let's write some tes
 +      height="300"
 +    />`);
 +
-+    assert.dom('.map img').hasAttribute('src', /^https:\/\/api\.mapbox\.com/, 'the src starts with "https://api.mapbox.com"');
-+    assert.dom('.map img').hasAttribute('width', '150');
-+    assert.dom('.map img').hasAttribute('height', '120');
++    assert
++      .dom('.map img')
++      .hasAttribute('src', /^https:\/\/api\.mapbox\.com\//)
++      .hasAttribute('width', '150')
++      .hasAttribute('height', '120');
    });
 ```
 
@@ -322,7 +361,7 @@ index 78e765f..1cad468 100644
 +    let { lng, lat, width, height, zoom } = this.args;
 +
 +    let coordinates = `${lng},${lat},${zoom}`;
-+    let dimensions  = `${width}x${height}`;
++    let dimensions = `${width}x${height}`;
 +    let accessToken = `access_token=${this.token}`;
 +
 +    return `${MAPBOX_API}/${coordinates}/${dimensions}@2x?${accessToken}`;
@@ -363,9 +402,9 @@ Ember does this by automatically tracking any variables that were accessed while
 Just to be sure, we can add a test for this behavior:
 
 ```run:file:patch lang=js cwd=super-rentals filename=tests/integration/components/map-test.js
-@@ -32,2 +32,42 @@
+@@ -32,2 +32,63 @@
 
-+  test('it updates the `src` attribute when the arguments change', async function(assert) {
++  test('it updates the `src` attribute when the arguments change', async function (assert) {
 +    this.setProperties({
 +      lat: 37.7749,
 +      lng: -122.4194,
@@ -384,8 +423,15 @@ Just to be sure, we can add a test for this behavior:
 +
 +    let img = find('.map img');
 +
-+    assert.ok(img.src.includes('-122.4194,37.7749,10'), 'the src should include the lng,lat,zoom parameter');
-+    assert.ok(img.src.includes('150x120@2x'), 'the src should include the width,height and @2x parameter');
++    assert.ok(
++      img.src.includes('-122.4194,37.7749,10'),
++      'the src should include the lng,lat,zoom parameter'
++    );
++
++    assert.ok(
++      img.src.includes('150x120@2x'),
++      'the src should include the width,height and @2x parameter'
++    );
 +
 +    this.setProperties({
 +      width: 300,
@@ -393,19 +439,33 @@ Just to be sure, we can add a test for this behavior:
 +      zoom: 12,
 +    });
 +
-+    assert.ok(img.src.includes('-122.4194,37.7749,12'), 'the src should include the lng,lat,zoom parameter');
-+    assert.ok(img.src.includes('300x200@2x'), 'the src should include the width,height and @2x parameter');
++    assert.ok(
++      img.src.includes('-122.4194,37.7749,12'),
++      'the src should include the lng,lat,zoom parameter'
++    );
++
++    assert.ok(
++      img.src.includes('300x200@2x'),
++      'the src should include the width,height and @2x parameter'
++    );
 +
 +    this.setProperties({
 +      lat: 47.6062,
 +      lng: -122.3321,
 +    });
 +
-+    assert.ok(img.src.includes('-122.3321,47.6062,12'), 'the src should include the lng,lat,zoom parameter');
-+    assert.ok(img.src.includes('300x200@2x'), 'the src should include the width,height and @2x parameter');
++    assert.ok(
++      img.src.includes('-122.3321,47.6062,12'),
++      'the src should include the lng,lat,zoom parameter'
++    );
++
++    assert.ok(
++      img.src.includes('300x200@2x'),
++      'the src should include the width,height and @2x parameter'
++    );
 +  });
 +
-   test('the default alt attribute can be overridden', async function(assert) {
+   test('the default alt attribute can be overridden', async function (assert) {
 ```
 
 Using the special `this.setProperties` testing API, we can pass arbitrary values into our component.

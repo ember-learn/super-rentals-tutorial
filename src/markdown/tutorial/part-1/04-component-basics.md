@@ -153,6 +153,29 @@ ember generate component-test jumbo
 git add tests/integration/components/jumbo-test.js
 ```
 
+<!-- patch for https://github.com/emberjs/ember.js/issues/19333 -->
+
+```run:file:patch hidden=true cwd=super-rentals filename=tests/integration/components/jumbo-test.js
+@@ -5,8 +5,8 @@
+
+-module('Integration | Component | jumbo', function(hooks) {
++module('Integration | Component | jumbo', function (hooks) {
+   setupRenderingTest(hooks);
+
+-  test('it renders', async function(assert) {
++  test('it renders', async function (assert) {
+     // Set any properties with this.set('myProperty', 'value');
+-    // Handle any actions with this.set('myAction', function(val) { ... });
++    // Handle any actions with this.set('myAction', function (val) { ... });
+
+```
+
+```run:command hidden=true cwd=super-rentals
+git add tests/integration/components/jumbo-test.js
+```
+
+<!-- end patch for https://github.com/emberjs/ember.js/issues/19333 -->
+
 Here, we used the generator to generate a *[component test](../../../testing/testing-components/)*, also known as a rendering test. These are used to render and test a single component at a time. This is in contrast to the acceptance tests that we wrote earlier, which have to navigate and render entire pages worth of content.
 
 Let's replace the boilerplate code that was generated for us with our own test:
@@ -160,9 +183,9 @@ Let's replace the boilerplate code that was generated for us with our own test:
 ```run:file:patch lang=js cwd=super-rentals filename=tests/integration/components/jumbo-test.js
 @@ -8,18 +8,8 @@
 
--  test('it renders', async function(assert) {
+-  test('it renders', async function (assert) {
 -    // Set any properties with this.set('myProperty', 'value');
--    // Handle any actions with this.set('myAction', function(val) { ... });
+-    // Handle any actions with this.set('myAction', function (val) { ... });
 -
 -    await render(hbs`<Jumbo />`);
 -
@@ -176,7 +199,7 @@ Let's replace the boilerplate code that was generated for us with our own test:
 -    `);
 -
 -    assert.equal(this.element.textContent.trim(), 'template block text');
-+  test('it renders the content inside a jumbo header with a tomster', async function(assert) {
++  test('it renders the content inside a jumbo header with a tomster', async function (assert) {
 +    await render(hbs`<Jumbo>Hello World</Jumbo>`);
 +
 +    assert.dom('.jumbo').exists();
@@ -282,7 +305,7 @@ But what kind of test? We *could* write a component test for the `<NavBar>` by i
 @@ -42,2 +48,20 @@
    });
 +
-+  test('navigating using the nav-bar', async function(assert) {
++  test('navigating using the nav-bar', async function (assert) {
 +    await visit('/');
 +
 +    assert.dom('nav').exists();

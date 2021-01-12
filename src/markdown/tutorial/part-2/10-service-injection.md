@@ -58,6 +58,29 @@ git add app/components/share-button.js
 git add tests/integration/components/share-button-test.js
 ```
 
+<!-- patch for https://github.com/emberjs/ember.js/issues/19333 -->
+
+```run:file:patch hidden=true cwd=super-rentals filename=tests/integration/components/share-button-test.js
+@@ -5,8 +5,8 @@
+
+-module('Integration | Component | share-button', function(hooks) {
++module('Integration | Component | share-button', function (hooks) {
+   setupRenderingTest(hooks);
+
+-  test('it renders', async function(assert) {
++  test('it renders', async function (assert) {
+     // Set any properties with this.set('myProperty', 'value');
+-    // Handle any actions with this.set('myAction', function(val) { ... });
++    // Handle any actions with this.set('myAction', function (val) { ... });
+
+```
+
+```run:command hidden=true cwd=super-rentals
+git add tests/integration/components/share-button-test.js
+```
+
+<!-- end patch for https://github.com/emberjs/ember.js/issues/19333 -->
+
 Let's start with the template that was generated for this component. We already have some markup for the share button in the `<Rental::Detailed>` component we made earlier, so let's just copy that over into our new `<ShareButton>` component.
 
 ```run:file:patch lang=handlebars cwd=super-rentals filename=app/components/share-button.hbs
@@ -271,17 +294,17 @@ We will take advantage of this capability in our component test:
 +  }
 +}
 +
- module('Integration | Component | share-button', function(hooks) {
-@@ -8,18 +15,20 @@
+ module('Integration | Component | share-button', function (hooks) {
+@@ -8,18 +15,22 @@
 
--  test('it renders', async function(assert) {
+-  test('it renders', async function (assert) {
 -    // Set any properties with this.set('myProperty', 'value');
--    // Handle any actions with this.set('myAction', function(val) { ... });
+-    // Handle any actions with this.set('myAction', function (val) { ... });
 -
 -    await render(hbs`<ShareButton />`);
 -
 -    assert.equal(this.element.textContent.trim(), '');
-+  hooks.beforeEach(function() {
++  hooks.beforeEach(function () {
 +    this.owner.register('service:router', MockRouterService);
 +  });
 
@@ -291,21 +314,23 @@ We will take advantage of this capability in our component test:
 -        template block text
 -      </ShareButton>
 -    `);
-+  test('basic usage', async function(assert) {
++  test('basic usage', async function (assert) {
 +    await render(hbs`<ShareButton>Tweet this!</ShareButton>`);
 
 -    assert.equal(this.element.textContent.trim(), 'template block text');
-+    assert.dom('a').exists();
-+    assert.dom('a').hasAttribute('target', '_blank');
-+    assert.dom('a').hasAttribute('rel', 'external nofollow noopener noreferrer');
-+    assert.dom('a').hasAttribute('href', `https://twitter.com/intent/tweet?url=${
-+      encodeURIComponent(
-+        new URL('/foo/bar?baz=true#some-section', window.location.origin)
++    assert
++      .dom('a')
++      .hasAttribute('target', '_blank')
++      .hasAttribute('rel', 'external nofollow noopener noreferrer')
++      .hasAttribute(
++        'href',
++        `https://twitter.com/intent/tweet?url=${encodeURIComponent(
++          new URL('/foo/bar?baz=true#some-section', window.location.origin)
++        )}`
 +      )
-+    }`);
-+    assert.dom('a').hasClass('share');
-+    assert.dom('a').hasClass('button');
-+    assert.dom('a').containsText('Tweet this!');
++      .hasClass('share')
++      .hasClass('button')
++      .containsText('Tweet this!');
    });
 ```
 
@@ -331,23 +356,24 @@ While we are here, let's add some more tests for the various functionalities of 
 @@ -17,2 +17,8 @@
      this.owner.register('service:router', MockRouterService);
 +
-+    this.tweetParam = param => {
++    this.tweetParam = (param) => {
 +      let link = find('a');
 +      let url = new URL(link.href);
 +      return url.searchParams.get(param);
 +    };
    });
-@@ -25,7 +31,3 @@
-     assert.dom('a').hasAttribute('rel', 'external nofollow noopener noreferrer');
--    assert.dom('a').hasAttribute('href', `https://twitter.com/intent/tweet?url=${
--      encodeURIComponent(
--        new URL('/foo/bar?baz=true#some-section', window.location.origin)
+@@ -26,8 +32,3 @@
+       .hasAttribute('rel', 'external nofollow noopener noreferrer')
+-      .hasAttribute(
+-        'href',
+-        `https://twitter.com/intent/tweet?url=${encodeURIComponent(
+-          new URL('/foo/bar?baz=true#some-section', window.location.origin)
+-        )}`
 -      )
--    }`);
-+    assert.dom('a').hasAttribute('href', /^https:\/\/twitter\.com\/intent\/tweet/);
-     assert.dom('a').hasClass('share');
-@@ -33,2 +35,39 @@
-     assert.dom('a').containsText('Tweet this!');
++      .hasAttribute('href', /^https:\/\/twitter\.com\/intent\/tweet/)
+       .hasClass('share')
+@@ -35,2 +36,53 @@
+       .containsText('Tweet this!');
 +
 +    assert.equal(
 +      this.tweetParam('url'),
@@ -355,36 +381,50 @@ While we are here, let's add some more tests for the various functionalities of 
 +    );
 +  });
 +
-+  test('it supports passing @text', async function(assert) {
-+    await render(hbs`<ShareButton @text="Hello Twitter!">Tweet this!</ShareButton>`);
++  test('it supports passing @text', async function (assert) {
++    await render(
++      hbs`<ShareButton @text="Hello Twitter!">Tweet this!</ShareButton>`
++    );
++
 +    assert.equal(this.tweetParam('text'), 'Hello Twitter!');
 +  });
 +
-+  test('it supports passing @hashtags', async function(assert) {
-+    await render(hbs`<ShareButton @hashtags="foo,bar,baz">Tweet this!</ShareButton>`);
++  test('it supports passing @hashtags', async function (assert) {
++    await render(
++      hbs`<ShareButton @hashtags="foo,bar,baz">Tweet this!</ShareButton>`
++    );
++
 +    assert.equal(this.tweetParam('hashtags'), 'foo,bar,baz');
 +  });
 +
-+  test('it supports passing @via', async function(assert) {
++  test('it supports passing @via', async function (assert) {
 +    await render(hbs`<ShareButton @via="emberjs">Tweet this!</ShareButton>`);
 +    assert.equal(this.tweetParam('via'), 'emberjs');
 +  });
 +
-+  test('it supports adding extra classes', async function(assert) {
-+    await render(hbs`<ShareButton class="extra things">Tweet this!</ShareButton>`);
++  test('it supports adding extra classes', async function (assert) {
++    await render(
++      hbs`<ShareButton class="extra things">Tweet this!</ShareButton>`
++    );
 +
-+    assert.dom('a').hasClass('share');
-+    assert.dom('a').hasClass('button');
-+    assert.dom('a').hasClass('extra');
-+    assert.dom('a').hasClass('things');
++    assert
++      .dom('a')
++      .hasClass('share')
++      .hasClass('button')
++      .hasClass('extra')
++      .hasClass('things');
 +  });
 +
-+  test('the target, rel and href attributes cannot be overridden', async function(assert) {
-+    await render(hbs`<ShareButton target="_self" rel="" href="/">Not a Tweet!</ShareButton>`);
++  test('the target, rel and href attributes cannot be overridden', async function (assert) {
++    await render(
++      hbs`<ShareButton target="_self" rel="" href="/">Not a Tweet!</ShareButton>`
++    );
 +
-+    assert.dom('a').hasAttribute('target', '_blank');
-+    assert.dom('a').hasAttribute('rel', 'external nofollow noopener noreferrer');
-+    assert.dom('a').hasAttribute('href', /^https:\/\/twitter\.com\/intent\/tweet/);
++    assert
++      .dom('a')
++      .hasAttribute('target', '_blank')
++      .hasAttribute('rel', 'external nofollow noopener noreferrer')
++      .hasAttribute('href', /^https:\/\/twitter\.com\/intent\/tweet/);
    });
 ```
 

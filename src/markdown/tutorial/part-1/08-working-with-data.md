@@ -176,8 +176,8 @@ Because component tests are meant to render and test a single component in isola
 Therefore, in our `<Rental>` component's test, we will have to feed the data into it some other way. We can do this using the `setProperties` we learned about from the [previous chapter](../reusable-components/).
 
 ```run:file:patch lang=js cwd=super-rentals filename=tests/integration/components/rental-test.js
-@@ -9,3 +9,20 @@
-   test('it renders information about a rental property', async function(assert) {
+@@ -9,3 +9,22 @@
+   test('it renders information about a rental property', async function (assert) {
 -    await render(hbs`<Rental />`);
 +    this.setProperties({
 +      rental: {
@@ -191,9 +191,11 @@ Therefore, in our `<Rental>` component's test, we will have to feed the data int
 +        category: 'Estate',
 +        type: 'Standalone',
 +        bedrooms: 15,
-+        image: 'https://upload.wikimedia.org/wikipedia/commons/c/cb/Crane_estate_(5).jpg',
-+        description: 'This grand old mansion sits on over 100 acres of rolling hills and dense redwood forests.',
-+      }
++        image:
++          'https://upload.wikimedia.org/wikipedia/commons/c/cb/Crane_estate_(5).jpg',
++        description:
++          'This grand old mansion sits on over 100 acres of rolling hills and dense redwood forests.',
++      },
 +    });
 +
 +    await render(hbs`<Rental @rental={{this.rental}} />`);
@@ -310,13 +312,9 @@ In [Part 2](../../part-2/) of this tutorial, we will learn about a more convenie
 We can handle it all in our model hook:
 
 ```run:file:patch lang=js cwd=super-rentals filename=app/routes/index.js
-@@ -2,7 +2,25 @@
+@@ -2,7 +2,21 @@
 
-+const COMMUNITY_CATEGORIES = [
-+  'Condo',
-+  'Townhouse',
-+  'Apartment'
-+];
++const COMMUNITY_CATEGORIES = ['Condo', 'Townhouse', 'Apartment'];
 +
  export default class IndexRoute extends Route {
    async model() {
@@ -325,7 +323,7 @@ We can handle it all in our model hook:
 -    return parsed;
 +    let { data } = await response.json();
 +
-+    return data.map(model => {
++    return data.map((model) => {
 +      let { attributes } = model;
 +      let type;
 +
@@ -350,21 +348,23 @@ The last change we'll need to make is to our `index.hbs` route template, where w
 
 Let's see how.
 
+<!-- Workaround for https://github.com/emberjs/ember.js/issues/19334 -->
+
 ```run:file:patch lang=handlebars cwd=super-rentals filename=app/templates/index.hbs
 @@ -8,5 +8,5 @@
    <ul class="results">
 -    <li><Rental @rental={{@model}} /></li>
 -    <li><Rental @rental={{@model}} /></li>
 -    <li><Rental @rental={{@model}} /></li>
-+    {{#each @model as |rental|}}
-+      <li><Rental @rental={{rental}} /></li>
++    {{#each @model as |property|}}
++      <li><Rental @rental={{property}} /></li>
 +    {{/each}}
    </ul>
 ```
 
 We can use the `{{#each}}...{{/each}}` syntax to iterate and loop through the array returned by the model hook. For each iteration through the array&mdash;for each item in the array&mdash;we will render the block that is passed to it once. In our case, the block is our `<Rental>` component, surrounded by `<li>` tags.
 
-Inside of the block we have access to the item of the *current* iteration with the `{{rental}}` variable. But why `rental`? Well, because we named it that! This variable comes from the `as |rental|` declaration of the `each` loop. We could have just as easily called it something else, like `as |property|`, in which case we would have to access the current item through the `{{property}}` variable.
+Inside of the block we have access to the item of the *current* iteration with the `{{property}}` variable. But why `property`? Well, because we named it that! This variable comes from the `as |property|` declaration of the `each` loop. We could have just as easily called it something else, like `as |rental|`, in which case we would have to access the current item through the `{{rental}}` variable.
 
 Now, let's go over to our browser and see what our index route looks like with this change.
 
