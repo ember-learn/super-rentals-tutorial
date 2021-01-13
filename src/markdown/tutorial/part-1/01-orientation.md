@@ -30,7 +30,7 @@ If a version number is shown, you're ready to go.
 
 ## Creating a New Ember App with Ember CLI
 
-We can create a new project using Ember CLI's `new` command. It follows the pattern `ember new <project-name>`. In our case, the project name would be `super-rentals`:
+We can create a new project using Ember CLI's `new` command. It follows the pattern `ember new <project-name>`. In our case, the project name would be `super-rentals`. We also include a `--lang en` option. This sets our app's primary language to English which improves website [Accessibility](../../../accessibility/application-considerations/).
 
 ```run:ignore
 Hack: make an empty package.json to convince ember-cli we are really not in an Ember project. Otherwise, we will get the "You cannot use the new command inside an ember-cli project." error when running `ember new`.
@@ -47,11 +47,11 @@ Hack: make an empty package.json to convince ember-cli we are really not in an E
 
 #[cfg(all(ci, unix))]
 #[display(ember new super-rentals)]
-ember new super-rentals --yarn \
+ember new super-rentals --lang en --yarn \
   | awk '{ gsub("Yarn", "npm"); gsub("yarn", "npm"); print }'
 
 #[cfg(not(all(ci, unix)))]
-ember new super-rentals --yarn
+ember new super-rentals --lang en --yarn
 ```
 
 ```run:command hidden=true
