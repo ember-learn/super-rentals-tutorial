@@ -58,8 +58,6 @@ Wait...why don't we just refactor the search box into a component? Once we do th
 
 Let's start simple again and begin our refactor by creating a new template for our component, which we will call `rentals.hbs`.
 
-<!-- Workaround for https://github.com/emberjs/ember.js/issues/19334 -->
-
 ```run:file:create lang=handlebars cwd=super-rentals filename=app/components/rentals.hbs
 <div class="rentals">
   <label>
@@ -68,8 +66,8 @@ Let's start simple again and begin our refactor by creating a new template for o
   </label>
 
   <ul class="results">
-    {{#each @rentals as |property|}}
-      <li><Rental @rental={{property}} /></li>
+    {{#each @rentals as |rental|}}
+      <li><Rental @rental={{rental}} /></li>
     {{/each}}
   </ul>
 </div>
@@ -87,8 +85,8 @@ There is one minor change to note here: while extracting our markup into a compo
 -  </label>
 -
 -  <ul class="results">
--    {{#each @model as |property|}}
--      <li><Rental @rental={{property}} /></li>
+-    {{#each @model as |rental|}}
+-      <li><Rental @rental={{rental}} /></li>
 -    {{/each}}
 -  </ul>
 -</div>
@@ -285,12 +283,12 @@ Well, in order to answer this question, let's look at how the data that we're yi
 ```run:file:patch lang=handlebars cwd=super-rentals filename=app/components/rentals.hbs
 @@ -7,5 +7,7 @@
    <ul class="results">
--    {{#each @rentals as |property|}}
--      <li><Rental @rental={{property}} /></li>
+-    {{#each @rentals as |rental|}}
+-      <li><Rental @rental={{rental}} /></li>
 -    {{/each}}
 +    <Rentals::Filter @rentals={{@rentals}} @query={{this.query}} as |results|>
-+      {{#each results as |property|}}
-+        <li><Rental @rental={{property}} /></li>
++      {{#each results as |rental|}}
++        <li><Rental @rental={{rental}} /></li>
 +      {{/each}}
 +    </Rentals::Filter>
    </ul>
