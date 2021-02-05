@@ -348,23 +348,21 @@ The last change we'll need to make is to our `index.hbs` route template, where w
 
 Let's see how.
 
-<!-- Workaround for https://github.com/emberjs/ember.js/issues/19334 -->
-
 ```run:file:patch lang=handlebars cwd=super-rentals filename=app/templates/index.hbs
 @@ -8,5 +8,5 @@
    <ul class="results">
 -    <li><Rental @rental={{@model}} /></li>
 -    <li><Rental @rental={{@model}} /></li>
 -    <li><Rental @rental={{@model}} /></li>
-+    {{#each @model as |property|}}
-+      <li><Rental @rental={{property}} /></li>
++    {{#each @model as |rental|}}
++      <li><Rental @rental={{rental}} /></li>
 +    {{/each}}
    </ul>
 ```
 
 We can use the `{{#each}}...{{/each}}` syntax to iterate and loop through the array returned by the model hook. For each iteration through the array&mdash;for each item in the array&mdash;we will render the block that is passed to it once. In our case, the block is our `<Rental>` component, surrounded by `<li>` tags.
 
-Inside of the block we have access to the item of the *current* iteration with the `{{property}}` variable. But why `property`? Well, because we named it that! This variable comes from the `as |property|` declaration of the `each` loop. We could have just as easily called it something else, like `as |rental|`, in which case we would have to access the current item through the `{{rental}}` variable.
+Inside of the block we have access to the item of the *current* iteration with the `{{rental}}` variable. But why `rental`? Well, because we named it that! This variable comes from the `as |rental|` declaration of the `each` loop. We could have just as easily called it something else, like `as |property|`, in which case we would have to access the current item through the `{{property}}` variable.
 
 Now, let's go over to our browser and see what our index route looks like with this change.
 
