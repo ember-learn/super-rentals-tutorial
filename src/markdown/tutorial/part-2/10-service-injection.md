@@ -185,7 +185,7 @@ git add tests/acceptance/super-rentals-test.js
 
 To be sure, let's add some tests! Let's start with an acceptance test:
 
-```run:file:patch lang=handlebars cwd=super-rentals filename=tests/acceptance/super-rentals-test.js
+```run:file:patch lang=js cwd=super-rentals filename=tests/acceptance/super-rentals-test.js
 @@ -1,3 +1,3 @@
  import { module, test } from 'qunit';
 -import { click, visit, currentURL } from '@ember/test-helpers';
