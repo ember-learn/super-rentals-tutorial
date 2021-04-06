@@ -171,8 +171,8 @@ Correctly spelled words flagged as misspelt can be added to the local dictionary
 
 Finally, the tutorial will be linted using the `guides` markdown linter when the PR is created.  Since the linter will use the `guides` dictionary the words in `.local.dic` must also be in the guides `.local.dic` file for linting to pass.
 
-When new words are added to the local dictionary, a separate PR must be opened on the guides to add them to the guides dictionary. If there are words that you think belong in the master Ember [dictionary](https://github.com/maxwondercorn/ember-dictionary) versus being in the local dictionary, open a PR.
+When new words are added to the local dictionary, a separate PR must be opened on the guides to add them to the guides dictionary. If there are words that you think belong to the [Ember dictionary](https://github.com/maxwondercorn/ember-dictionary), please open a PR in that repo.
 
 #### Pull Request Merging
 
-After the pull request is merged into the master branch, the generated markdown and code output will be pushed to a branch on the markdown/code output will be pushed to a branch on the [guides](https://github.com/ember-learn/guides-source) and [super rentals repos](https://github.com/ember-learn/guides-source/tree/super-rentals-tutorial) so that they can be further reviewed by their maintainers before integrating into the tutorial code/app and markdown.
+After the pull request is merged to the `main` branch, the generated markdown and code output will be pushed to a branch on the markdown/code output will be pushed to a branch on the [guides](https://github.com/ember-learn/guides-source) and [super rentals repos](https://github.com/ember-learn/guides-source/tree/super-rentals-tutorial) so that they can be further reviewed by their maintainers before integrating into the tutorial code/app and markdown.
