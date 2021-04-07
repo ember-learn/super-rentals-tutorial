@@ -156,7 +156,7 @@ jobs:
           IFS=$'\n\t'
 
           if ! git clone git@github.com:ember-learn/guides-source --depth 1 -b super-rentals-tutorial; then
-            git clone git@github.com:ember-learn/guides-source --depth 1 -b main
+            git clone git@github.com:ember-learn/guides-source --depth 1 -b master
             cd guides-source
             git checkout -b super-rentals-tutorial
           fi
