@@ -3,7 +3,7 @@ on:
   pull_request: {}
   push:
     branches:
-      - master
+      - main
   schedule:
     - cron: '0 0 * * *'
 
@@ -126,7 +126,7 @@ jobs:
     name: Deploy to ember-learn/guides-source (super-rentals-tutorial branch)
     needs: build
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/master'
+    if: github.ref == 'refs/heads/main'
     steps:
       - name: Set up Git
         run: |
@@ -156,7 +156,7 @@ jobs:
           IFS=$'\n\t'
 
           if ! git clone git@github.com:ember-learn/guides-source --depth 1 -b super-rentals-tutorial; then
-            git clone git@github.com:ember-learn/guides-source --depth 1 -b master
+            git clone git@github.com:ember-learn/guides-source --depth 1 -b main
             cd guides-source
             git checkout -b super-rentals-tutorial
           fi
@@ -293,7 +293,7 @@ jobs:
     name: Deploy to ember-learn/super-rentals (super-rentals-tutorial-output branch)
     needs: build
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/master'
+    if: github.ref == 'refs/heads/main'
     steps:
       - name: Set up Git
         run: |
@@ -336,23 +336,23 @@ jobs:
       - name: Push
         run: |
           git remote add super-rentals git@github.com:ember-learn/super-rentals.git
-          git push -f super-rentals master:super-rentals-tutorial-output
+          git push -f super-rentals main:super-rentals-tutorial-output
 
   deploy-code-flattened:
-    # This job deploys the built app to the master branch of the
+    # This job deploys the built app to the main branch of the
     # ember-learn/super-rentals repository. This branch does not preserve
     # the commit history of the tutorial flow. Instead, it squashes the changes
-    # into a single commit on the master branch. This preserves
+    # into a single commit on the main branch. This preserves
     # a linear history of changes to the built app over time, either due to
     # changes to the generator blueprints, or changes to the tutorial content
     # itself (e.g. refactoring to use new ember features). A lot of times, the
     # built app's source code remains stable and so there may be no changes to
     # push here.
     #
-    name: Deploy to ember-learn/super-rentals (master branch)
+    name: Deploy to ember-learn/super-rentals (main branch)
     needs: build
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/master'
+    if: github.ref == 'refs/heads/main'
     steps:
       - name: Set up Git
         run: |
@@ -397,7 +397,7 @@ jobs:
           git commit --allow-empty -m "$COMMIT_MESSAGE"
           git remote add output ../output
           git fetch output
-          git merge --squash --no-commit --allow-unrelated-histories output/master
+          git merge --squash --no-commit --allow-unrelated-histories output/main
           git reset HEAD~ -- README.md app.json
           git commit --allow-empty --amend --no-edit
         env:
@@ -408,7 +408,7 @@ jobs:
           set -euo pipefail
           IFS=$'\n\t'
 
-          if git diff --exit-code origin/master; then
+          if git diff --exit-code origin/main; then
             echo "Nothing to push"
           else
             git push

@@ -1,6 +1,6 @@
 # Runnable super-rentals tutorial
 
-[![Build Status](https://github.com/ember-learn/super-rentals-tutorial/workflows/Build/badge.svg?branch=master)](https://github.com/ember-learn/super-rentals-tutorial/actions?query=workflow%3ABuild+branch%3Amaster)
+[![Build Status](https://github.com/ember-learn/super-rentals-tutorial/actions/workflows/build.yml/badge.svg)](https://github.com/ember-learn/super-rentals-tutorial/actions/workflows/build.yml)
 
 ## What?
 
@@ -468,7 +468,7 @@ Example:
 
     ```run:ignore:command cwd=super-rentals
     # FIXME: don't run this for now, since Heroku is down atm
-    git push heroku master
+    git push heroku main
     ```
 
 ### `run:pause`
