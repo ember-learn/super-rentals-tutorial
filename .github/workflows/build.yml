@@ -397,7 +397,7 @@ jobs:
           git commit --allow-empty -m "$COMMIT_MESSAGE"
           git remote add output ../output
           git fetch output
-          git merge --squash --no-commit --allow-unrelated-histories output/main
+          git merge --squash --no-commit --allow-unrelated-histories output/master
           git reset HEAD~ -- README.md app.json
           git commit --allow-empty --amend --no-edit
         env:
