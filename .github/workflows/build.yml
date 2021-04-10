@@ -336,7 +336,7 @@ jobs:
       - name: Push
         run: |
           git remote add super-rentals git@github.com:ember-learn/super-rentals.git
-          git push -f super-rentals main:super-rentals-tutorial-output
+          git push -f super-rentals master:super-rentals-tutorial-output
 
   deploy-code-flattened:
     # This job deploys the built app to the main branch of the
