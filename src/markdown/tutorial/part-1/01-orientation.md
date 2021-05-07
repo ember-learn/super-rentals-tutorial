@@ -46,7 +46,7 @@ Hack: make an empty package.json to convince ember-cli we are really not in an E
 # pretend we are running NPM.
 
 #[cfg(all(ci, unix))]
-#[display(ember new super-rentals)]
+#[display(ember new super-rentals --lang en)]
 ember new super-rentals --lang en --yarn \
   | awk '{ gsub("Yarn", "npm"); gsub("yarn", "npm"); print }'
 
