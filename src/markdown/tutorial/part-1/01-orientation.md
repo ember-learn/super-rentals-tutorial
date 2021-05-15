@@ -45,9 +45,18 @@ Hack: make an empty package.json to convince ember-cli we are really not in an E
 # for our setup, so we pass the `--yarn` flag but change the output to
 # pretend we are running NPM.
 
-#[cfg(all(ci, unix))]
+#[cfg(all(ci, unix, not(beta)))]
 #[display(ember new super-rentals --lang en)]
 ember new super-rentals --lang en --yarn \
+  | awk '{ gsub("Yarn", "npm"); gsub("yarn", "npm"); print }'
+
+# On ember-cli 3.27.0-beta.1, embroider is enabled by default. There is
+# a patch to revert it, but it hasn't been published yet. Remove this
+# temporary workaround after 3.27.0 is released.
+
+#[cfg(all(ci, unix, beta))]
+#[display(ember new super-rentals --lang en)]
+EMBER_CLI_CLASSIC=true ember new super-rentals --lang en --yarn \
   | awk '{ gsub("Yarn", "npm"); gsub("yarn", "npm"); print }'
 
 #[cfg(not(all(ci, unix)))]

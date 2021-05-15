@@ -12,7 +12,7 @@ jobs:
     name: Build (${{ matrix.channel }})
     runs-on: ubuntu-latest
     env:
-      CI: 'true'
+      CFG: "ci,${{ matrix.channel }}"
     strategy:
       fail-fast: false
       matrix:

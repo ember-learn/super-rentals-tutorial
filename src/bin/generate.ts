@@ -62,10 +62,12 @@ async function main() {
 
   let inputPaths = await glob(pattern);
 
+  let cfg = process.env.CFG?.split(',')?.map(c => c.trim()) ?? [];
+
   let processor = unified()
     .use(markdown)
     .use(frontmatter)
-    .use(runCodeBlocks, { cfg: process.env.CI ? ['ci'] : [], cwd: codeDir, assets: assetsDir })
+    .use(runCodeBlocks, { cfg, cwd: codeDir, assets: assetsDir })
     .use(todoLinks)
     .use(zoeySays)
     .use(doNotEdit, { repo: 'ember-learn/super-rentals-tutorial' })
