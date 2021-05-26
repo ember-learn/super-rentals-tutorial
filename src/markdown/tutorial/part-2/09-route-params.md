@@ -179,19 +179,8 @@ git add tests/integration/components/rental/detailed-test.js
 
 <!-- patch for https://github.com/emberjs/ember.js/issues/19333 -->
 
-```run:file:patch hidden=true cwd=super-rentals filename=tests/integration/components/rental/detailed-test.js
-@@ -5,8 +5,8 @@
-
--module('Integration | Component | rental/detailed', function(hooks) {
-+module('Integration | Component | rental/detailed', function (hooks) {
-   setupRenderingTest(hooks);
-
--  test('it renders', async function(assert) {
-+  test('it renders', async function (assert) {
-     // Set any properties with this.set('myProperty', 'value');
--    // Handle any actions with this.set('myAction', function(val) { ... });
-+    // Handle any actions with this.set('myAction', function (val) { ... });
-
+```run:command hidden=true cwd=super-rentals
+yarn lint:fix
 ```
 
 ```run:command hidden=true cwd=super-rentals

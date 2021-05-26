@@ -47,16 +47,8 @@ git add tests/acceptance/super-rentals-test.js
 
 <!-- patch for https://github.com/emberjs/ember.js/issues/19333 -->
 
-```run:file:patch hidden=true cwd=super-rentals filename=tests/acceptance/super-rentals-test.js
-@@ -4,6 +4,6 @@
-
--module('Acceptance | super rentals', function(hooks) {
-+module('Acceptance | super rentals', function (hooks) {
-   setupApplicationTest(hooks);
-
--  test('visiting /super-rentals', async function(assert) {
-+  test('visiting /super-rentals', async function (assert) {
-     await visit('/super-rentals');
+```run:command hidden=true cwd=super-rentals
+yarn lint:fix
 ```
 
 ```run:command hidden=true cwd=super-rentals
