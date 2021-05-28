@@ -45,26 +45,6 @@ In this case, we generated an *[acceptance test](../../../testing/test-types/#to
 git add tests/acceptance/super-rentals-test.js
 ```
 
-<!-- patch for https://github.com/emberjs/ember.js/issues/19333 -->
-
-```run:file:patch hidden=true cwd=super-rentals filename=tests/acceptance/super-rentals-test.js
-@@ -4,6 +4,6 @@
-
--module('Acceptance | super rentals', function(hooks) {
-+module('Acceptance | super rentals', function (hooks) {
-   setupApplicationTest(hooks);
-
--  test('visiting /super-rentals', async function(assert) {
-+  test('visiting /super-rentals', async function (assert) {
-     await visit('/super-rentals');
-```
-
-```run:command hidden=true cwd=super-rentals
-git add tests/acceptance/super-rentals-test.js
-```
-
-<!-- end patch for https://github.com/emberjs/ember.js/issues/19333 -->
-
 Generators aren't required; we *could* have created the file ourselves which would have accomplished the exact same thing. But, generators certainly save us a lot of typing. Go ahead and take a peek at the acceptance test file and see for yourself.
 
 > Zoey says...

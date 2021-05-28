@@ -98,43 +98,21 @@ git add app/components/map.js
 git add tests/integration/components/map-test.js
 ```
 
-<!-- patch for https://github.com/emberjs/ember.js/issues/19333 -->
-
-```run:file:patch hidden=true cwd=super-rentals filename=tests/integration/components/map-test.js
-@@ -5,8 +5,8 @@
-
--module('Integration | Component | map', function(hooks) {
-+module('Integration | Component | map', function (hooks) {
-   setupRenderingTest(hooks);
-
--  test('it renders', async function(assert) {
-+  test('it renders', async function (assert) {
-     // Set any properties with this.set('myProperty', 'value');
--    // Handle any actions with this.set('myAction', function(val) { ... });
-+    // Handle any actions with this.set('myAction', function (val) { ... });
-
-```
-
-```run:command hidden=true cwd=super-rentals
-git add tests/integration/components/map-test.js
-```
-
-<!-- end patch for https://github.com/emberjs/ember.js/issues/19333 -->
-
 ## Parameterizing Components with Arguments
 
 Let's start with our JavaScript file:
 
 ```run:file:patch lang=js cwd=super-rentals filename=app/components/map.js
-@@ -1,4 +1,8 @@
+@@ -1,3 +1,8 @@
  import Component from '@glimmer/component';
 +import ENV from 'super-rentals/config/environment';
 
- export default class MapComponent extends Component {
+-export default class MapComponent extends Component {}
++export default class MapComponent extends Component {
 +  get token() {
 +    return encodeURIComponent(ENV.MAPBOX_ACCESS_TOKEN);
 +  }
- }
++}
 ```
 
 Here, we import the access token from the config file and return it from a `token` *[getter](https://javascript.info/property-accessors)*. This allows us to access our token as `this.token` both inside the `MapComponent` class body, as well as the component's template. It is also important to [URL-encode](https://javascript.info/url#encoding-strings) the token, just in case it contains any special characters that are not URL-safe.
@@ -193,7 +171,7 @@ We just added a lot of behavior into a single component, so let's write some tes
 
 -  test('it renders', async function (assert) {
 -    // Set any properties with this.set('myProperty', 'value');
--    // Handle any actions with this.set('myAction', function (val) { ... });
+-    // Handle any actions with this.set('myAction', function(val) { ... });
 +  test('it renders a map image for the specified parameters', async function (assert) {
 +    await render(hbs`<Map
 +      @lat="37.7797"
@@ -212,7 +190,7 @@ We just added a lot of behavior into a single component, so let's write some tes
 +      .hasAttribute('width', '150')
 +      .hasAttribute('height', '120');
 
--    assert.equal(this.element.textContent.trim(), '');
+-    assert.dom(this.element).hasText('');
 +    let { src } = find('.map img');
 +    let token = encodeURIComponent(ENV.MAPBOX_ACCESS_TOKEN);
 
@@ -227,7 +205,7 @@ We just added a lot of behavior into a single component, so let's write some tes
 +      'the src starts with "https://api.mapbox.com/"'
 +    );
 
--    assert.equal(this.element.textContent.trim(), 'template block text');
+-    assert.dom(this.element).hasText('template block text');
 +    assert.ok(
 +      src.includes('-122.4184,37.7797,10'),
 +      'the src should include the lng,lat,zoom parameter'

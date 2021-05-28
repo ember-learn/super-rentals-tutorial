@@ -31,29 +31,6 @@ git add app/components/rental.hbs
 git add tests/integration/components/rental-test.js
 ```
 
-<!-- patch for https://github.com/emberjs/ember.js/issues/19333 -->
-
-```run:file:patch hidden=true cwd=super-rentals filename=tests/integration/components/rental-test.js
-@@ -5,8 +5,8 @@
-
--module('Integration | Component | rental', function(hooks) {
-+module('Integration | Component | rental', function (hooks) {
-   setupRenderingTest(hooks);
-
--  test('it renders', async function(assert) {
-+  test('it renders', async function (assert) {
-     // Set any properties with this.set('myProperty', 'value');
--    // Handle any actions with this.set('myAction', function(val) { ... });
-+    // Handle any actions with this.set('myAction', function (val) { ... });
-
-```
-
-```run:command hidden=true cwd=super-rentals
-git add tests/integration/components/rental-test.js
-```
-
-<!-- end patch for https://github.com/emberjs/ember.js/issues/19333 -->
-
 We will start by editing the template. Let's *[hard-code](https://en.wikipedia.org/wiki/Hard_coding)* the details for one rental property for now, and replace it with the real data from the server later on.
 
 ```run:file:patch lang=handlebars cwd=super-rentals filename=app/components/rental.hbs
@@ -86,11 +63,11 @@ Then, we will write a test to ensure all of the details are present. We will rep
 
 -  test('it renders', async function (assert) {
 -    // Set any properties with this.set('myProperty', 'value');
--    // Handle any actions with this.set('myAction', function (val) { ... });
+-    // Handle any actions with this.set('myAction', function(val) { ... });
 -
 -    await render(hbs`<Rental />`);
 -
--    assert.equal(this.element.textContent.trim(), '');
+-    assert.dom(this.element).hasText('');
 -
 -    // Template block usage:
 -    await render(hbs`
@@ -99,7 +76,7 @@ Then, we will write a test to ensure all of the details are present. We will rep
 -      </Rental>
 -    `);
 -
--    assert.equal(this.element.textContent.trim(), 'template block text');
+-    assert.dom(this.element).hasText('template block text');
 +  test('it renders information about a rental property', async function (assert) {
 +    await render(hbs`<Rental />`);
 +
@@ -170,30 +147,6 @@ git add app/components/rental/image.hbs
 git add tests/integration/components/rental/image-test.js
 ```
 
-<!-- patch for https://github.com/emberjs/ember.js/issues/19333 -->
-
-```run:file:patch hidden=true cwd=super-rentals filename=tests/integration/components/rental/image-test.js
-@@ -5,8 +5,8 @@
-
--module('Integration | Component | rental/image', function(hooks) {
-+module('Integration | Component | rental/image', function (hooks) {
-   setupRenderingTest(hooks);
-
--  test('it renders', async function(assert) {
-+  test('it renders', async function (assert) {
-     // Set any properties with this.set('myProperty', 'value');
--    // Handle any actions with this.set('myAction', function(val) { ... });
-+    // Handle any actions with this.set('myAction', function (val) { ... });
-
-```
-
-```run:command hidden=true cwd=super-rentals
-git add tests/integration/components/rental/image-test.js
-```
-
-<!-- end patch for https://github.com/emberjs/ember.js/issues/19333 -->
-
-
 Components like these are known as *[namespaced](https://en.wikipedia.org/wiki/Namespace)* components. Namespacing allows us to organize our components by folders according to their purpose. This is completely optional&mdash;namespaced components are not special in any way.
 
 ## Forwarding HTML Attributes with `...attributes`
@@ -239,11 +192,11 @@ Let's write a test for our new component!
 
 -  test('it renders', async function (assert) {
 -    // Set any properties with this.set('myProperty', 'value');
--    // Handle any actions with this.set('myAction', function (val) { ... });
+-    // Handle any actions with this.set('myAction', function(val) { ... });
 -
 -    await render(hbs`<Rental::Image />`);
 -
--    assert.equal(this.element.textContent.trim(), '');
+-    assert.dom(this.element).hasText('');
 -
 -    // Template block usage:
 -    await render(hbs`
@@ -252,7 +205,7 @@ Let's write a test for our new component!
 -      </Rental::Image>
 -    `);
 -
--    assert.equal(this.element.textContent.trim(), 'template block text');
+-    assert.dom(this.element).hasText('template block text');
 +  test('it renders the given image', async function (assert) {
 +    await render(hbs`
 +      <Rental::Image
