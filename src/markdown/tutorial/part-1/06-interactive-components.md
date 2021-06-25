@@ -54,13 +54,14 @@ This generated a JavaScript file with the same name as our component's template 
 Ember will create an *[instance][TODO: link to instance]* of the class whenever our component is invoked. We can use that instance to store our state:
 
 ```run:file:patch lang=js cwd=super-rentals filename=app/components/rental/image.js
-@@ -3,2 +3,6 @@
- export default class RentalImageComponent extends Component {
+@@ -3 +3,6 @@
+-export default class RentalImageComponent extends Component {}
++export default class RentalImageComponent extends Component {
 +  constructor(...args) {
 +    super(...args);
 +    this.isLarge = false;
 +  }
- }
++}
 ```
 
 Here, in the *[component's constructor][TODO: link to component's constructor]*, we *[initialized][TODO: link to initialized]* the *[instance variable][TODO: link to instance variable]* `this.isLarge` with the value `false`, since this is the default state that we want for our component.

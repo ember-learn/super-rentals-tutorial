@@ -177,30 +177,6 @@ git add app/components/rental/detailed.hbs
 git add tests/integration/components/rental/detailed-test.js
 ```
 
-<!-- patch for https://github.com/emberjs/ember.js/issues/19333 -->
-
-```run:file:patch hidden=true cwd=super-rentals filename=tests/integration/components/rental/detailed-test.js
-@@ -5,8 +5,8 @@
-
--module('Integration | Component | rental/detailed', function(hooks) {
-+module('Integration | Component | rental/detailed', function (hooks) {
-   setupRenderingTest(hooks);
-
--  test('it renders', async function(assert) {
-+  test('it renders', async function (assert) {
-     // Set any properties with this.set('myProperty', 'value');
--    // Handle any actions with this.set('myAction', function(val) { ... });
-+    // Handle any actions with this.set('myAction', function (val) { ... });
-
-```
-
-```run:command hidden=true cwd=super-rentals
-git add tests/integration/components/rental/detailed-test.js
-```
-
-<!-- end patch for https://github.com/emberjs/ember.js/issues/19333 -->
-
-
 ```run:file:patch lang=handlebars cwd=super-rentals filename=app/components/rental/detailed.hbs
 @@ -1 +1,44 @@
 -{{yield}}
@@ -267,7 +243,7 @@ Now that we have this template in place, we can add some tests for this new comp
 
 -  test('it renders', async function (assert) {
 -    // Set any properties with this.set('myProperty', 'value');
--    // Handle any actions with this.set('myAction', function (val) { ... });
+-    // Handle any actions with this.set('myAction', function(val) { ... });
 +  hooks.beforeEach(function () {
 +    this.setProperties({
 +      rental: {
@@ -294,7 +270,7 @@ Now that we have this template in place, we can add some tests for this new comp
 +  test('it renders a header with a share button', async function (assert) {
 +    await render(hbs`<Rental::Detailed @rental={{this.rental}} />`);
 
--    assert.equal(this.element.textContent.trim(), '');
+-    assert.dom(this.element).hasText('');
 +    assert.dom('.jumbo').exists();
 +    assert.dom('.jumbo h2').containsText('Grand Old Mansion');
 +    assert
@@ -312,7 +288,7 @@ Now that we have this template in place, we can add some tests for this new comp
 +  test('it renders detailed information about a rental property', async function (assert) {
 +    await render(hbs`<Rental::Detailed @rental={{this.rental}} />`);
 
--    assert.equal(this.element.textContent.trim(), 'template block text');
+-    assert.dom(this.element).hasText('template block text');
 +    assert.dom('article').hasClass('rental');
 +    assert.dom('article h3').containsText('About Grand Old Mansion');
 +    assert.dom('article .detail.owner').containsText('Veruca Salt');

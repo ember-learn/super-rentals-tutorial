@@ -97,27 +97,6 @@ ember test --path dist
 git add tests/unit/models/rental-test.js
 ```
 
-<!-- patch for https://github.com/emberjs/data/issues/7418 -->
-
-```run:file:patch hidden=true cwd=super-rentals filename=tests/unit/models/rental-test.js
-@@ -3,3 +3,3 @@
-
--module('Unit | Model | rental', function(hooks) {
-+module('Unit | Model | rental', function (hooks) {
-   setupTest(hooks);
-@@ -7,3 +7,3 @@
-   // Replace this with your real tests.
--  test('it exists', function(assert) {
-+  test('it exists', function (assert) {
-     let store = this.owner.lookup('service:store');
-```
-
-```run:command hidden=true cwd=super-rentals
-git add tests/unit/models/rental-test.js
-```
-
-<!-- end patch for https://github.com/emberjs/data/issues/7418 -->
-
 > Zoey says...
 >
 > We could also have used the `ember generate model rental` command in the first place, which would have created both the model and test file for us.

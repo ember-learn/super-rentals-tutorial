@@ -58,29 +58,6 @@ git add app/components/share-button.js
 git add tests/integration/components/share-button-test.js
 ```
 
-<!-- patch for https://github.com/emberjs/ember.js/issues/19333 -->
-
-```run:file:patch hidden=true cwd=super-rentals filename=tests/integration/components/share-button-test.js
-@@ -5,8 +5,8 @@
-
--module('Integration | Component | share-button', function(hooks) {
-+module('Integration | Component | share-button', function (hooks) {
-   setupRenderingTest(hooks);
-
--  test('it renders', async function(assert) {
-+  test('it renders', async function (assert) {
-     // Set any properties with this.set('myProperty', 'value');
--    // Handle any actions with this.set('myAction', function(val) { ... });
-+    // Handle any actions with this.set('myAction', function (val) { ... });
-
-```
-
-```run:command hidden=true cwd=super-rentals
-git add tests/integration/components/share-button-test.js
-```
-
-<!-- end patch for https://github.com/emberjs/ember.js/issues/19333 -->
-
 Let's start with the template that was generated for this component. We already have some markup for the share button in the `<Rental::Detailed>` component we made earlier, so let's just copy that over into our new `<ShareButton>` component.
 
 ```run:file:patch lang=handlebars cwd=super-rentals filename=app/components/share-button.hbs
@@ -109,12 +86,11 @@ We also have a `{{yield}}` inside of our `<a>` tag so that we can customize the 
 Whew! Let's look at the JavaScript class next.
 
 ```run:file:patch lang=js cwd=super-rentals filename=app/components/share-button.js
-@@ -1,4 +1,29 @@
- import Component from '@glimmer/component';
-+
+@@ -3 +3,27 @@
+-export default class ShareButtonComponent extends Component {}
 +const TWEET_INTENT = 'https://twitter.com/intent/tweet';
-
- export default class ShareButtonComponent extends Component {
++
++export default class ShareButtonComponent extends Component {
 +  get currentURL() {
 +    return window.location.href;
 +  }
@@ -138,7 +114,7 @@ Whew! Let's look at the JavaScript class next.
 +
 +    return url;
 +  }
- }
++}
 ```
 
 The key functionality of this class is to build the appropriate URL for the Twitter Web Intent API, which is exposed to the template via the `this.shareURL` getter. It mainly involves "gluing together" the component's arguments and setting the appropriate query params on the resulting URL. Conveniently, the browser provides a handy [`URL` class](https://javascript.info/url) that handles escaping and joining of query params for us.
@@ -299,11 +275,11 @@ We will take advantage of this capability in our component test:
 
 -  test('it renders', async function (assert) {
 -    // Set any properties with this.set('myProperty', 'value');
--    // Handle any actions with this.set('myAction', function (val) { ... });
+-    // Handle any actions with this.set('myAction', function(val) { ... });
 -
 -    await render(hbs`<ShareButton />`);
 -
--    assert.equal(this.element.textContent.trim(), '');
+-    assert.dom(this.element).hasText('');
 +  hooks.beforeEach(function () {
 +    this.owner.register('service:router', MockRouterService);
 +  });
@@ -317,7 +293,7 @@ We will take advantage of this capability in our component test:
 +  test('basic usage', async function (assert) {
 +    await render(hbs`<ShareButton>Tweet this!</ShareButton>`);
 
--    assert.equal(this.element.textContent.trim(), 'template block text');
+-    assert.dom(this.element).hasText('template block text');
 +    assert
 +      .dom('a')
 +      .hasAttribute('target', '_blank')
