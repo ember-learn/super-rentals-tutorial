@@ -47,9 +47,7 @@ This generated a JavaScript file with the same name as our component's template 
 
 > Zoey says...
 >
-> `@glimmer/component`, or *[Glimmer component](../../../upgrading/current-edition/glimmer-components/)*, is one of the several component classes available to use. They are a great starting point whenever you want to add behavior to your components. In this tutorial, we will be using Glimmer components exclusively.
->
-> In general, Glimmer components should be used whenever possible. However, you may also see `@ember/components`, or *[classic components](https://ember-learn.github.io/ember-octane-vs-classic-cheat-sheet/)*, used in older apps. You can tell them apart by looking at their import path (which is helpful for looking up the respective documentation, as they have different and incompatible APIs).
+> `@glimmer/component`, or *[Glimmer component](../../../upgrading/current-edition/glimmer-components/)*, is one of the several component classes available to use. In older apps or blog articles, you may also see `@ember/components`, or *[classic components](https://ember-learn.github.io/ember-octane-vs-classic-cheat-sheet/)*, which are deprecated. You can tell them apart by looking at their import path (which is helpful for looking up the respective documentation, as they have different and incompatible APIs).
 
 Ember will create an *[instance][TODO: link to instance]* of the class whenever our component is invoked. We can use that instance to store our state:
 
