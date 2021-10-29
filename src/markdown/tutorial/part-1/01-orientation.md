@@ -192,6 +192,19 @@ del package.json
 
 ```
 
+<!-- BEGIN patch: waiting for https://github.com/emberjs/data/pull/7667 backport -->
+
+```run:command hidden=true cwd=super-rentals
+#[cfg(unix)]
+if $(ember --version | grep "ember-cli: 4.0.0"); then
+  yarn upgrade ember-data@~4.1.0-alpha.10;
+  git add package.json;
+  git add yarn.lock;
+fi
+```
+
+<!-- END patch: waiting for https://github.com/emberjs/data/pull/7667 backport -->
+
 ```run:command hidden=true cwd=super-rentals
 yarn test
 git add app/index.html
