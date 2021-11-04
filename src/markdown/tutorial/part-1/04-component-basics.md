@@ -265,17 +265,17 @@ But what kind of test? We *could* write a component test for the `<NavBar>` by i
 
 ```run:file:patch lang=js cwd=super-rentals filename=tests/acceptance/super-rentals-test.js
 @@ -11,2 +11,4 @@
-     assert.equal(currentURL(), '/');
+     assert.strictEqual(currentURL(), '/');
 +    assert.dom('nav').exists();
 +    assert.dom('h1').hasText('SuperRentals');
      assert.dom('h2').hasText('Welcome to Super Rentals!');
 @@ -23,2 +25,4 @@
-     assert.equal(currentURL(), '/about');
+     assert.strictEqual(currentURL(), '/about');
 +    assert.dom('nav').exists();
 +    assert.dom('h1').hasText('SuperRentals');
      assert.dom('h2').hasText('About Super Rentals');
 @@ -35,2 +39,4 @@
-     assert.equal(currentURL(), '/getting-in-touch');
+     assert.strictEqual(currentURL(), '/getting-in-touch');
 +    assert.dom('nav').exists();
 +    assert.dom('h1').hasText('SuperRentals');
      assert.dom('h2').hasText('Contact Us');
@@ -291,13 +291,13 @@ But what kind of test? We *could* write a component test for the `<NavBar>` by i
 +    assert.dom('nav a.menu-contact').hasText('Contact');
 +
 +    await click('nav a.menu-about');
-+    assert.equal(currentURL(), '/about');
++    assert.strictEqual(currentURL(), '/about');
 +
 +    await click('nav a.menu-contact');
-+    assert.equal(currentURL(), '/getting-in-touch');
++    assert.strictEqual(currentURL(), '/getting-in-touch');
 +
 +    await click('nav a.menu-index');
-+    assert.equal(currentURL(), '/');
++    assert.strictEqual(currentURL(), '/');
 +  });
  });
 ```

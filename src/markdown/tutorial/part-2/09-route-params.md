@@ -333,13 +333,13 @@ Finally, let's add a `rental` template to actually *invoke* our `<Rental::Detail
 +    assert.dom('.rental').exists({ count: 3 });
 +
 +    await click('.rental:first-of-type a');
-+    assert.equal(currentURL(), '/rentals/grand-old-mansion');
++    assert.strictEqual(currentURL(), '/rentals/grand-old-mansion');
 +  });
 +
 +  test('visiting /rentals/grand-old-mansion', async function (assert) {
 +    await visit('/rentals/grand-old-mansion');
 +
-+    assert.equal(currentURL(), '/rentals/grand-old-mansion');
++    assert.strictEqual(currentURL(), '/rentals/grand-old-mansion');
 +    assert.dom('nav').exists();
 +    assert.dom('h1').containsText('SuperRentals');
 +    assert.dom('h2').containsText('Grand Old Mansion');
