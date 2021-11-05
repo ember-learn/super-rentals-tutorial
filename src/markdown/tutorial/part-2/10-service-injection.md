@@ -324,22 +324,20 @@ git add tests/integration/components/share-button-test.js
 While we are here, let's add some more tests for the various functionalities of the `<ShareButton>` component:
 
 ```run:file:patch lang=js cwd=super-rentals filename=tests/integration/components/share-button-test.js
-@@ -3,3 +3,3 @@
- import Service from '@ember/service';
+@@ -4 +4 @@ 
+import Service from '@ember/service';
 -import { render } from '@ember/test-helpers';
 +import { find, render } from '@ember/test-helpers';
- import { hbs } from 'ember-cli-htmlbars';
-@@ -17,2 +17,8 @@
-     this.owner.register('service:router', MockRouterService);
+@@ -17,0 +18,6 @@ module('Integration | Component | share-button', function (hooks) {
 +
 +    this.tweetParam = (param) => {
 +      let link = find('a');
 +      let url = new URL(link.href);
 +      return url.searchParams.get(param);
 +    };
-   });
-@@ -26,8 +32,3 @@
-       .hasAttribute('rel', 'external nofollow noopener noreferrer')
+@@ -25,7 +31 @@ 
+module('Integration | Component | share-button', function (hooks) {
+-      .hasAttribute('rel', 'external nofollow noopener noreferrer')
 -      .hasAttribute(
 -        'href',
 -        `https://twitter.com/intent/tweet?url=${encodeURIComponent(
@@ -347,14 +345,11 @@ While we are here, let's add some more tests for the various functionalities of 
 -        )}`
 -      )
 +      .hasAttribute('href', /^https:\/\/twitter\.com\/intent\/tweet/)
-       .hasClass('share')
-@@ -35,2 +36,53 @@
-       .containsText('Tweet this!');
+@@ -34,0 +35,50 @@ 
+module('Integration | Component | share-button', function (hooks) {
 +
-+    assert.strictEqual(
-+      this.tweetParam('url'),
-+      new URL('/foo/bar?baz=true#some-section', window.location.origin)
-+    );
++    let url = new URL('/foo/bar?baz=true#some-section', window.location.origin);
++    assert.strictEqual(this.tweetParam('url'), url.href);
 +  });
 +
 +  test('it supports passing @text', async function (assert) {
@@ -401,7 +396,6 @@ While we are here, let's add some more tests for the various functionalities of 
 +      .hasAttribute('target', '_blank')
 +      .hasAttribute('rel', 'external nofollow noopener noreferrer')
 +      .hasAttribute('href', /^https:\/\/twitter\.com\/intent\/tweet/);
-   });
 ```
 
 The main goal here is to test the key functionalities of the component individually. That way, if any of these features regresses in the future, these tests can help pinpoint the source of the problem for us. Because a lot of these tests require parsing the URL and accessing its query params, we setup our own `this.tweetParam` test helper function in the `beforeEach` hook. This pattern allows us to easily share functionality between tests. We were even able to refactor the previous test using this new helper!
