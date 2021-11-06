@@ -328,7 +328,8 @@ While we are here, let's add some more tests for the various functionalities of 
 import Service from '@ember/service';
 -import { render } from '@ember/test-helpers';
 +import { find, render } from '@ember/test-helpers';
-@@ -17,0 +18,6 @@ module('Integration | Component | share-button', function (hooks) {
+@@ -17,0 +18,6 @@ 
+module('Integration | Component | share-button', function (hooks) {
 +
 +    this.tweetParam = (param) => {
 +      let link = find('a');
