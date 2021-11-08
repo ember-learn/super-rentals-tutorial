@@ -350,7 +350,7 @@ While we are here, let's add some more tests for the various functionalities of 
 @@ -33,2 +36,51 @@
        .containsText('Tweet this!');
 +
-+    assert.equal(this.tweetParam('url'), MOCK_URL.href);
++    assert.strictEqual(this.tweetParam('url'), MOCK_URL.href);
 +  });
 +
 +  test('it supports passing @text', async function (assert) {
@@ -358,7 +358,7 @@ While we are here, let's add some more tests for the various functionalities of 
 +      hbs`<ShareButton @text="Hello Twitter!">Tweet this!</ShareButton>`
 +    );
 +
-+    assert.equal(this.tweetParam('text'), 'Hello Twitter!');
++    assert.strictEqual(this.tweetParam('text'), 'Hello Twitter!');
 +  });
 +
 +  test('it supports passing @hashtags', async function (assert) {
@@ -366,12 +366,12 @@ While we are here, let's add some more tests for the various functionalities of 
 +      hbs`<ShareButton @hashtags="foo,bar,baz">Tweet this!</ShareButton>`
 +    );
 +
-+    assert.equal(this.tweetParam('hashtags'), 'foo,bar,baz');
++    assert.strictEqual(this.tweetParam('hashtags'), 'foo,bar,baz');
 +  });
 +
 +  test('it supports passing @via', async function (assert) {
 +    await render(hbs`<ShareButton @via="emberjs">Tweet this!</ShareButton>`);
-+    assert.equal(this.tweetParam('via'), 'emberjs');
++    assert.strictEqual(this.tweetParam('via'), 'emberjs');
 +  });
 +
 +  test('it supports adding extra classes', async function (assert) {
