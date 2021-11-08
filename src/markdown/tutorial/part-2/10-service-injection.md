@@ -262,9 +262,12 @@ We will take advantage of this capability in our component test:
  import { setupRenderingTest } from 'ember-qunit';
 +import Service from '@ember/service';
  import { render } from '@ember/test-helpers';
-@@ -5,2 +6,10 @@
+@@ -5,2 +6,13 @@
 
-+const MOCK_URL = new URL('/foo/bar?baz=true#some-section', window.location.origin);
++const MOCK_URL = new URL(
++  '/foo/bar?baz=true#some-section',
++  window.location.origin
++);
 +
 +class MockRouterService extends Service {
 +  get currentURL() {
@@ -273,7 +276,7 @@ We will take advantage of this capability in our component test:
 +}
 +
  module('Integration | Component | share-button', function (hooks) {
-@@ -8,18 +17,20 @@
+@@ -8,18 +20,20 @@
 
 -  test('it renders', async function (assert) {
 -    // Set any properties with this.set('myProperty', 'value');
@@ -329,7 +332,7 @@ While we are here, let's add some more tests for the various functionalities of 
 -import { render } from '@ember/test-helpers';
 +import { find, render } from '@ember/test-helpers';
  import { hbs } from 'ember-cli-htmlbars';
-@@ -19,2 +19,8 @@
+@@ -22,2 +22,8 @@
      this.owner.register('service:router', MockRouterService);
 +
 +    this.tweetParam = (param) => {
@@ -338,7 +341,7 @@ While we are here, let's add some more tests for the various functionalities of 
 +      return url.searchParams.get(param);
 +    };
    });
-@@ -28,6 +34,3 @@
+@@ -31,6 +37,3 @@
        .hasAttribute('rel', 'external nofollow noopener noreferrer')
 -      .hasAttribute(
 -        'href',
@@ -346,7 +349,7 @@ While we are here, let's add some more tests for the various functionalities of 
 -      )
 +      .hasAttribute('href', /^https:\/\/twitter\.com\/intent\/tweet/)
        .hasClass('share')
-@@ -35,2 +38,50 @@
+@@ -38,2 +41,50 @@
        .containsText('Tweet this!');
 +
 +      assert.strictEqual(this.tweetParam('url'), MOCK_URL.href);
