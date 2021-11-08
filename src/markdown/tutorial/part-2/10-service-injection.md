@@ -262,31 +262,30 @@ We will take advantage of this capability in our component test:
  import { setupRenderingTest } from 'ember-qunit';
 +import Service from '@ember/service';
  import { render } from '@ember/test-helpers';
-@@ -5,2 +6,11 @@
-
-+
+@@ -5,21 +6,31 @@
+ 
+-module('Integration | Component | share-button', function (hooks) {
+-  setupRenderingTest(hooks);
 +const MOCK_URL = new URL('/foo/bar?baz=true#some-section', window.location.origin);
-+
+ 
+-  test('it renders', async function (assert) {
+-    // Set any properties with this.set('myProperty', 'value');
+-    // Handle any actions with this.set('myAction', function(val) { ... });
 +class MockRouterService extends Service {
 +  get currentURL() {
 +    return '/foo/bar?baz=true#some-section';
 +  }
 +}
-+
- module('Integration | Component | share-button', function (hooks) {
-@@ -8,18 +15,20 @@
-
--  test('it renders', async function (assert) {
--    // Set any properties with this.set('myProperty', 'value');
--    // Handle any actions with this.set('myAction', function(val) { ... });
--
+ 
 -    await render(hbs`<ShareButton />`);
--
++module('Integration | Component | share-button', function (hooks) {
++  setupRenderingTest(hooks);
+ 
 -    assert.dom(this.element).hasText('');
 +  hooks.beforeEach(function () {
 +    this.owner.register('service:router', MockRouterService);
 +  });
-
+ 
 -    // Template block usage:
 -    await render(hbs`
 -      <ShareButton>
@@ -295,7 +294,7 @@ We will take advantage of this capability in our component test:
 -    `);
 +  test('basic usage', async function (assert) {
 +    await render(hbs`<ShareButton>Tweet this!</ShareButton>`);
-
+ 
 -    assert.dom(this.element).hasText('template block text');
 +    assert
 +      .dom('a')
@@ -330,7 +329,7 @@ While we are here, let's add some more tests for the various functionalities of 
 -import { render } from '@ember/test-helpers';
 +import { find, render } from '@ember/test-helpers';
  import { hbs } from 'ember-cli-htmlbars';
-@@ -17,2 +17,8 @@
+@@ -19,2 +19,8 @@
      this.owner.register('service:router', MockRouterService);
 +
 +    this.tweetParam = (param) => {
@@ -347,7 +346,7 @@ While we are here, let's add some more tests for the various functionalities of 
 -      )
 +      .hasAttribute('href', /^https:\/\/twitter\.com\/intent\/tweet/)
        .hasClass('share')
-@@ -33,2 +36,51 @@
+@@ -35,2 +38,50 @@
        .containsText('Tweet this!');
 +
 +    assert.strictEqual(this.tweetParam('url'), MOCK_URL.href);
