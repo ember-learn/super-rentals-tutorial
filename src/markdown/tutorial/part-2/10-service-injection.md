@@ -262,8 +262,11 @@ We will take advantage of this capability in our component test:
  import { setupRenderingTest } from 'ember-qunit';
 +import Service from '@ember/service';
  import { render } from '@ember/test-helpers';
-@@ -5,2 +6,8 @@
+@@ -5,2 +6,11 @@
 
++
++const MOCK_URL = new URL('/foo/bar?baz=true#some-section', window.location.origin);
++
 +class MockRouterService extends Service {
 +  get currentURL() {
 +    return '/foo/bar?baz=true#some-section';
@@ -271,7 +274,7 @@ We will take advantage of this capability in our component test:
 +}
 +
  module('Integration | Component | share-button', function (hooks) {
-@@ -8,18 +15,22 @@
+@@ -8,18 +15,20 @@
 
 -  test('it renders', async function (assert) {
 -    // Set any properties with this.set('myProperty', 'value');
@@ -300,9 +303,7 @@ We will take advantage of this capability in our component test:
 +      .hasAttribute('rel', 'external nofollow noopener noreferrer')
 +      .hasAttribute(
 +        'href',
-+        `https://twitter.com/intent/tweet?url=${encodeURIComponent(
-+          new URL('/foo/bar?baz=true#some-section', window.location.origin)
-+        )}`
++        `https://twitter.com/intent/tweet?url=${encodeURIComponent(MOCK_URL.href)}`
 +      )
 +      .hasClass('share')
 +      .hasClass('button')
@@ -324,33 +325,32 @@ git add tests/integration/components/share-button-test.js
 While we are here, let's add some more tests for the various functionalities of the `<ShareButton>` component:
 
 ```run:file:patch lang=js cwd=super-rentals filename=tests/integration/components/share-button-test.js
-@@ -4 +4 @@ 
-import Service from '@ember/service';
+@@ -3,3 +3,3 @@
+ import Service from '@ember/service';
 -import { render } from '@ember/test-helpers';
 +import { find, render } from '@ember/test-helpers';
-@@ -17,0 +18,6 @@ 
-module('Integration | Component | share-button', function (hooks) {
+ import { hbs } from 'ember-cli-htmlbars';
+@@ -17,2 +17,8 @@
+     this.owner.register('service:router', MockRouterService);
 +
 +    this.tweetParam = (param) => {
 +      let link = find('a');
 +      let url = new URL(link.href);
 +      return url.searchParams.get(param);
 +    };
-@@ -25,7 +31 @@ 
-module('Integration | Component | share-button', function (hooks) {
--      .hasAttribute('rel', 'external nofollow noopener noreferrer')
+   });
+@@ -26,6 +32,3 @@
+       .hasAttribute('rel', 'external nofollow noopener noreferrer')
 -      .hasAttribute(
 -        'href',
--        `https://twitter.com/intent/tweet?url=${encodeURIComponent(
--          new URL('/foo/bar?baz=true#some-section', window.location.origin)
--        )}`
+-        `https://twitter.com/intent/tweet?url=${encodeURIComponent(MOCK_URL.href)}`
 -      )
 +      .hasAttribute('href', /^https:\/\/twitter\.com\/intent\/tweet/)
-@@ -34,0 +35,50 @@ 
-module('Integration | Component | share-button', function (hooks) {
+       .hasClass('share')
+@@ -33,2 +36,51 @@
+       .containsText('Tweet this!');
 +
-+    let url = new URL('/foo/bar?baz=true#some-section', window.location.origin);
-+    assert.strictEqual(this.tweetParam('url'), url.href);
++    assert.equal(this.tweetParam('url'), MOCK_URL.href);
 +  });
 +
 +  test('it supports passing @text', async function (assert) {
@@ -358,7 +358,7 @@ module('Integration | Component | share-button', function (hooks) {
 +      hbs`<ShareButton @text="Hello Twitter!">Tweet this!</ShareButton>`
 +    );
 +
-+    assert.strictEqual(this.tweetParam('text'), 'Hello Twitter!');
++    assert.equal(this.tweetParam('text'), 'Hello Twitter!');
 +  });
 +
 +  test('it supports passing @hashtags', async function (assert) {
@@ -366,12 +366,12 @@ module('Integration | Component | share-button', function (hooks) {
 +      hbs`<ShareButton @hashtags="foo,bar,baz">Tweet this!</ShareButton>`
 +    );
 +
-+    assert.strictEqual(this.tweetParam('hashtags'), 'foo,bar,baz');
++    assert.equal(this.tweetParam('hashtags'), 'foo,bar,baz');
 +  });
 +
 +  test('it supports passing @via', async function (assert) {
 +    await render(hbs`<ShareButton @via="emberjs">Tweet this!</ShareButton>`);
-+    assert.strictEqual(this.tweetParam('via'), 'emberjs');
++    assert.equal(this.tweetParam('via'), 'emberjs');
 +  });
 +
 +  test('it supports adding extra classes', async function (assert) {
@@ -397,6 +397,7 @@ module('Integration | Component | share-button', function (hooks) {
 +      .hasAttribute('target', '_blank')
 +      .hasAttribute('rel', 'external nofollow noopener noreferrer')
 +      .hasAttribute('href', /^https:\/\/twitter\.com\/intent\/tweet/);
+   });
 ```
 
 The main goal here is to test the key functionalities of the component individually. That way, if any of these features regresses in the future, these tests can help pinpoint the source of the problem for us. Because a lot of these tests require parsing the URL and accessing its query params, we setup our own `this.tweetParam` test helper function in the `beforeEach` hook. This pattern allows us to easily share functionality between tests. We were even able to refactor the previous test using this new helper!
