@@ -352,7 +352,7 @@ While we are here, let's add some more tests for the various functionalities of 
 @@ -38,2 +41,50 @@
        .containsText('Tweet this!');
 +
-+      assert.strictEqual(this.tweetParam('url'), MOCK_URL.href);
++    assert.strictEqual(this.tweetParam('url'), MOCK_URL.href);
 +  });
 +
 +  test('it supports passing @text', async function (assert) {
