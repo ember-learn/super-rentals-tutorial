@@ -278,23 +278,23 @@ We will take advantage of this capability in our component test:
 -  test('it renders', async function (assert) {
 -    // Set any properties with this.set('myProperty', 'value');
 -    // Handle any actions with this.set('myAction', function(val) { ... });
+-
+-    await render(hbs`<ShareButton />`);
+-
+-    assert.dom(this.element).hasText('');
 +  hooks.beforeEach(function () {
 +    this.owner.register('service:router', MockRouterService);
 +  });
 
--    await render(hbs`<ShareButton />`);
-+  test('basic usage', async function (assert) {
-+    await render(hbs`<ShareButton>Tweet this!</ShareButton>`);
-
--    assert.dom(this.element).hasText('');
--
 -    // Template block usage:
 -    await render(hbs`
 -      <ShareButton>
 -        template block text
 -      </ShareButton>
 -    `);
--
++  test('basic usage', async function (assert) {
++    await render(hbs`<ShareButton>Tweet this!</ShareButton>`);
+
 -    assert.dom(this.element).hasText('template block text');
 +    assert
 +      .dom('a')
