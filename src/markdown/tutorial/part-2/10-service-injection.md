@@ -257,17 +257,16 @@ More importantly, services are designed to be easily *swappable*. In our compone
 
 We will take advantage of this capability in our component test:
 
-```run:file:patch lang=js cwd=super-rentals filename=tests/integration/components/share-button-test.js
 @@ -2,2 +2,3 @@
  import { setupRenderingTest } from 'ember-qunit';
 +import Service from '@ember/service';
  import { render } from '@ember/test-helpers';
-@@ -5,21 +6,31 @@
- 
+@@ -5,21 +6,33 @@ import { hbs } from 'ember-cli-htmlbars';
+
 -module('Integration | Component | share-button', function (hooks) {
 -  setupRenderingTest(hooks);
 +const MOCK_URL = new URL('/foo/bar?baz=true#some-section', window.location.origin);
- 
+
 -  test('it renders', async function (assert) {
 -    // Set any properties with this.set('myProperty', 'value');
 -    // Handle any actions with this.set('myAction', function(val) { ... });
@@ -276,15 +275,16 @@ We will take advantage of this capability in our component test:
 +    return '/foo/bar?baz=true#some-section';
 +  }
 +}
- 
+
 -    await render(hbs`<ShareButton />`);
 +module('Integration | Component | share-button', function (hooks) {
 +  setupRenderingTest(hooks);
- 
+
 -    assert.dom(this.element).hasText('');
 +  hooks.beforeEach(function () {
 +    this.owner.register('service:router', MockRouterService);
 +  });
+
 -    // Template block usage:
 -    await render(hbs`
 -      <ShareButton>
@@ -293,6 +293,7 @@ We will take advantage of this capability in our component test:
 -    `);
 +  test('basic usage', async function (assert) {
 +    await render(hbs`<ShareButton>Tweet this!</ShareButton>`);
+
 -    assert.dom(this.element).hasText('template block text');
 +    assert
 +      .dom('a')
@@ -300,13 +301,14 @@ We will take advantage of this capability in our component test:
 +      .hasAttribute('rel', 'external nofollow noopener noreferrer')
 +      .hasAttribute(
 +        'href',
-+        `https://twitter.com/intent/tweet?url=${encodeURIComponent(MOCK_URL.href)}`
++        `https://twitter.com/intent/tweet?url=${encodeURIComponent(
++          new URL('/foo/bar?baz=true#some-section', window.location.origin)
++        )}`
 +      )
 +      .hasClass('share')
 +      .hasClass('button')
 +      .containsText('Tweet this!');
    });
-```
 
 In this component test, we *[registered](../../../applications/dependency-injection/#toc_factory-registrations)* our own router service with Ember in the `beforeEach` hook. When our component is rendered and requests the router service to be injected, it will get an instance of our `MockRouterService` instead of the built-in router service.
 
@@ -336,18 +338,20 @@ While we are here, let's add some more tests for the various functionalities of 
 +      return url.searchParams.get(param);
 +    };
    });
-@@ -26,6 +32,3 @@
+@@ -28,8 +34,3 @@
        .hasAttribute('rel', 'external nofollow noopener noreferrer')
 -      .hasAttribute(
 -        'href',
--        `https://twitter.com/intent/tweet?url=${encodeURIComponent(MOCK_URL.href)}`
+-        `https://twitter.com/intent/tweet?url=${encodeURIComponent(
+-          new URL('/foo/bar?baz=true#some-section', window.location.origin)
+-        )}`
 -      )
 +      .hasAttribute('href', /^https:\/\/twitter\.com\/intent\/tweet/)
        .hasClass('share')
-@@ -35,2 +38,50 @@
+@@ -37,2 +38,50 @@
        .containsText('Tweet this!');
 +
-+    assert.strictEqual(this.tweetParam('url'), MOCK_URL.href);
++      assert.strictEqual(this.tweetParam('url'), MOCK_URL.href);
 +  });
 +
 +  test('it supports passing @text', async function (assert) {
