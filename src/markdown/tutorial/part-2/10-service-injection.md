@@ -285,7 +285,6 @@ We will take advantage of this capability in our component test:
 +  hooks.beforeEach(function () {
 +    this.owner.register('service:router', MockRouterService);
 +  });
- 
 -    // Template block usage:
 -    await render(hbs`
 -      <ShareButton>
@@ -294,7 +293,6 @@ We will take advantage of this capability in our component test:
 -    `);
 +  test('basic usage', async function (assert) {
 +    await render(hbs`<ShareButton>Tweet this!</ShareButton>`);
- 
 -    assert.dom(this.element).hasText('template block text');
 +    assert
 +      .dom('a')
