@@ -129,19 +129,19 @@ The generator created some boilerplate code for us, which serves as a pretty goo
 +        'This grand old mansion sits on over 100 acres of rolling hills and dense redwood forests.',
 +    });
 +
-+    assert.equal(rental.type, 'Standalone');
++    assert.strictEqual(rental.type, 'Standalone');
 +
 +    rental.category = 'Condo';
-+    assert.equal(rental.type, 'Community');
++    assert.strictEqual(rental.type, 'Community');
 +
 +    rental.category = 'Townhouse';
-+    assert.equal(rental.type, 'Community');
++    assert.strictEqual(rental.type, 'Community');
 +
 +    rental.category = 'Apartment';
-+    assert.equal(rental.type, 'Community');
++    assert.strictEqual(rental.type, 'Community');
 +
 +    rental.category = 'Estate';
-+    assert.equal(rental.type, 'Standalone');
++    assert.strictEqual(rental.type, 'Standalone');
    });
 ```
 

@@ -174,9 +174,9 @@ To be sure, let's add some tests! Let's start with an acceptance test:
 +    let button = find('.share.button');
 +
 +    let tweetURL = new URL(button.href);
-+    assert.equal(tweetURL.host, 'twitter.com');
++    assert.strictEqual(tweetURL.host, 'twitter.com');
 +
-+    assert.equal(
++    assert.strictEqual(
 +      tweetURL.searchParams.get('url'),
 +      `${window.location.origin}/rentals/grand-old-mansion`
 +    );
@@ -202,7 +202,7 @@ wait  #qunit-banner.qunit-fail
 
 Looking at the failure closely, the problem seems to be that the component had captured `http://localhost:4200/tests` as the "current page's URL". The issue here is that the `<ShareButton>` component uses `window.location.href` to capture the current URL. Because we are running our tests at `http://localhost:4200/tests`, that's what we got. *Technically* it's not wrong, but this is certainly not what we meant. Gotta love computers!
 
-This brings up an interesting question – why does the `currentURL()` test helper not have the same problem? In our test, we have been writing assertions like `assert.equal(currentURL(), '/about');`, and those assertions did not fail.
+This brings up an interesting question – why does the `currentURL()` test helper not have the same problem? In our test, we have been writing assertions like `assert.strictEqual(currentURL(), '/about');`, and those assertions did not fail.
 
 It turns out that this is something Ember's router handled for us. In an Ember app, the router is responsible for handling navigation and maintaining the URL. For example, when you click on a `<LinkTo>` component, it will ask the router to execute a *[route transition](../../../routing/preventing-and-retrying-transitions/)*. Normally, the router is set up to update the browser's address bar whenever it transitions into a new route. That way, your users will be able to use the browser's back button and bookmark functionality just like any other webpage.
 
@@ -262,8 +262,13 @@ We will take advantage of this capability in our component test:
  import { setupRenderingTest } from 'ember-qunit';
 +import Service from '@ember/service';
  import { render } from '@ember/test-helpers';
-@@ -5,2 +6,8 @@
+@@ -5,2 +6,13 @@
 
++const MOCK_URL = new URL(
++  '/foo/bar?baz=true#some-section',
++  window.location.origin
++);
++
 +class MockRouterService extends Service {
 +  get currentURL() {
 +    return '/foo/bar?baz=true#some-section';
@@ -271,7 +276,7 @@ We will take advantage of this capability in our component test:
 +}
 +
  module('Integration | Component | share-button', function (hooks) {
-@@ -8,18 +15,22 @@
+@@ -8,18 +20,20 @@
 
 -  test('it renders', async function (assert) {
 -    // Set any properties with this.set('myProperty', 'value');
@@ -300,9 +305,7 @@ We will take advantage of this capability in our component test:
 +      .hasAttribute('rel', 'external nofollow noopener noreferrer')
 +      .hasAttribute(
 +        'href',
-+        `https://twitter.com/intent/tweet?url=${encodeURIComponent(
-+          new URL('/foo/bar?baz=true#some-section', window.location.origin)
-+        )}`
++        `https://twitter.com/intent/tweet?url=${encodeURIComponent(MOCK_URL.href)}`
 +      )
 +      .hasClass('share')
 +      .hasClass('button')
@@ -329,7 +332,7 @@ While we are here, let's add some more tests for the various functionalities of 
 -import { render } from '@ember/test-helpers';
 +import { find, render } from '@ember/test-helpers';
  import { hbs } from 'ember-cli-htmlbars';
-@@ -17,2 +17,8 @@
+@@ -22,2 +22,8 @@
      this.owner.register('service:router', MockRouterService);
 +
 +    this.tweetParam = (param) => {
@@ -338,23 +341,18 @@ While we are here, let's add some more tests for the various functionalities of 
 +      return url.searchParams.get(param);
 +    };
    });
-@@ -26,8 +32,3 @@
+@@ -31,6 +37,3 @@
        .hasAttribute('rel', 'external nofollow noopener noreferrer')
 -      .hasAttribute(
 -        'href',
--        `https://twitter.com/intent/tweet?url=${encodeURIComponent(
--          new URL('/foo/bar?baz=true#some-section', window.location.origin)
--        )}`
+-        `https://twitter.com/intent/tweet?url=${encodeURIComponent(MOCK_URL.href)}`
 -      )
 +      .hasAttribute('href', /^https:\/\/twitter\.com\/intent\/tweet/)
        .hasClass('share')
-@@ -35,2 +36,53 @@
+@@ -38,2 +41,50 @@
        .containsText('Tweet this!');
 +
-+    assert.equal(
-+      this.tweetParam('url'),
-+      new URL('/foo/bar?baz=true#some-section', window.location.origin)
-+    );
++    assert.strictEqual(this.tweetParam('url'), MOCK_URL.href);
 +  });
 +
 +  test('it supports passing @text', async function (assert) {
@@ -362,7 +360,7 @@ While we are here, let's add some more tests for the various functionalities of 
 +      hbs`<ShareButton @text="Hello Twitter!">Tweet this!</ShareButton>`
 +    );
 +
-+    assert.equal(this.tweetParam('text'), 'Hello Twitter!');
++    assert.strictEqual(this.tweetParam('text'), 'Hello Twitter!');
 +  });
 +
 +  test('it supports passing @hashtags', async function (assert) {
@@ -370,12 +368,12 @@ While we are here, let's add some more tests for the various functionalities of 
 +      hbs`<ShareButton @hashtags="foo,bar,baz">Tweet this!</ShareButton>`
 +    );
 +
-+    assert.equal(this.tweetParam('hashtags'), 'foo,bar,baz');
++    assert.strictEqual(this.tweetParam('hashtags'), 'foo,bar,baz');
 +  });
 +
 +  test('it supports passing @via', async function (assert) {
 +    await render(hbs`<ShareButton @via="emberjs">Tweet this!</ShareButton>`);
-+    assert.equal(this.tweetParam('via'), 'emberjs');
++    assert.strictEqual(this.tweetParam('via'), 'emberjs');
 +  });
 +
 +  test('it supports adding extra classes', async function (assert) {
