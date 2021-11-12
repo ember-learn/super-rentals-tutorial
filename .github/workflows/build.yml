@@ -18,7 +18,7 @@ jobs:
       fail-fast: false
       matrix:
         channel:
-          # - release TODO: Re-enable once 4.0 is released
+          - release
           - beta
     steps:
       - name: Set up Git
