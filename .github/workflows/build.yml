@@ -18,8 +18,8 @@ jobs:
       fail-fast: false
       matrix:
         channel:
-          # - release TODO: Re-enable once 4.0 is released
-          - beta
+          - release
+          # - beta TODO re-enable once CLI no longer has deprecated behavior on generation
     steps:
       - name: Set up Git
         run: |
