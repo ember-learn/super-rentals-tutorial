@@ -19,7 +19,7 @@ jobs:
       matrix:
         channel:
           - release
-          - beta
+          # - beta TODO re-enable once CLI no longer has deprecated behavior on generation
     steps:
       - name: Set up Git
         run: |
