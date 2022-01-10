@@ -214,7 +214,7 @@ To fix our problem, we would need to do the same. Ember exposes this internal st
 
 ```run:file:patch lang=js cwd=super-rentals filename=app/components/share-button.js
 @@ -1 +1,2 @@
-+import { inject as service } from '@ember/service';
++import { service } from '@ember/service';
  import Component from '@glimmer/component';
 @@ -5,4 +6,6 @@
  export default class ShareButtonComponent extends Component {
