@@ -1,4 +1,4 @@
-import { BlockContent, Blockquote, HTML } from 'mdast';
+import { BlockContent, Blockquote, DefinitionContent, HTML } from 'mdast';
 import { Position } from 'unist';
 import { VFile } from 'vfile';
 import BaseWalker from '../../walker';
@@ -23,7 +23,7 @@ function isZoeySays({ children }: Blockquote): boolean {
     firstParagraph.value === ZOEY_SAYS;
 }
 
-async function render(nodes: BlockContent[], position?: Position): Promise<HTML> {
+async function render(nodes: Array<BlockContent | DefinitionContent>, position?: Position): Promise<HTML> {
   let content = [];
 
   for (let node of nodes) {
