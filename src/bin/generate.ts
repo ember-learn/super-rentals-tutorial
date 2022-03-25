@@ -44,7 +44,7 @@ async function group<T>(name: string, callback: () => Promise<T>): Promise<T> {
 async function run(processor: Processor, inputPath: string, outputPath: string, options: VFileOptions): Promise<void> {
   let contents = await readFile(inputPath, { encoding: 'utf8' });
   let result = await processor.process({ ...options, contents });
-  await writeFile(outputPath, result, { encoding: 'utf8' });
+  await writeFile(outputPath, result.toString(), { encoding: 'utf8' });
 }
 
 async function main() {
