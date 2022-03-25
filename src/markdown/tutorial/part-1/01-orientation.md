@@ -98,7 +98,7 @@ del package.json
 ```
 
 ```run:file:patch hidden=true cwd=super-rentals filename=tests/index.html
-@@ -28,2 +28,91 @@
+@@ -28,2 +28,93 @@
      <script src="{{rootURL}}assets/tests.js"></script>
 +    <script>
 +      if (QUnit.urlParams.deterministic) {
@@ -178,14 +178,16 @@ del package.json
 +          }
 +        });
 +
-+        QUnit.config.callbacks.done.unshift(details => {
-+          details.runtime = totalRuntime;
-+        });
-+
 +        QUnit.begin(details => {
 +          let ua = document.getElementById('qunit-userAgent');
 +          ua.innerText = ua.innerText.replace(/QUnit [0-9\.]+/g, 'QUnit');
 +          ua.innerText = ua.innerText.replace(/(WebKit|Chrome|Safari)\/[0-9\.]+/g, '$1');
++        });
++
++        QUnit.on('runEnd', () => {
++          let display = document.getElementById('qunit-testresult-display');
++          display.innerText = display.innerText
++            .replace(/in [.0-9]+ milliseconds/, `in ${totalRuntime} milliseconds`);
 +        });
 +      }
 +    </script>
