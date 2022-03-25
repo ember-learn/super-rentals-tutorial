@@ -358,6 +358,10 @@ body {
 /* ...snip... */
 ```
 
+> Zoey says...
+>
+> The CSS file is pretty long, so we didn't show the entire file here. Be sure to use the link above to download the complete file!
+
 If you are familiar with CSS, feel free to customize these styles to your liking! Just keep in mind that you may see some visual differences going forward, should you choose to do so.
 
 When you are ready, save the CSS file; our trusty development server should pick it up and refresh our page right away. No more unstyled content!
