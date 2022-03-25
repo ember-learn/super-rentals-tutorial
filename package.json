@@ -66,7 +66,7 @@
     "postbuild": "yarn lint:md:dist"
   },
   "volta": {
-    "node": "12.22.1",
+    "node": "14.19.1",
     "yarn": "1.22.10"
   }
 }
