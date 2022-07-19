@@ -62,7 +62,7 @@ Let's open the generated test file and replace the boilerplate test with our own
  import { module, test } from 'qunit';
 -import { visit, currentURL } from '@ember/test-helpers';
 +import { click, visit, currentURL } from '@ember/test-helpers';
- import { setupApplicationTest } from 'ember-qunit';
+ import { setupApplicationTest } from 'super-rentals/tests/helpers';
 @@ -7,6 +7,12 @@
 
 -  test('visiting /super-rentals', async function (assert) {

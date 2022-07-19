@@ -166,7 +166,7 @@ To be sure, let's add some tests! Let's start with an acceptance test:
  import { module, test } from 'qunit';
 -import { click, visit, currentURL } from '@ember/test-helpers';
 +import { click, find, visit, currentURL } from '@ember/test-helpers';
- import { setupApplicationTest } from 'ember-qunit';
+ import { setupApplicationTest } from 'super-rentals/tests/helpers';
 @@ -37,2 +37,13 @@
      assert.dom('.rental.detailed').exists();
 +    assert.dom('.share.button').hasText('Share on Twitter');
@@ -259,7 +259,7 @@ We will take advantage of this capability in our component test:
 
 ```run:file:patch lang=js cwd=super-rentals filename=tests/integration/components/share-button-test.js
 @@ -2,2 +2,3 @@
- import { setupRenderingTest } from 'ember-qunit';
+ import { setupRenderingTest } from 'super-rentals/tests/helpers';
 +import Service from '@ember/service';
  import { render } from '@ember/test-helpers';
 @@ -5,2 +6,13 @@

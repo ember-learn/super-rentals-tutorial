@@ -234,7 +234,7 @@ Finally, let's write a test for this new behavior:
 
 ```run:file:patch lang=js cwd=super-rentals filename=tests/integration/components/rental/image-test.js
 @@ -2,3 +2,3 @@
- import { setupRenderingTest } from 'ember-qunit';
+ import { setupRenderingTest } from 'super-rentals/tests/helpers';
 -import { render } from '@ember/test-helpers';
 +import { render, click } from '@ember/test-helpers';
  import { hbs } from 'ember-cli-htmlbars';

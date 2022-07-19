@@ -161,7 +161,7 @@ We just added a lot of behavior into a single component, so let's write some tes
 
 ```run:file:patch lang=js cwd=super-rentals filename=tests/integration/components/map-test.js
 @@ -2,4 +2,5 @@
- import { setupRenderingTest } from 'ember-qunit';
+ import { setupRenderingTest } from 'super-rentals/tests/helpers';
 -import { render } from '@ember/test-helpers';
 +import { render, find } from '@ember/test-helpers';
  import { hbs } from 'ember-cli-htmlbars';
