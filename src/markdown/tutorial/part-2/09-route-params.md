@@ -1,7 +1,7 @@
 <!--lint disable no-undefined-references-->
 
 ```run:server:start hidden=true cwd=super-rentals expect="Serving on http://localhost:4200/"
-ember server
+ember serve
 ```
 
 Now that we are fetching real data from our "server", let's add a new feature — dedicated pages for each of our rentals:
@@ -374,7 +374,7 @@ wait  #qunit-banner.qunit-pass
 This page *looks* done, but we have a share button that doesn't actually work. We'll address this in the next chapter.
 
 ```run:server:stop
-ember server
+ember serve
 ```
 
 ```run:checkpoint cwd=super-rentals
