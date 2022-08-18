@@ -1,7 +1,7 @@
 <!--lint disable no-undefined-references-->
 
 ```run:server:start hidden=true cwd=super-rentals expect="Serving on http://localhost:4200/"
-ember server
+ember serve
 ```
 
 In this chapter, you will *[refactor](../../../components/introducing-components/#toc_breaking-it-into-pieces)* your existing templates to use components. We will also be adding a site-wide navigation bar:
@@ -372,7 +372,7 @@ wait  #qunit-banner.qunit-pass
 ```
 
 ```run:server:stop
-ember server
+ember serve
 ```
 
 ```run:checkpoint cwd=super-rentals
