@@ -16,7 +16,7 @@ While adding the map, you will learn about:
 
 ## Managing Application-level Configurations
 
-We will use the [Mapbox](https://www.mapbox.com) API to generate maps for our rental properties. You can [sign up](https://www.mapbox.com/signup/) for free and without a credit card.
+We will use the [Mapbox](https://www.mapbox.com) API to generate maps for our rental properties. You can [sign up](https://www.mapbox.com/signup/) for free. The signup process does require a credit card, but the expected usage for this project should be well under the threshold for any charges to be incurred.
 
 Mapbox provides a [static map images API](https://docs.mapbox.com/api/maps/#static-images), which serves map images in PNG format. This means that we can generate the appropriate URL for the parameters we want and render the map using a standard `<img>` tag. Pretty neat!
 
