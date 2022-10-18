@@ -56,6 +56,16 @@ yarn ember test
 git add config/environment.js
 ```
 
+> Zoey says...
+>
+> The above described way of storing your MapBox token will expose it on the repository once you upload it. There is a safer way to store your public token, using dotenv:
+> - run ```ember i ember-cli-dotenv```
+> - create a .env file in the root folder and add the intended variable
+> - on the dotenv.js file, add the variables to the clientAllowedKeys array
+> - type ```import ENV from '<your_app_name>/config/environment'``` on the file in which you intend to access the env variable
+> - access it with ```ENV.<env_var>```
+
+
 After saving the changes to our configuration file, we will need to restart our development server to pick up these file changes. Unlike the files we have edited so far, `config/environment.js` is not automatically reloaded.
 
 <!-- TODO: https://github.com/ember-cli/ember-cli/issues/8782 -->
