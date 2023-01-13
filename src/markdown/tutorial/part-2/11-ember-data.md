@@ -15,6 +15,10 @@ During this refactor, you will learn about:
 * The Ember Data store
 * Working with adapters and serializers
 
+```run:file:create hidden=true cwd=super-rentals filename=app/adapters/application.js
+export { default } from '@ember-data/adapter/json-api';
+```
+
 ## What is Ember Data?
 
 Now that we've added some features, it's time to do some clean up again!
@@ -82,6 +86,7 @@ Attributes declared with the `@attr` decorator work with the auto-track feature 
 ```run:command hidden=true cwd=super-rentals
 ember test --path dist
 git add app/models/rental.js
+git add app/adapters/application.js
 ```
 
 ## Testing Models
