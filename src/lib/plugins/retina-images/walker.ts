@@ -39,7 +39,9 @@ function attr(v: unknown): string {
 
 async function toImgTag(node: Image, options: Options): Promise<HTML> {
   let size = await imageSize(pathFor(node.url, options));
+  // @ts-ignore
   let width = Math.floor(size.width / 2);
+  // @ts-ignore
   let height = Math.floor(size.height / 2);
 
   let attrs = [];

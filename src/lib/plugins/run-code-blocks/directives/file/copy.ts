@@ -1,6 +1,6 @@
 import { lstat as _lstat, readFile as _readFile } from 'fs';
 import { Code } from 'mdast';
-import _mkdirp from 'mkdirp';
+import mkdirp from 'mkdirp';
 import { ncp as _ncp } from 'ncp';
 import { basename, dirname, join } from 'path';
 import { Option } from 'ts-std';
@@ -9,7 +9,6 @@ import Options from '../../options';
 import parseArgs, { ToBool, optional, required } from '../../parse-args';
 
 const lstat = promisify(_lstat);
-const mkdirp = promisify(_mkdirp);
 const ncp = promisify(_ncp);
 const readFile = promisify(_readFile);
 
@@ -53,7 +52,7 @@ export default async function copyFile(node: Code, options: Options): Promise<Op
     throw new Error(`\`${src}\` is neither a regular file or a directory`);
   }
 
-  await mkdirp(destDir);
+  await mkdirp(destDir, {});
   await ncp(src, destPath);
 
   if (args.hidden) {

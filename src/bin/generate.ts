@@ -5,7 +5,7 @@ import {
   writeFile as _writeFile
 } from 'fs';
 import _glob from 'glob';
-import _mkdirp from 'mkdirp';
+import mkdirp from 'mkdirp';
 import { ncp as _ncp } from 'ncp';
 import { basename, dirname, join, relative, sep } from 'path';
 import frontmatter from 'remark-frontmatter';
@@ -21,7 +21,6 @@ import { doNotEdit, retinaImages, runCodeBlocks, todoLinks, zoeySays } from '../
 const glob = promisify(_glob);
 const readFile = promisify(_readFile);
 const writeFile = promisify(_writeFile);
-const mkdirp = promisify(_mkdirp);
 const ncp = promisify(_ncp);
 
 // 01-orientation.md -> orientation.md
@@ -55,8 +54,8 @@ async function main() {
   let codeDir = join(project, 'dist', 'code');
 
   await ncp(join(project, 'src', 'assets'), assetsDir);
-  await mkdirp(outDir);
-  await mkdirp(codeDir);
+  await mkdirp(outDir, {});
+  await mkdirp(codeDir, {});
 
   let pattern = process.argv[2] || join('src', 'markdown', '**', '*.md');
 
@@ -79,7 +78,7 @@ async function main() {
       let dir = unprefix(relative(srcDir, dirname(inputPath)));
       let name = unprefix(basename(inputPath));
 
-      await mkdirp(join(outDir, dir));
+      await mkdirp(join(outDir, dir), {});
 
       let outputPath = join(outDir, dir, name);
 
