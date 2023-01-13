@@ -2,6 +2,7 @@ import { exists as _exists } from 'fs';
 import _imageSize from 'image-size';
 import { HTML, Image } from 'mdast';
 import { basename, resolve } from 'path';
+import { expect } from 'ts-std';
 import { promisify } from 'util';
 import BaseWalker from '../../walker';
 import Options from './options';
@@ -38,9 +39,14 @@ function attr(v: unknown): string {
 
 
 async function toImgTag(node: Image, options: Options): Promise<HTML> {
-  let size = await imageSize(pathFor(node.url, options));
-  let width = Math.floor(size!.width! / 2);
-  let height = Math.floor(size!.height! / 2);
+  let sizeOfImage = await imageSize(pathFor(node.url, options));
+
+  let size = expect(sizeOfImage, 'size should be present');
+  let width = expect(size.width, 'width should be present');
+  let height = expect(size.height, 'height should be present');
+
+  let widthAttr = Math.floor(width / 2);
+  let heightAttr = Math.floor(height / 2);
 
   let attrs = [];
 
@@ -54,8 +60,8 @@ async function toImgTag(node: Image, options: Options): Promise<HTML> {
     attrs.push(`title=${attr(node.title)}`);
   }
 
-  attrs.push(`width=${attr(width)}`);
-  attrs.push(`height=${attr(height)}`);
+  attrs.push(`width=${attr(widthAttr)}`);
+  attrs.push(`height=${attr(heightAttr)}`);
 
   return {
     type: 'html',
