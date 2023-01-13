@@ -23,7 +23,7 @@ function isZoeySays({ children }: Blockquote): boolean {
     firstParagraph.value === ZOEY_SAYS;
 }
 
-async function render(nodes: Array<BlockContent | DefinitionContent>, position?: Position): Promise<HTML> {
+async function render(nodes: (BlockContent | DefinitionContent)[], position?: Position): Promise<HTML> {
   let content = [];
 
   for (let node of nodes) {
