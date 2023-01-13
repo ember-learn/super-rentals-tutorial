@@ -90,7 +90,7 @@ del package.json
 @@ -9,2 +9,3 @@
      EmberENV: {
 +      RAISE_ON_DEPRECATION: true,
-       FEATURES: {
+       EXTEND_PROTOTYPES: false,
 ```
 
 ```run:file:create hidden=true cwd=super-rentals filename=public/_redirects
