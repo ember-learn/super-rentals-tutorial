@@ -12,7 +12,7 @@ and replaced with their output in the final markdown files.
 ## Why?
 
 * Make sure the tutorial steps are up-to-date and working correctly with the
-  latest Ember, Ember CLI Ember Data, etc.
+  latest Ember, Ember CLI EmberData, etc.
 * Save time by not having to manually sync the content with upstream blueprint
   changes!
 * Easy to maintain – changing a step early on in the tutorial automatically
