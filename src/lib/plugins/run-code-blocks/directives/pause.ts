@@ -6,7 +6,7 @@ import Options from '../options';
 async function prompt(message: string): Promise<void> {
   console.log(`\n${message}\n`);
 
-  await new Promise(resolve => {
+  await new Promise<void>(resolve => {
     let rl = readline.createInterface({
       input: process.stdin,
       output: process.stdout
