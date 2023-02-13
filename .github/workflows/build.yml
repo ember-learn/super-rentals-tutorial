@@ -86,6 +86,16 @@ jobs:
         with:
           name: code (${{ matrix.channel }})
           path: dist/code/super-rentals
+      - name: Notify Discord
+        uses: sarisia/actions-status-discord@v1
+        if: ${{ failure() && github.event_name == 'schedule' }}
+        with:
+          webhook: ${{ secrets.CORE_META_WEBHOOK }}
+          status: "Failure"
+          title: "Super Rentals Tutorial Build ${{ matrix.channel }}"
+          color: 0xcc0000
+          url: "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          username: GitHub Actions
 
   deploy-guides:
     # This job deploys the markdown output to the super-rentals-tutorial branch
