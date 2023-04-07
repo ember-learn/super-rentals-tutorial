@@ -65,8 +65,8 @@ del package.json
 ```
 
 ```run:file:patch hidden=true cwd=super-rentals filename=app/index.html
-@@ -14,2 +14,17 @@
-
+@@ -13,2 +13,17 @@
+ 
 +    <script>
 +      if (window.location.search.indexOf('deterministic') >= 0) {
 +        let style = document.createElement('style');
@@ -90,7 +90,7 @@ del package.json
 @@ -9,2 +9,3 @@
      EmberENV: {
 +      RAISE_ON_DEPRECATION: true,
-       EXTEND_PROTOTYPES: false,
+       FEATURES: {
 ```
 
 ```run:file:create hidden=true cwd=super-rentals filename=public/_redirects
