@@ -37,7 +37,7 @@ jobs:
       - name: Install dependencies (apt-get)
         run: |
           sudo apt-get update -y
-          sudo apt-get install -y tree
+          sudo apt-get install -y tree git
       - name: Install dependencies (yarn)
         run: |
           if [[ "$EMBER_RELEASE_CHANNEL" == "beta" ]]; then
