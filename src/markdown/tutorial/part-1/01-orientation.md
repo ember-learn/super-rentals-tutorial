@@ -270,7 +270,7 @@ As text on the welcome page pointed out, the source code for the page is located
 # This can be removed when ember-cli 5.1.0 is out of beta
 
 #[cfg(unix)]
-sed 's/--//g' app/templates/application.hbs
+sed -i 's/--//g' app/templates/application.hbs
 ```
 
 ```run:file:patch lang=handlebars cwd=super-rentals filename=app/templates/application.hbs
