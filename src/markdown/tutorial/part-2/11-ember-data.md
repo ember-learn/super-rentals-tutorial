@@ -4,22 +4,22 @@
 ember serve
 ```
 
-In this chapter, we will work on removing some code duplication in our route handlers, by switching to using Ember Data to manage our data. The end result looks exactly the same as before:
+In this chapter, we will work on removing some code duplication in our route handlers, by switching to using EmberData to manage our data. The end result looks exactly the same as before:
 
 ![The Super Rentals app by the end of the chapter](/images/tutorial/part-2/ember-data/homepage@2x.png)
 
 During this refactor, you will learn about:
-* Ember Data models
+* EmberData models
 * Testing models
 * Loading models in routes
-* The Ember Data store
+* The EmberData store
 * Working with adapters and serializers
 
 ```run:file:create hidden=true cwd=super-rentals filename=app/adapters/application.js
 export { default } from '@ember-data/adapter/json-api';
 ```
 
-## What is Ember Data?
+## What is EmberData?
 
 Now that we've added some features, it's time to do some clean up again!
 
@@ -35,13 +35,13 @@ This duplication incurred a bit of *[technical debt][TODO: link to technical deb
 
 Chances are, as we keep working on this app, we will need to add more routes that fetch data from the server. Since all of our server's API endpoints follow the [JSON:API](https://jsonapi.org/) format, we'd have to keep copying this boilerplate for every single new route we add to the app!
 
-Fortunately, we're not going to do any of that. As it turns out, there's a much better solution here: we can use Ember Data! As its name implies, [Ember Data](../../../models/) is a library that helps manage data and *[application state][TODO: link to application state]* in Ember applications.
+Fortunately, we're not going to do any of that. As it turns out, there's a much better solution here: we can use EmberData! As its name implies, [EmberData](../../../models/) is a library that helps manage data and *[application state][TODO: link to application state]* in Ember applications.
 
-There's a lot to learn about Ember Data, but let's start by uncovering features that help with our immediate problem.
+There's a lot to learn about EmberData, but let's start by uncovering features that help with our immediate problem.
 
-## Ember Data Models
+## EmberData Models
 
-Ember Data is built around the idea of organizing your app's data into *[model objects](../../../models/defining-models/)*. These objects represent units of information that our application presents to the user. For example, the rental property data we have been working with would be a good candidate.
+EmberData is built around the idea of organizing your app's data into *[model objects](../../../models/defining-models/)*. These objects represent units of information that our application presents to the user. For example, the rental property data we have been working with would be a good candidate.
 
 Enough talking, why don't we give that a try!
 
@@ -70,7 +70,7 @@ export default class RentalModel extends Model {
 }
 ```
 
-Here, we created a `RentalModel` class that extends Ember Data's `Model` superclass. When fetching the listing data from the server, each individual rental property will be represented by an instance (also known as a *[record](../../../models/finding-records/)* of our `RentalModel` class.
+Here, we created a `RentalModel` class that extends EmberData's `Model` superclass. When fetching the listing data from the server, each individual rental property will be represented by an instance (also known as a *[record](../../../models/finding-records/)* of our `RentalModel` class.
 
 We used the `@attr` decorator to declare the attributes of a rental property. These attributes correspond directly to the `attributes` data we expect the server to provide in its responses:
 
@@ -79,7 +79,7 @@ We used the `@attr` decorator to declare the attributes of a rental property. Th
 
 We can access these attributes for an instance of `RentalModel` using standard dot notation, such as `model.title` or `model.location.lat`. In addition to the attributes we declared here, there will always be an implicit *id* attribute as well, which is used to uniquely identify the model object and can be accessed using `model.id`.
 
-Model classes in Ember Data are no different than any other classes we've worked with so far, in that they allow for a convenient place for adding custom behavior. We took advantage of this feature to move our `type` logic (which is a major source of unnecessary duplication in our route handlers) into a getter on our model class. Once we have everything working here, we will go back to clean that up.
+Model classes in EmberData are no different than any other classes we've worked with so far, in that they allow for a convenient place for adding custom behavior. We took advantage of this feature to move our `type` logic (which is a major source of unnecessary duplication in our route handlers) into a getter on our model class. Once we have everything working here, we will go back to clean that up.
 
 Attributes declared with the `@attr` decorator work with the auto-track feature (which we learned about [in a previous chapter](../../part-1/reusable-components/)). Therefore, we are free to reference any model attributes in our getter (`this.category`), and Ember will know when to invalidate its result.
 
@@ -152,7 +152,7 @@ The generator created some boilerplate code for us, which serves as a pretty goo
 
 This model test is also known as a *[unit test](../../../testing/testing-models/)*. Unlike any of the other tests that we've written thus far, this test doesn't actually *render* anything. It just instantiates the rental model object and tests the model object directly, manipulating its attributes and asserting their value.
 
-It is worth pointing out that Ember Data provides a `store` *[service](../../../services/)*, also known as the Ember Data store. In our test, we used the `this.owner.lookup('service:store')` API to get access to the Ember Data store. The store provides a `createRecord` method to instantiate our model object for us.
+It is worth pointing out that EmberData provides a `store` *[service](../../../services/)*, also known as the EmberData store. In our test, we used the `this.owner.lookup('service:store')` API to get access to the EmberData store. The store provides a `createRecord` method to instantiate our model object for us.
 
 Running the tests in the browser confirms that everything is working as intended:
 
@@ -168,7 +168,7 @@ wait  #qunit-banner.qunit-pass
 
 ## Loading Models in Routes
 
-Alright, now that we have our model set up, it's time to refactor our route handlers to use Ember Data and remove the duplication!
+Alright, now that we have our model set up, it's time to refactor our route handlers to use EmberData and remove the duplication!
 
 ```run:file:patch lang=js cwd=super-rentals filename=app/routes/index.js
 @@ -1,22 +1,9 @@
@@ -230,11 +230,11 @@ Alright, now that we have our model set up, it's time to refactor our route hand
 
 Wow... that removed a lot of code! This is all possible thanks to the power of conventions!
 
-## The Ember Data Store
+## The EmberData Store
 
-As mentioned above, Ember Data provides a `store` service, which we can inject into our route using the `@service store;` declaration, making the Ember Data store available as `this.store`. It provides the `find` and `findAll` methods for loading records. Specifically, the [`findRecord` method](../../../models/finding-records/#toc_retrieving-a-single-record) takes a model type (`rental` in our case) and a model ID (for us, that would be `params.rental_id` from the URL) as arguments and fetches a single record from the store. On the other hand, the [`findAll` method](../../../models/finding-records/#toc_retrieving-multiple-records) takes the model type as an argument and fetches all records of that type from the store.
+As mentioned above, EmberData provides a `store` service, which we can inject into our route using the `@service store;` declaration, making the EmberData store available as `this.store`. It provides the `find` and `findAll` methods for loading records. Specifically, the [`findRecord` method](../../../models/finding-records/#toc_retrieving-a-single-record) takes a model type (`rental` in our case) and a model ID (for us, that would be `params.rental_id` from the URL) as arguments and fetches a single record from the store. On the other hand, the [`findAll` method](../../../models/finding-records/#toc_retrieving-multiple-records) takes the model type as an argument and fetches all records of that type from the store.
 
-The Ember Data store acts as a kind of intermediary between our app and the server; it does many important things, including caching the responses that were fetched from the server. If we request some records (instances of model classes) that we had *already* fetched from the server in the past, Ember Data's store ensures that we can access the records immediately, without having to fetch them again unnecessarily and wait for the server to respond. But, if we don't already have that response cached in our store, then it will go off and fetches it from the server. Pretty nice, right?
+The EmberData store acts as a kind of intermediary between our app and the server; it does many important things, including caching the responses that were fetched from the server. If we request some records (instances of model classes) that we had *already* fetched from the server in the past, EmberData's store ensures that we can access the records immediately, without having to fetch them again unnecessarily and wait for the server to respond. But, if we don't already have that response cached in our store, then it will go off and fetches it from the server. Pretty nice, right?
 
 That's a lot of theory, but is this going to work in our app? Let's run the tests and find out!
 
@@ -250,17 +250,17 @@ Looking at the failure messages, the problem appears to be that the store went t
 * When performing the `findAll('rental')` query, it requested the data from `/rentals`, instead of `/api/rentals.json`.
 * When performing the `find('rental', 'grand-old-mansion')` query, it requested the data from `/rentals/grand-old-mansion`, instead of `/api/rentals/grand-old-mansion.json`.
 
-Hm, okay, so we have to teach Ember Data to fetch data from the correct location. But how does Ember Data know how to fetch data from our server in the first place?
+Hm, okay, so we have to teach EmberData to fetch data from the correct location. But how does EmberData know how to fetch data from our server in the first place?
 
 ## Working with Adapters and Serializers
 
-Ember Data uses an *[adapter](../../../models/customizing-adapters/)* and *[serializer](../../../models/customizing-serializers/)* architecture. Adapters deal with *how* and *where* Ember Data should fetch data from your servers, such as whether to use HTTP, HTTPS, WebSockets or local storage, as well as the URLs, headers and parameters to use for these requests. On the other hand, serializers are in charge of converting the data returned by the server into a format Ember Data can understand.
+EmberData uses an *[adapter](../../../models/customizing-adapters/)* and *[serializer](../../../models/customizing-serializers/)* architecture. Adapters deal with *how* and *where* EmberData should fetch data from your servers, such as whether to use HTTP, HTTPS, WebSockets or local storage, as well as the URLs, headers and parameters to use for these requests. On the other hand, serializers are in charge of converting the data returned by the server into a format EmberData can understand.
 
 The idea is that, provided that your backend exposes a *consistent* protocol and interchange format to access its data, we can write a single adapter-serializer pair to handle all data fetches for the entire application.
 
-As it turns out, JSON:API just happens to be Ember Data's default data protocol and interchange format. Out of the box, Ember Data provides a default JSON:API adapter and serializer. This is great news for us, since that is also what our server has implemented. What a wonderful coincidence!
+As it turns out, JSON:API just happens to be EmberData's default data protocol and interchange format. Out of the box, EmberData provides a default JSON:API adapter and serializer. This is great news for us, since that is also what our server has implemented. What a wonderful coincidence!
 
-However, as mentioned above, there are some minor differences between how our server works and Ember Data's default assumptions. We can customize the default behavior by defining our own adapter and serializer:
+However, as mentioned above, there are some minor differences between how our server works and EmberData's default assumptions. We can customize the default behavior by defining our own adapter and serializer:
 
 ```run:file:create lang=js cwd=super-rentals filename=app/adapters/application.js
 import JSONAPIAdapter from '@ember-data/adapter/json-api';
@@ -289,7 +289,7 @@ Inside this newly created file, we defined an `ApplicationAdapter` class, inheri
 
 Adding a namespace prefix happens to be pretty common across Ember apps, so the `JSONAPIAdapter` has an API to do just that. All we need to do is to set the  `namespace` property to the prefix we want, which is `api` in our case.
 
-Adding the `.json` extension is a bit less common, and doesn't have a declarative configuration API of its own. Instead, we will need to *[override][TODO: link to override]* Ember Data's [`buildURL`](https://api.emberjs.com/ember-data/release/classes/JSONAPIAdapter/methods/buildURL?anchor=buildURL) method. Inside of `buildURL`, we will call `super.buildURL(...args)` to invoke the `JSONAPIAdapter` default implementation of `buildURL`. This will give us the URL that the adapter *would have built*, which would be something like `/api/rentals` and `/api/rentals/grand-old-mansion` after configuring the `namespace` above. All we have to do is to append `.json` to this URL and return it.
+Adding the `.json` extension is a bit less common, and doesn't have a declarative configuration API of its own. Instead, we will need to *[override][TODO: link to override]* EmberData's [`buildURL`](https://api.emberjs.com/ember-data/release/classes/JSONAPIAdapter/methods/buildURL?anchor=buildURL) method. Inside of `buildURL`, we will call `super.buildURL(...args)` to invoke the `JSONAPIAdapter` default implementation of `buildURL`. This will give us the URL that the adapter *would have built*, which would be something like `/api/rentals` and `/api/rentals/grand-old-mansion` after configuring the `namespace` above. All we have to do is to append `.json` to this URL and return it.
 
 Similarly, serializers are located at `app/serializers`. Adapters and serializers are always added together as a pair. We added an `application` adapter, so we also added a corresponding serializer to go with it as well. Since the JSON data returned by our server is JSON:API-compliant, the default [`JSONAPISerializer`](https://api.emberjs.com/ember-data/release/classes/JSONAPISerializer) work just fine for us without further customization.
 
@@ -320,7 +320,7 @@ visit http://localhost:4200/rentals/grand-old-mansion?deterministic
 wait  .rental.detailed
 ```
 
-Ember Data offers many, many features (like managing the *relationships* between different models) and there's a lot more we can learn about it. For example, if your backend's have some inconsistencies across different endpoints, Ember Data allows you to define more specific, per-model adapters and serializers too! We are just scratching the surface here. If you want to learn more about Ember Data, check out [its own dedicated section](../../../models/) in the guides!
+EmberData offers many, many features (like managing the *relationships* between different models) and there's a lot more we can learn about it. For example, if your backend's have some inconsistencies across different endpoints, EmberData allows you to define more specific, per-model adapters and serializers too! We are just scratching the surface here. If you want to learn more about EmberData, check out [its own dedicated section](../../../models/) in the guides!
 
 ```run:server:stop
 ember serve
