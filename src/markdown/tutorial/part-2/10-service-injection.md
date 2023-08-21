@@ -284,7 +284,7 @@ We will take advantage of this capability in our component test:
 -
 -    await render(hbs`<ShareButton />`);
 -
--    assert.dom(this.element).hasText('');
+-    assert.dom().hasText('');
 +  hooks.beforeEach(function () {
 +    this.owner.register('service:router', MockRouterService);
 +  });
@@ -298,7 +298,7 @@ We will take advantage of this capability in our component test:
 +  test('basic usage', async function (assert) {
 +    await render(hbs`<ShareButton>Tweet this!</ShareButton>`);
 
--    assert.dom(this.element).hasText('template block text');
+-    assert.dom().hasText('template block text');
 +    assert
 +      .dom('a')
 +      .hasAttribute('target', '_blank')

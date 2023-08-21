@@ -190,7 +190,7 @@ We just added a lot of behavior into a single component, so let's write some tes
 +      .hasAttribute('width', '150')
 +      .hasAttribute('height', '120');
 
--    assert.dom(this.element).hasText('');
+-    assert.dom().hasText('');
 +    let { src } = find('.map img');
 +    let token = encodeURIComponent(ENV.MAPBOX_ACCESS_TOKEN);
 
@@ -205,7 +205,7 @@ We just added a lot of behavior into a single component, so let's write some tes
 +      'the src starts with "https://api.mapbox.com/"'
 +    );
 
--    assert.dom(this.element).hasText('template block text');
+-    assert.dom().hasText('template block text');
 +    assert.ok(
 +      src.includes('-122.4184,37.7797,10'),
 +      'the src should include the lng,lat,zoom parameter'
