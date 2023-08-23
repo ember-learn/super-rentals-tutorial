@@ -98,7 +98,6 @@ ember generate model-test rental
 ```
 
 ```run:command hidden=true cwd=super-rentals
-ember test --path dist
 git add tests/unit/models/rental-test.js
 ```
 
@@ -152,12 +151,17 @@ The generator created some boilerplate code for us, which serves as a pretty goo
 
 This model test is also known as a *[unit test](../../../testing/testing-models/)*. Unlike any of the other tests that we've written thus far, this test doesn't actually *render* anything. It just instantiates the rental model object and tests the model object directly, manipulating its attributes and asserting their value.
 
-It is worth pointing out that EmberData provides a `store` *[service](../../../services/)*, also known as the EmberData store. In our test, we used the `this.owner.lookup('service:store')` API to get access to the EmberData store. The store provides a `createRecord` method to instantiate our model object for us.
+It is worth pointing out that EmberData provides a `store` *[service](../../../services/)*, also known as the EmberData store. In our test, we used the `this.owner.lookup('service:store')` API to get access to the EmberData store. The store provides a `createRecord` method to instantiate our model object for us. To make this `store` service available, we must add the following file:
+
+```run:file:create cwd=super-rentals filename=app/services/store.js
+export { default } from 'ember-data/store';
+```
 
 Running the tests in the browser confirms that everything is working as intended:
 
 ```run:command hidden=true cwd=super-rentals
 ember test --path dist
+git add app/services/store.js
 git add tests/unit/models/rental-test.js
 ```
 

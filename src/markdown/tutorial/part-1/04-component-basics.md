@@ -166,7 +166,7 @@ Let's replace the boilerplate code that was generated for us with our own test:
 -
 -    await render(hbs`<Jumbo />`);
 -
--    assert.dom(this.element).hasText('');
+-    assert.dom().hasText('');
 -
 -    // Template block usage:
 -    await render(hbs`
@@ -175,7 +175,7 @@ Let's replace the boilerplate code that was generated for us with our own test:
 -      </Jumbo>
 -    `);
 -
--    assert.dom(this.element).hasText('template block text');
+-    assert.dom().hasText('template block text');
 +  test('it renders the content inside a jumbo header with a tomster', async function (assert) {
 +    await render(hbs`<Jumbo>Hello World</Jumbo>`);
 +

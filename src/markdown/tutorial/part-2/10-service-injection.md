@@ -178,7 +178,7 @@ To be sure, let's add some tests! Let's start with an acceptance test:
 +
 +    assert.strictEqual(
 +      tweetURL.searchParams.get('url'),
-+      `${window.location.origin}/rentals/grand-old-mansion`
++      `${window.location.origin}/rentals/grand-old-mansion`,
 +    );
    });
 ```
@@ -266,7 +266,7 @@ We will take advantage of this capability in our component test:
 
 +const MOCK_URL = new URL(
 +  '/foo/bar?baz=true#some-section',
-+  window.location.origin
++  window.location.origin,
 +);
 +
 +class MockRouterService extends Service {
@@ -284,7 +284,7 @@ We will take advantage of this capability in our component test:
 -
 -    await render(hbs`<ShareButton />`);
 -
--    assert.dom(this.element).hasText('');
+-    assert.dom().hasText('');
 +  hooks.beforeEach(function () {
 +    this.owner.register('service:router', MockRouterService);
 +  });
@@ -298,7 +298,7 @@ We will take advantage of this capability in our component test:
 +  test('basic usage', async function (assert) {
 +    await render(hbs`<ShareButton>Tweet this!</ShareButton>`);
 
--    assert.dom(this.element).hasText('template block text');
+-    assert.dom().hasText('template block text');
 +    assert
 +      .dom('a')
 +      .hasAttribute('target', '_blank')
@@ -357,7 +357,7 @@ While we are here, let's add some more tests for the various functionalities of 
 +
 +  test('it supports passing @text', async function (assert) {
 +    await render(
-+      hbs`<ShareButton @text="Hello Twitter!">Tweet this!</ShareButton>`
++      hbs`<ShareButton @text="Hello Twitter!">Tweet this!</ShareButton>`,
 +    );
 +
 +    assert.strictEqual(this.tweetParam('text'), 'Hello Twitter!');
@@ -365,7 +365,7 @@ While we are here, let's add some more tests for the various functionalities of 
 +
 +  test('it supports passing @hashtags', async function (assert) {
 +    await render(
-+      hbs`<ShareButton @hashtags="foo,bar,baz">Tweet this!</ShareButton>`
++      hbs`<ShareButton @hashtags="foo,bar,baz">Tweet this!</ShareButton>`,
 +    );
 +
 +    assert.strictEqual(this.tweetParam('hashtags'), 'foo,bar,baz');
@@ -378,7 +378,7 @@ While we are here, let's add some more tests for the various functionalities of 
 +
 +  test('it supports adding extra classes', async function (assert) {
 +    await render(
-+      hbs`<ShareButton class="extra things">Tweet this!</ShareButton>`
++      hbs`<ShareButton class="extra things">Tweet this!</ShareButton>`,
 +    );
 +
 +    assert
@@ -391,7 +391,7 @@ While we are here, let's add some more tests for the various functionalities of 
 +
 +  test('the target, rel and href attributes cannot be overridden', async function (assert) {
 +    await render(
-+      hbs`<ShareButton target="_self" rel="" href="/">Not a Tweet!</ShareButton>`
++      hbs`<ShareButton target="_self" rel="" href="/">Not a Tweet!</ShareButton>`,
 +    );
 +
 +    assert

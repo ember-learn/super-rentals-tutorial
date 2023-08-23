@@ -270,7 +270,7 @@ Now that we have this template in place, we can add some tests for this new comp
 +  test('it renders a header with a share button', async function (assert) {
 +    await render(hbs`<Rental::Detailed @rental={{this.rental}} />`);
 
--    assert.dom(this.element).hasText('');
+-    assert.dom().hasText('');
 +    assert.dom('.jumbo').exists();
 +    assert.dom('.jumbo h2').containsText('Grand Old Mansion');
 +    assert
@@ -288,7 +288,7 @@ Now that we have this template in place, we can add some tests for this new comp
 +  test('it renders detailed information about a rental property', async function (assert) {
 +    await render(hbs`<Rental::Detailed @rental={{this.rental}} />`);
 
--    assert.dom(this.element).hasText('template block text');
+-    assert.dom().hasText('template block text');
 +    assert.dom('article').hasClass('rental');
 +    assert.dom('article h3').containsText('About Grand Old Mansion');
 +    assert.dom('article .detail.owner').containsText('Veruca Salt');
