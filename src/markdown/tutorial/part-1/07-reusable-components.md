@@ -56,6 +56,11 @@ yarn ember test
 git add config/environment.js
 ```
 
+> Zoey says...
+>
+> The above described way of storing your Mapbox token will expose it in the repository once you upload it. There are safer ways of storing your public token (eg, using [dotenv](https://www.npmjs.com/package/ember-cli-dotenv)), but that is beyond the scope of this tutorial.
+
+
 After saving the changes to our configuration file, we will need to restart our development server to pick up these file changes. Unlike the files we have edited so far, `config/environment.js` is not automatically reloaded.
 
 <!-- TODO: https://github.com/ember-cli/ember-cli/issues/8782 -->
