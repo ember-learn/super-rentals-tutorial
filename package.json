@@ -63,9 +63,5 @@
     "prebuild": "yarn clean && yarn compile && yarn lint:md:src",
     "build": "yarn generate",
     "postbuild": "yarn lint:md:dist"
-  },
-  "volta": {
-    "node": "16.20.0",
-    "yarn": "1.22.10"
   }
 }
