@@ -1,7 +1,7 @@
 <!--lint disable no-undefined-references-->
 
 ```run:server:start hidden=true cwd=super-rentals expect="Serving on http://localhost:4200/"
-ember serve
+npm start
 ```
 
 It's time to finally work on the rentals listing:
@@ -249,7 +249,7 @@ wait  #qunit-banner.qunit-pass
 ```
 
 ```run:server:stop
-ember serve
+npm start
 ```
 
 ```run:checkpoint cwd=super-rentals

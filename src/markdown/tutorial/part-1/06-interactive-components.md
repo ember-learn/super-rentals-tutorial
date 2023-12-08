@@ -1,7 +1,7 @@
 <!--lint disable no-undefined-references-->
 
 ```run:server:start hidden=true cwd=super-rentals expect="Serving on http://localhost:4200/"
-ember serve
+npm start
 ```
 
 In this chapter, you will add interactivity to the page, allowing the user to click an image to enlarge or shrink it:
@@ -341,7 +341,7 @@ wait  #qunit-banner.qunit-pass
 ```
 
 ```run:server:stop
-ember serve
+npm start
 ```
 
 ```run:checkpoint cwd=super-rentals

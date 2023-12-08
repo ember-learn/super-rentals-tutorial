@@ -60,19 +60,19 @@ After saving the changes to our configuration file, we will need to restart our 
 
 <!-- TODO: https://github.com/ember-cli/ember-cli/issues/8782 -->
 
-You can stop the server by finding the terminal window where `ember serve` is running, then type `Ctrl + C`. That is, typing the "C" key on your keyboard *while* holding down the "Ctrl" key at the same time. Once it has stopped, you can start it back up again with the same `ember server` command.
+You can stop the server by finding the terminal window where `npm start` is running, then type `Ctrl + C`. That is, typing the "C" key on your keyboard *while* holding down the "Ctrl" key at the same time. Once it has stopped, you can start it back up again with the same `npm start` command.
 
 ```run:server:start cwd=super-rentals expect="Serving on http://localhost:4200/"
 #[cfg(all(ci, unix))]
-#[display(ember serve)]
-ember serve | awk '{ \
+#[display(npm start)]
+npm start | awk '{ \
   gsub("Build successful \\([0-9]+ms\\)", "Build successful (13286ms)"); \
   print; \
   system("") # https://unix.stackexchange.com/a/83853 \
 }'
 
 #[cfg(not(all(ci, unix)))]
-ember serve
+npm start
 ```
 
 ## Generating a Component with a Component Class
@@ -465,7 +465,7 @@ wait  #qunit-banner.qunit-pass
 ```
 
 ```run:server:stop
-ember serve
+npm start
 ```
 
 ```run:checkpoint cwd=super-rentals
