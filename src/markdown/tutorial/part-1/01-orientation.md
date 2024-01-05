@@ -233,19 +233,19 @@ We'll learn about the purposes of these files and folders as we go. For now, jus
 
 ## Starting and Stopping the Development Server
 
-Ember CLI comes with a lot of different commands for a variety of development tasks, such as the `ember new` command that we saw earlier. It also comes with a *development server*, which we can launch with the `ember serve` command:
+Ember CLI comes with a lot of different commands for a variety of development tasks, such as the `ember new` command that we saw earlier. It also comes with a *development server*, which we can launch within the project with the `npm start` command:
 
 ```run:server:start cwd=super-rentals expect="Serving on http://localhost:4200/"
 #[cfg(all(ci, unix))]
-#[display(ember serve)]
-ember serve | awk '{ \
+#[display(npm start)]
+npm start | awk '{ \
   gsub("Build successful \\([0-9]+ms\\)", "Build successful (9761ms)"); \
   print; \
   system("") # https://unix.stackexchange.com/a/83853 \
 }'
 
 #[cfg(not(all(ci, unix)))]
-ember serve
+npm start
 ```
 
 The development server is responsible for compiling our app and serving it to the browsers. It may take a while to boot up. Once it's up and running, open your favorite browser and head to <http://localhost:4200>. You should see the following welcome page:
@@ -258,7 +258,7 @@ visit http://localhost:4200/?deterministic
 >
 > The `localhost` address in the URL means that you can only access the development server from your local machine. If you would like to share your work with the world, you will have to *[deploy](https://cli.emberjs.com/release/basic-use/deploying/)* your app to the public Internet. We'll cover how to do that in Part 2 of the tutorial.
 
-You can exit out of the development server at any time by typing `Ctrl + C` into the terminal window where `ember serve` is running. That is, typing the "C" key on your keyboard *while* holding down the "Ctrl" key at the same time. Once it has stopped, you can start it back up again with the same `ember server` command. We recommend having two terminal windows open: one to run the server in background, another to type other Ember CLI commands.
+You can exit out of the development server at any time by typing `Ctrl + C` into the terminal window where `npm start` is running. That is, typing the "C" key on your keyboard *while* holding down the "Ctrl" key at the same time. Once it has stopped, you can start it back up again with the same `npm start` command. We recommend having two terminal windows open: one to run the server in background, another to type other Ember CLI commands.
 
 ## Editing Files and Live Reload
 
@@ -402,7 +402,7 @@ visit http://localhost:4200/?deterministic
 ```
 
 ```run:server:stop
-ember serve
+npm start
 ```
 
 ```run:checkpoint cwd=super-rentals

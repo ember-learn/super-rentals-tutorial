@@ -1,7 +1,7 @@
 <!--lint disable no-undefined-references-->
 
 ```run:server:start hidden=true cwd=super-rentals expect="Serving on http://localhost:4200/"
-ember serve
+npm start
 ```
 
 In this chapter, we will work on removing some code duplication in our route handlers, by switching to using EmberData to manage our data. The end result looks exactly the same as before:
@@ -327,7 +327,7 @@ wait  .rental.detailed
 EmberData offers many, many features (like managing the *relationships* between different models) and there's a lot more we can learn about it. For example, if your backend's have some inconsistencies across different endpoints, EmberData allows you to define more specific, per-model adapters and serializers too! We are just scratching the surface here. If you want to learn more about EmberData, check out [its own dedicated section](../../../models/) in the guides!
 
 ```run:server:stop
-ember serve
+npm start
 ```
 
 ```run:checkpoint cwd=super-rentals

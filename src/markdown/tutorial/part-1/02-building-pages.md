@@ -1,7 +1,7 @@
 <!--lint disable no-undefined-references-->
 
 ```run:server:start hidden=true cwd=super-rentals expect="Serving on http://localhost:4200/"
-ember serve
+npm start
 ```
 
 In this chapter, you will build the first few pages of your Ember app and set up links between them. By the end of this chapter, you should have two new pages – an about page and a contact page. These pages will be linked to from your landing page:
@@ -192,7 +192,7 @@ We will learn more about how all of this works soon. In the meantime, go ahead a
 Congratulations, you are well on your way to becoming a master page-crafter!
 
 ```run:server:stop
-ember serve
+npm start
 ```
 
 ```run:checkpoint cwd=super-rentals

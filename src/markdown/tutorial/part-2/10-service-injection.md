@@ -1,7 +1,7 @@
 <!--lint disable no-undefined-references-->
 
 ```run:server:start hidden=true cwd=super-rentals expect="Serving on http://localhost:4200/"
-ember serve
+npm start
 ```
 
 As promised, we will now work on implementing the share button!
@@ -417,7 +417,7 @@ wait  #qunit-banner.qunit-pass
 ```
 
 ```run:server:stop
-ember serve
+npm start
 ```
 
 ```run:checkpoint cwd=super-rentals

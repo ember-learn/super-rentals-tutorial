@@ -1,7 +1,7 @@
 <!--lint disable no-undefined-references-->
 
 ```run:server:start hidden=true cwd=super-rentals expect="Serving on http://localhost:4200/"
-ember serve
+npm start
 ```
 
 In this chapter, we'll work on adding a new search feature, and refactor our `index.hbs` template into a new component along the way. We'll learn about a new pattern for passing data around between components, too! Once we're done, our page will look like this:
@@ -391,7 +391,7 @@ wait  #qunit-banner.qunit-pass
 ```
 
 ```run:server:stop
-ember serve
+npm start
 ```
 
 ```run:checkpoint cwd=super-rentals
