@@ -1,7 +1,7 @@
 <!--lint disable no-undefined-references-->
 
 ```run:server:start hidden=true cwd=super-rentals expect="Serving on http://localhost:4200/"
-ember server
+npm start
 ```
 
 In this chapter, you will build the first few pages of your Ember app and set up links between them. By the end of this chapter, you should have two new pages – an about page and a contact page. These pages will be linked to from your landing page:
@@ -75,7 +75,7 @@ With that, our second page is done!
 
 We're on a roll! While we're at it, let's add our third page. This time, things are a little bit different. Everyone at the company calls this the "contact" page. However, the old website we are replacing already has a similar page, which is served at the legacy URL `/getting-in-touch`.
 
-We want to keep the existing URLs for the new website, but we don't want to have to type `getting-in-touch` all over the new codebase! Fortunately, we can have the best of the both worlds:
+We want to keep the existing URLs for the new website, but we don't want to have to type `getting-in-touch` all over the new codebase! Fortunately, we can have the best of both worlds:
 
 ```run:file:patch lang=js cwd=super-rentals filename=app/router.js
 @@ -10,2 +10,3 @@
@@ -192,7 +192,7 @@ We will learn more about how all of this works soon. In the meantime, go ahead a
 Congratulations, you are well on your way to becoming a master page-crafter!
 
 ```run:server:stop
-ember server
+npm start
 ```
 
 ```run:checkpoint cwd=super-rentals

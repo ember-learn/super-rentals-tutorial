@@ -1,7 +1,7 @@
 <!--lint disable no-undefined-references-->
 
 ```run:server:start hidden=true cwd=super-rentals expect="Serving on http://localhost:4200/"
-ember server
+npm start
 ```
 
 In this chapter, you will use Ember's built-in testing framework to write some automated tests for your app. By the end of this chapter, we will have an automated test suite that we can run to ensure our app is working correctly:
@@ -62,24 +62,24 @@ Let's open the generated test file and replace the boilerplate test with our own
  import { module, test } from 'qunit';
 -import { visit, currentURL } from '@ember/test-helpers';
 +import { click, visit, currentURL } from '@ember/test-helpers';
- import { setupApplicationTest } from 'ember-qunit';
+ import { setupApplicationTest } from 'super-rentals/tests/helpers';
 @@ -7,6 +7,12 @@
 
 -fail!!!
 -  test('visiting /super-rentals', async function (assert) {
 -    await visit('/super-rentals');
 -
--    assert.equal(currentURL(), '/super-rentals');
+-    assert.strictEqual(currentURL(), '/super-rentals');
 +  test('visiting /', async function (assert) {
 +    await visit('/');
 +
-+    assert.equal(currentURL(), '/');
++    assert.strictEqual(currentURL(), '/');
 +    assert.dom('h2').hasText('Welcome to Super Rentals!');
 +
 +    assert.dom('.jumbo a.button').hasText('About Us');
 +    await click('.jumbo a.button');
 +
-+    assert.equal(currentURL(), '/about');
++    assert.strictEqual(currentURL(), '/about');
    });
 ```
 
@@ -153,25 +153,25 @@ Let's practice what we learned by adding tests for the remaining pages:
 +  test('visiting /about', async function (assert) {
 +    await visit('/about');
 +
-+    assert.equal(currentURL(), '/about');
++    assert.strictEqual(currentURL(), '/about');
 +    assert.dom('h2').hasText('About Super Rentals');
 +
 +    assert.dom('.jumbo a.button').hasText('Contact Us');
 +    await click('.jumbo a.button');
 +
-+    assert.equal(currentURL(), '/getting-in-touch');
++    assert.strictEqual(currentURL(), '/getting-in-touch');
 +  });
 +
 +  test('visiting /getting-in-touch', async function (assert) {
 +    await visit('/getting-in-touch');
 +
-+    assert.equal(currentURL(), '/getting-in-touch');
++    assert.strictEqual(currentURL(), '/getting-in-touch');
 +    assert.dom('h2').hasText('Contact Us');
 +
 +    assert.dom('.jumbo a.button').hasText('About');
 +    await click('.jumbo a.button');
 +
-+    assert.equal(currentURL(), '/about');
++    assert.strictEqual(currentURL(), '/about');
 +  });
  });
 ```
@@ -193,7 +193,7 @@ For the rest of the tutorial, we will continue to add more automated tests as we
 If you are in a hurry, you can skip over the testing sections in this tutorial and still be able to follow along with everything else. But don't you find it super satisfying&mdash;*oddly satisfying*&mdash;to watch a robot click on things really, really fast?
 
 ```run:server:stop
-ember server
+npm start
 ```
 
 ```run:checkpoint cwd=super-rentals

@@ -25,15 +25,13 @@ jobs:
         run: |
           git config --global user.name "Tomster"
           git config --global user.email "tomster@emberjs.com"
-      - name: Set up Volta
-        uses: rwjblue/setup-volta@v1
-      - name: Set up build cache (yarn)
-        uses: actions/cache@preview
-        with:
-          path: ~/.cache/yarn
-          key: ${{ runner.os }}-yarn
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
+      - name: Set up Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          cache: 'yarn'
       - name: Install dependencies (apt-get)
         run: |
           sudo apt-get update -y
@@ -69,23 +67,33 @@ jobs:
         working-directory: dist/code/super-rentals
         run: git clean -dfX
       - name: Upload artifacts (assets)
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         if: always()
         with:
           name: assets (${{ matrix.channel }})
           path: dist/assets
       - name: Upload artifacts (markdown)
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         if: always()
         with:
           name: markdown (${{ matrix.channel }})
           path: dist/markdown
       - name: Upload artifacts (code)
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         if: always()
         with:
           name: code (${{ matrix.channel }})
           path: dist/code/super-rentals
+      - name: Notify Discord
+        uses: sarisia/actions-status-discord@v1
+        if: ${{ failure() && github.event_name == 'schedule' }}
+        with:
+          webhook: ${{ secrets.CORE_META_WEBHOOK }}
+          status: "Failure"
+          title: "Super Rentals Tutorial Build ${{ matrix.channel }}"
+          color: 0xcc0000
+          url: "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          username: GitHub Actions
 
   deploy-guides:
     # This job deploys the markdown output to the super-rentals-tutorial branch
@@ -142,12 +150,12 @@ jobs:
           sudo apt-get update -y
           sudo apt-get install -y zipcmp advancecomp optipng perceptualdiff
       - name: Download artifacts (assets)
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: assets (release)
           path: assets
       - name: Download artifacts (markdown)
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: markdown (release)
           path: markdown
@@ -240,7 +248,7 @@ jobs:
 
           git add public/images
       - name: Upload artifacts (perceptualdiff)
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         if: always()
         with:
           name: perceptualdiff (release)
@@ -305,7 +313,7 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.SUPER_RENTALS_DEPLOY_KEY }}
       - name: Download artifacts
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: code (release)
           path: .
@@ -364,7 +372,7 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.SUPER_RENTALS_DEPLOY_KEY }}
       - name: Download artifacts
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: code (release)
           path: output

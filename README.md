@@ -12,7 +12,7 @@ and replaced with their output in the final markdown files.
 ## Why?
 
 * Make sure the tutorial steps are up-to-date and working correctly with the
-  latest Ember, Ember CLI Ember Data, etc.
+  latest Ember, Ember CLI EmberData, etc.
 * Save time by not having to manually sync the content with upstream blueprint
   changes!
 * Easy to maintain – changing a step early on in the tutorial automatically
@@ -497,13 +497,13 @@ Start a server (background task).
 Example:
 
     ```run:server:start cwd=super-rentals expect="Serving on http://localhost:4200/"
-    ember server
+    npm start
     ```
 
 Result:
 
     ```shell
-    $ ember server
+    $ npm start
     Build successful (9006ms) – Serving on http://localhost:4200/
     ```
 
@@ -574,7 +574,7 @@ Stop a server (background task) previously started with `run:server:start`.
 Example:
 
     ```run:server:stop
-    ember server
+    npm start
     ```
 
 The content of the source code block is the command used to start the server.
@@ -589,7 +589,7 @@ Options:
 
 ## How?
 
-* Requires [Volta](https://volta.sh), `git`
+* Requires `git`
 * Probably only works on Unix/bash for now (PRs welcome)
   * Should probably run the build in a docker container anyway
 * `yarn install`

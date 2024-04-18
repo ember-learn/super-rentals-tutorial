@@ -1,6 +1,6 @@
 import { exec as _exec } from 'child_process';
 import { Code, Image } from 'mdast';
-import _mkdirp from 'mkdirp';
+import mkdirp from 'mkdirp';
 import { basename, extname, join, sep } from 'path';
 import { ScreenshotOptions, Viewport } from 'puppeteer';
 import { JSONObject, JSONValue, assert } from 'ts-std';
@@ -10,7 +10,6 @@ import Options from '../options';
 import parseArgs, { ToBool, optional, required } from '../parse-args';
 
 const exec = promisify(_exec);
-const mkdirp = promisify(_mkdirp);
 
 interface Args {
   filename: string;
@@ -156,7 +155,7 @@ export default async function screenshot(node: Code, options: Options, vfile: VF
     filename = `${basename(filename, '.png')}@2x.png`;
   }
 
-  await mkdirp(dir);
+  await mkdirp(dir, {});
 
   let path = join(dir, filename);
 

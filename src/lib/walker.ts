@@ -10,7 +10,7 @@ import { VFile } from 'vfile';
 type Handler<Options> = (this: Walker<Options>, node: Node) => Option<Node> | Promise<Option<Node>>;
 
 function isParent(node: Node): node is Parent {
-  return Array.isArray(node.children);
+  return Array.isArray((node as Node & { children: unknown }).children);
 }
 
 const Printer = unified().use(markdown).use(stringify);
@@ -19,7 +19,7 @@ export default class Walker<Options> {
   private lastNode: Option<Node> = null;
   private lastHeading: Option<Heading> = null;
 
-  constructor(protected options: Options, protected file: VFile) {}
+  constructor(protected options: Options, protected file: VFile) { }
 
   [key: string]: unknown;
 
@@ -116,10 +116,10 @@ export default class Walker<Options> {
       let handler = maybeHandler as Handler<Options>;
       return handler.call(this, node);
     } else if (isParent(node)) {
-      return {
+      return ({
         ...node,
         children: await this.visit(node.children)
-      };
+      } as Parent);
     } else {
       return node;
     }

@@ -27,7 +27,7 @@ export function ToBool(input: string): boolean {
   return input === 'true';
 }
 
-export type KeyTransforms = Array<KeyTransform<string | undefined, unknown>>;
+export type KeyTransforms = KeyTransform<string | undefined, unknown>[];
 
 export default function parseArgs<Args extends object>(node: Code, transforms: KeyTransforms): Args {
   let { lang, meta } = node;

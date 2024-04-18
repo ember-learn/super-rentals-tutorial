@@ -1,7 +1,7 @@
 <!--lint disable no-undefined-references-->
 
 ```run:server:start hidden=true cwd=super-rentals expect="Serving on http://localhost:4200/"
-ember server
+npm start
 ```
 
 In this chapter, we'll work on adding a new search feature, and refactor our `index.hbs` template into a new component along the way. We'll learn about a new pattern for passing data around between components, too! Once we're done, our page will look like this:
@@ -114,7 +114,7 @@ Now that we've finished our refactor and tried it out in the UI, let's write a t
 
 ```run:file:create lang=js cwd=super-rentals filename=tests/integration/components/rentals-test.js
 import { module, test } from 'qunit';
-import { setupRenderingTest } from 'ember-qunit';
+import { setupRenderingTest } from 'super-rentals/tests/helpers';
 import { render } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 
@@ -332,7 +332,7 @@ Hooray, it works! Awesome. Now that we've tried this out manually in the UI, let
 
 ```run:file:patch lang=js cwd=super-rentals filename=tests/integration/components/rentals-test.js
 @@ -2,3 +2,3 @@
- import { setupRenderingTest } from 'ember-qunit';
+ import { setupRenderingTest } from 'super-rentals/tests/helpers';
 -import { render } from '@ember/test-helpers';
 +import { render, fillIn } from '@ember/test-helpers';
  import { hbs } from 'ember-cli-htmlbars';
@@ -391,7 +391,7 @@ wait  #qunit-banner.qunit-pass
 ```
 
 ```run:server:stop
-ember server
+npm start
 ```
 
 ```run:checkpoint cwd=super-rentals

@@ -60,19 +60,19 @@ After saving the changes to our configuration file, we will need to restart our 
 
 <!-- TODO: https://github.com/ember-cli/ember-cli/issues/8782 -->
 
-You can stop the server by finding the terminal window where `ember server` is running, then type `Ctrl + C`. That is, typing the "C" key on your keyboard *while* holding down the "Ctrl" key at the same time. Once it has stopped, you can start it back up again with the same `ember server` command.
+You can stop the server by finding the terminal window where `npm start` is running, then type `Ctrl + C`. That is, typing the "C" key on your keyboard *while* holding down the "Ctrl" key at the same time. Once it has stopped, you can start it back up again with the same `npm start` command.
 
 ```run:server:start cwd=super-rentals expect="Serving on http://localhost:4200/"
 #[cfg(all(ci, unix))]
-#[display(ember server)]
-ember server | awk '{ \
+#[display(npm start)]
+npm start | awk '{ \
   gsub("Build successful \\([0-9]+ms\\)", "Build successful (13286ms)"); \
   print; \
   system("") # https://unix.stackexchange.com/a/83853 \
 }'
 
 #[cfg(not(all(ci, unix)))]
-ember server
+npm start
 ```
 
 ## Generating a Component with a Component Class
@@ -161,7 +161,7 @@ We just added a lot of behavior into a single component, so let's write some tes
 
 ```run:file:patch lang=js cwd=super-rentals filename=tests/integration/components/map-test.js
 @@ -2,4 +2,5 @@
- import { setupRenderingTest } from 'ember-qunit';
+ import { setupRenderingTest } from 'super-rentals/tests/helpers';
 -import { render } from '@ember/test-helpers';
 +import { render, find } from '@ember/test-helpers';
  import { hbs } from 'ember-cli-htmlbars';
@@ -190,7 +190,7 @@ We just added a lot of behavior into a single component, so let's write some tes
 +      .hasAttribute('width', '150')
 +      .hasAttribute('height', '120');
 
--    assert.dom(this.element).hasText('');
+-    assert.dom().hasText('');
 +    let { src } = find('.map img');
 +    let token = encodeURIComponent(ENV.MAPBOX_ACCESS_TOKEN);
 
@@ -202,23 +202,23 @@ We just added a lot of behavior into a single component, so let's write some tes
 -    `);
 +    assert.ok(
 +      src.startsWith('https://api.mapbox.com/'),
-+      'the src starts with "https://api.mapbox.com/"'
++      'the src starts with "https://api.mapbox.com/"',
 +    );
 
--    assert.dom(this.element).hasText('template block text');
+-    assert.dom().hasText('template block text');
 +    assert.ok(
 +      src.includes('-122.4184,37.7797,10'),
-+      'the src should include the lng,lat,zoom parameter'
++      'the src should include the lng,lat,zoom parameter',
 +    );
 +
 +    assert.ok(
 +      src.includes('150x120@2x'),
-+      'the src should include the width,height and @2x parameter'
++      'the src should include the width,height and @2x parameter',
 +    );
 +
 +    assert.ok(
 +      src.includes(`access_token=${token}`),
-+      'the src should include the escaped access token'
++      'the src should include the escaped access token',
 +    );
 +  });
 +
@@ -403,12 +403,12 @@ Just to be sure, we can add a test for this behavior:
 +
 +    assert.ok(
 +      img.src.includes('-122.4194,37.7749,10'),
-+      'the src should include the lng,lat,zoom parameter'
++      'the src should include the lng,lat,zoom parameter',
 +    );
 +
 +    assert.ok(
 +      img.src.includes('150x120@2x'),
-+      'the src should include the width,height and @2x parameter'
++      'the src should include the width,height and @2x parameter',
 +    );
 +
 +    this.setProperties({
@@ -419,12 +419,12 @@ Just to be sure, we can add a test for this behavior:
 +
 +    assert.ok(
 +      img.src.includes('-122.4194,37.7749,12'),
-+      'the src should include the lng,lat,zoom parameter'
++      'the src should include the lng,lat,zoom parameter',
 +    );
 +
 +    assert.ok(
 +      img.src.includes('300x200@2x'),
-+      'the src should include the width,height and @2x parameter'
++      'the src should include the width,height and @2x parameter',
 +    );
 +
 +    this.setProperties({
@@ -434,12 +434,12 @@ Just to be sure, we can add a test for this behavior:
 +
 +    assert.ok(
 +      img.src.includes('-122.3321,47.6062,12'),
-+      'the src should include the lng,lat,zoom parameter'
++      'the src should include the lng,lat,zoom parameter',
 +    );
 +
 +    assert.ok(
 +      img.src.includes('300x200@2x'),
-+      'the src should include the width,height and @2x parameter'
++      'the src should include the width,height and @2x parameter',
 +    );
 +  });
 +
@@ -465,7 +465,7 @@ wait  #qunit-banner.qunit-pass
 ```
 
 ```run:server:stop
-ember server
+npm start
 ```
 
 ```run:checkpoint cwd=super-rentals

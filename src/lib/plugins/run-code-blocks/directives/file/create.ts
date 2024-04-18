@@ -1,13 +1,12 @@
 import { writeFile as _writeFile } from 'fs';
 import { Code } from 'mdast';
-import _mkdirp from 'mkdirp';
+import mkdirp from 'mkdirp';
 import { basename, dirname, join } from 'path';
 import { Option } from 'ts-std';
 import { promisify } from 'util';
 import Options from '../../options';
 import parseArgs, { ToBool, optional, required } from '../../parse-args';
 
-const mkdirp = promisify(_mkdirp);
 const writeFile = promisify(_writeFile);
 
 interface Args {
@@ -37,7 +36,7 @@ export default async function createFile(node: Code, options: Options): Promise<
 
   dir = join(dir, dirname(args.filename));
 
-  await mkdirp(dir);
+  await mkdirp(dir, {});
 
   let path = join(dir, basename(args.filename));
 

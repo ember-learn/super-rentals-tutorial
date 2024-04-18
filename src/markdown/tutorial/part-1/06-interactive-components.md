@@ -1,7 +1,7 @@
 <!--lint disable no-undefined-references-->
 
 ```run:server:start hidden=true cwd=super-rentals expect="Serving on http://localhost:4200/"
-ember server
+npm start
 ```
 
 In this chapter, you will add interactivity to the page, allowing the user to click an image to enlarge or shrink it:
@@ -234,7 +234,7 @@ Finally, let's write a test for this new behavior:
 
 ```run:file:patch lang=js cwd=super-rentals filename=tests/integration/components/rental/image-test.js
 @@ -2,3 +2,3 @@
- import { setupRenderingTest } from 'ember-qunit';
+ import { setupRenderingTest } from 'super-rentals/tests/helpers';
 -import { render } from '@ember/test-helpers';
 +import { render, click } from '@ember/test-helpers';
  import { hbs } from 'ember-cli-htmlbars';
@@ -341,7 +341,7 @@ wait  #qunit-banner.qunit-pass
 ```
 
 ```run:server:stop
-ember server
+npm start
 ```
 
 ```run:checkpoint cwd=super-rentals

@@ -1,7 +1,7 @@
 <!--lint disable no-undefined-references-->
 
 ```run:server:start hidden=true cwd=super-rentals expect="Serving on http://localhost:4200/"
-ember server
+npm start
 ```
 
 Now that we are fetching real data from our "server", let's add a new feature — dedicated pages for each of our rentals:
@@ -270,7 +270,7 @@ Now that we have this template in place, we can add some tests for this new comp
 +  test('it renders a header with a share button', async function (assert) {
 +    await render(hbs`<Rental::Detailed @rental={{this.rental}} />`);
 
--    assert.dom(this.element).hasText('');
+-    assert.dom().hasText('');
 +    assert.dom('.jumbo').exists();
 +    assert.dom('.jumbo h2').containsText('Grand Old Mansion');
 +    assert
@@ -288,7 +288,7 @@ Now that we have this template in place, we can add some tests for this new comp
 +  test('it renders detailed information about a rental property', async function (assert) {
 +    await render(hbs`<Rental::Detailed @rental={{this.rental}} />`);
 
--    assert.dom(this.element).hasText('template block text');
+-    assert.dom().hasText('template block text');
 +    assert.dom('article').hasClass('rental');
 +    assert.dom('article h3').containsText('About Grand Old Mansion');
 +    assert.dom('article .detail.owner').containsText('Veruca Salt');
@@ -333,13 +333,13 @@ Finally, let's add a `rental` template to actually *invoke* our `<Rental::Detail
 +    assert.dom('.rental').exists({ count: 3 });
 +
 +    await click('.rental:first-of-type a');
-+    assert.equal(currentURL(), '/rentals/grand-old-mansion');
++    assert.strictEqual(currentURL(), '/rentals/grand-old-mansion');
 +  });
 +
 +  test('visiting /rentals/grand-old-mansion', async function (assert) {
 +    await visit('/rentals/grand-old-mansion');
 +
-+    assert.equal(currentURL(), '/rentals/grand-old-mansion');
++    assert.strictEqual(currentURL(), '/rentals/grand-old-mansion');
 +    assert.dom('nav').exists();
 +    assert.dom('h1').containsText('SuperRentals');
 +    assert.dom('h2').containsText('Grand Old Mansion');
@@ -374,7 +374,7 @@ wait  #qunit-banner.qunit-pass
 This page *looks* done, but we have a share button that doesn't actually work. We'll address this in the next chapter.
 
 ```run:server:stop
-ember server
+npm start
 ```
 
 ```run:checkpoint cwd=super-rentals

@@ -90,7 +90,7 @@ del package.json
 @@ -9,2 +9,3 @@
      EmberENV: {
 +      RAISE_ON_DEPRECATION: true,
-       FEATURES: {
+       EXTEND_PROTOTYPES: false,
 ```
 
 ```run:file:create hidden=true cwd=super-rentals filename=public/_redirects
@@ -98,7 +98,7 @@ del package.json
 ```
 
 ```run:file:patch hidden=true cwd=super-rentals filename=tests/index.html
-@@ -28,2 +28,91 @@
+@@ -28,2 +28,93 @@
      <script src="{{rootURL}}assets/tests.js"></script>
 +    <script>
 +      if (QUnit.urlParams.deterministic) {
@@ -178,14 +178,16 @@ del package.json
 +          }
 +        });
 +
-+        QUnit.config.callbacks.done.unshift(details => {
-+          details.runtime = totalRuntime;
-+        });
-+
 +        QUnit.begin(details => {
 +          let ua = document.getElementById('qunit-userAgent');
 +          ua.innerText = ua.innerText.replace(/QUnit [0-9\.]+/g, 'QUnit');
 +          ua.innerText = ua.innerText.replace(/(WebKit|Chrome|Safari)\/[0-9\.]+/g, '$1');
++        });
++
++        QUnit.on('runEnd', () => {
++          let display = document.getElementById('qunit-testresult-display');
++          display.innerText = display.innerText
++            .replace(/in [.0-9]+ milliseconds/, `in ${totalRuntime} milliseconds`);
 +        });
 +      }
 +    </script>
@@ -231,19 +233,19 @@ We'll learn about the purposes of these files and folders as we go. For now, jus
 
 ## Starting and Stopping the Development Server
 
-Ember CLI comes with a lot of different commands for a variety of development tasks, such as the `ember new` command that we saw earlier. It also comes with a *development server*, which we can launch with the `ember server` command:
+Ember CLI comes with a lot of different commands for a variety of development tasks, such as the `ember new` command that we saw earlier. It also comes with a *development server*, which we can launch within the project with the `npm start` command:
 
 ```run:server:start cwd=super-rentals expect="Serving on http://localhost:4200/"
 #[cfg(all(ci, unix))]
-#[display(ember server)]
-ember server | awk '{ \
+#[display(npm start)]
+npm start | awk '{ \
   gsub("Build successful \\([0-9]+ms\\)", "Build successful (9761ms)"); \
   print; \
   system("") # https://unix.stackexchange.com/a/83853 \
 }'
 
 #[cfg(not(all(ci, unix)))]
-ember server
+npm start
 ```
 
 The development server is responsible for compiling our app and serving it to the browsers. It may take a while to boot up. Once it's up and running, open your favorite browser and head to <http://localhost:4200>. You should see the following welcome page:
@@ -256,7 +258,7 @@ visit http://localhost:4200/?deterministic
 >
 > The `localhost` address in the URL means that you can only access the development server from your local machine. If you would like to share your work with the world, you will have to *[deploy](https://cli.emberjs.com/release/basic-use/deploying/)* your app to the public Internet. We'll cover how to do that in Part 2 of the tutorial.
 
-You can exit out of the development server at any time by typing `Ctrl + C` into the terminal window where `ember server` is running. That is, typing the "C" key on your keyboard *while* holding down the "Ctrl" key at the same time. Once it has stopped, you can start it back up again with the same `ember server` command. We recommend having two terminal windows open: one to run the server in background, another to type other Ember CLI commands.
+You can exit out of the development server at any time by typing `Ctrl + C` into the terminal window where `npm start` is running. That is, typing the "C" key on your keyboard *while* holding down the "Ctrl" key at the same time. Once it has stopped, you can start it back up again with the same `npm start` command. We recommend having two terminal windows open: one to run the server in background, another to type other Ember CLI commands.
 
 ## Editing Files and Live Reload
 
@@ -268,9 +270,9 @@ As text on the welcome page pointed out, the source code for the page is located
 @@ -1,7 +1 @@
 -{{page-title "SuperRentals"}}
 -
--{{!-- The following component displays Ember's default welcome message. --}}
+-{{! The following component displays Ember's default welcome message. }}
 -<WelcomePage />
--{{!-- Feel free to remove this! --}}
+-{{! Feel free to remove this! }}
 -
 -{{outlet}}
 \ No newline at end of file
@@ -356,6 +358,10 @@ body {
 /* ...snip... */
 ```
 
+> Zoey says...
+>
+> The CSS file is pretty long, so we didn't show the entire file here. Be sure to use the link above to download the complete file!
+
 If you are familiar with CSS, feel free to customize these styles to your liking! Just keep in mind that you may see some visual differences going forward, should you choose to do so.
 
 When you are ready, save the CSS file; our trusty development server should pick it up and refresh our page right away. No more unstyled content!
@@ -396,7 +402,7 @@ visit http://localhost:4200/?deterministic
 ```
 
 ```run:server:stop
-ember server
+npm start
 ```
 
 ```run:checkpoint cwd=super-rentals

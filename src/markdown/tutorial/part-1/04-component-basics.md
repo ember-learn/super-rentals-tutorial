@@ -1,7 +1,7 @@
 <!--lint disable no-undefined-references-->
 
 ```run:server:start hidden=true cwd=super-rentals expect="Serving on http://localhost:4200/"
-ember server
+npm start
 ```
 
 In this chapter, you will *[refactor](../../../components/introducing-components/#toc_breaking-it-into-pieces)* your existing templates to use components. We will also be adding a site-wide navigation bar:
@@ -166,7 +166,7 @@ Let's replace the boilerplate code that was generated for us with our own test:
 -
 -    await render(hbs`<Jumbo />`);
 -
--    assert.dom(this.element).hasText('');
+-    assert.dom().hasText('');
 -
 -    // Template block usage:
 -    await render(hbs`
@@ -175,7 +175,7 @@ Let's replace the boilerplate code that was generated for us with our own test:
 -      </Jumbo>
 -    `);
 -
--    assert.dom(this.element).hasText('template block text');
+-    assert.dom().hasText('template block text');
 +  test('it renders the content inside a jumbo header with a tomster', async function (assert) {
 +    await render(hbs`<Jumbo>Hello World</Jumbo>`);
 +
@@ -265,17 +265,17 @@ But what kind of test? We *could* write a component test for the `<NavBar>` by i
 
 ```run:file:patch lang=js cwd=super-rentals filename=tests/acceptance/super-rentals-test.js
 @@ -11,2 +11,4 @@
-     assert.equal(currentURL(), '/');
+     assert.strictEqual(currentURL(), '/');
 +    assert.dom('nav').exists();
 +    assert.dom('h1').hasText('SuperRentals');
      assert.dom('h2').hasText('Welcome to Super Rentals!');
 @@ -23,2 +25,4 @@
-     assert.equal(currentURL(), '/about');
+     assert.strictEqual(currentURL(), '/about');
 +    assert.dom('nav').exists();
 +    assert.dom('h1').hasText('SuperRentals');
      assert.dom('h2').hasText('About Super Rentals');
 @@ -35,2 +39,4 @@
-     assert.equal(currentURL(), '/getting-in-touch');
+     assert.strictEqual(currentURL(), '/getting-in-touch');
 +    assert.dom('nav').exists();
 +    assert.dom('h1').hasText('SuperRentals');
      assert.dom('h2').hasText('Contact Us');
@@ -291,13 +291,13 @@ But what kind of test? We *could* write a component test for the `<NavBar>` by i
 +    assert.dom('nav a.menu-contact').hasText('Contact');
 +
 +    await click('nav a.menu-about');
-+    assert.equal(currentURL(), '/about');
++    assert.strictEqual(currentURL(), '/about');
 +
 +    await click('nav a.menu-contact');
-+    assert.equal(currentURL(), '/getting-in-touch');
++    assert.strictEqual(currentURL(), '/getting-in-touch');
 +
 +    await click('nav a.menu-index');
-+    assert.equal(currentURL(), '/');
++    assert.strictEqual(currentURL(), '/');
 +  });
  });
 ```
@@ -372,7 +372,7 @@ wait  #qunit-banner.qunit-pass
 ```
 
 ```run:server:stop
-ember server
+npm start
 ```
 
 ```run:checkpoint cwd=super-rentals

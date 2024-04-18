@@ -1,7 +1,7 @@
 <!--lint disable no-undefined-references-->
 
 ```run:server:start hidden=true cwd=super-rentals expect="Serving on http://localhost:4200/"
-ember server
+npm start
 ```
 
 It's time to finally work on the rentals listing:
@@ -67,7 +67,7 @@ Then, we will write a test to ensure all of the details are present. We will rep
 -
 -    await render(hbs`<Rental />`);
 -
--    assert.dom(this.element).hasText('');
+-    assert.dom().hasText('');
 -
 -    // Template block usage:
 -    await render(hbs`
@@ -76,7 +76,7 @@ Then, we will write a test to ensure all of the details are present. We will rep
 -      </Rental>
 -    `);
 -
--    assert.dom(this.element).hasText('template block text');
+-    assert.dom().hasText('template block text');
 +  test('it renders information about a rental property', async function (assert) {
 +    await render(hbs`<Rental />`);
 +
@@ -196,7 +196,7 @@ Let's write a test for our new component!
 -
 -    await render(hbs`<Rental::Image />`);
 -
--    assert.dom(this.element).hasText('');
+-    assert.dom().hasText('');
 -
 -    // Template block usage:
 -    await render(hbs`
@@ -205,7 +205,7 @@ Let's write a test for our new component!
 -      </Rental::Image>
 -    `);
 -
--    assert.dom(this.element).hasText('template block text');
+-    assert.dom().hasText('template block text');
 +  test('it renders the given image', async function (assert) {
 +    await render(hbs`
 +      <Rental::Image
@@ -249,7 +249,7 @@ wait  #qunit-banner.qunit-pass
 ```
 
 ```run:server:stop
-ember server
+npm start
 ```
 
 ```run:checkpoint cwd=super-rentals

@@ -25,7 +25,7 @@ export default class Server {
     // TODO
   }
 
-  get pid(): Option<number> {
+  get pid(): null | number | undefined {
     return this.process && this.process.pid;
   }
 
