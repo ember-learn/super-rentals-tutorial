@@ -44,7 +44,7 @@ EmberData is built around the idea of organizing your app's data into _[model ob
 
 Enough talking, why don't we give that a try!
 
-```run:file:create lang=js cwd=super-rentals filename=app/models/rentals.js
+```run:file:create lang=js cwd=super-rentals filename=app/models/rental.js
 import Model, { attr } from '@ember-data/model';
 
 const COMMUNITY_CATEGORIES = ['Condo', 'Townhouse', 'Apartment'];
@@ -85,7 +85,7 @@ Attributes declared with the `@attr` decorator work with the auto-track feature 
 
 ```run:command hidden=true cwd=super-rentals
 ember test --path dist
-git add app/models/rentals.js
+git add app/models/rental.js
 ```
 
 ## Testing Models
@@ -93,29 +93,29 @@ git add app/models/rentals.js
 So far, we haven't had a good place to write tests for the rental property's `type` logic. Now that we have found a home for it in the model class, it also made it easy to test this behavior. We can add a test file for our model using the `model-test` generator:
 
 ```run:command cwd=super-rentals
-ember generate model-test rentals
+ember generate model-test rental
 ```
 
 ```run:command hidden=true cwd=super-rentals
-git add tests/unit/models/rentals-test.js
+git add tests/unit/models/rental-test.js
 ```
 
 > Zoey says...
 >
-> We could also have used the `ember generate model rentals` command in the first place, which would have created both the model and test file for us.
+> We could also have used the `ember generate model rental` command in the first place, which would have created both the model and test file for us.
 
 The generator created some boilerplate code for us, which serves as a pretty good starting point for writing our test:
 
-```run:file:patch lang=js cwd=super-rentals filename=tests/unit/models/rentals-test.js
+```run:file:patch lang=js cwd=super-rentals filename=tests/unit/models/rental-test.js
 @@ -6,7 +6,34 @@
 
 -  // Replace this with your real tests.
 -  test('it exists', function (assert) {
 +  test('it has the right type', function (assert) {
      const store = this.owner.lookup('service:store');
--    const model = store.createRecord('rentals', {});
+-    const model = store.createRecord('rental', {});
 -    assert.ok(model, 'model exists');
-+    let rental = store.createRecord('rentals', {
++    let rental = store.createRecord('rental', {
 +      id: 'grand-old-mansion',
 +      title: 'Grand Old Mansion',
 +      owner: 'Veruca Salt',
@@ -161,7 +161,7 @@ Running the tests in the browser confirms that everything is working as intended
 ```run:command hidden=true cwd=super-rentals
 ember test --path dist
 git add app/services/store.js
-git add tests/unit/models/rentals-test.js
+git add tests/unit/models/rental-test.js
 ```
 
 ```run:screenshot width=1024 height=1024 retina=true filename=pass-1.png alt="All the tests pass!"
@@ -200,7 +200,7 @@ Alright, now that we have our model set up, it's time to refactor our route hand
 -      return { id, type, ...attributes };
 -    });
 +  async model() {
-+    const { content } = await this.store.request(query('rentals'));
++    const { content } = await this.store.request(query('rental'));
 +    return content.data;
    }
 ```
@@ -231,7 +231,7 @@ Alright, now that we have our model set up, it's time to refactor our route hand
 -    return { id, type, ...attributes };
 +  async model(params) {
 +    const { content } = await this.store.request(
-+      findRecord('rentals', params.rental_id),
++      findRecord('rental', params.rental_id),
 +    );
 +    return content.data;
    }
@@ -241,7 +241,7 @@ Wow... that removed a lot of code! This is all possible thanks to the power of c
 
 ## The EmberData Store
 
-As mentioned above, EmberData provides a `store` service, which we can inject into our route using the `@service store;` declaration, making the EmberData store available as `this.store`. It provides the `request` method for making fetch requests using `RequestManager`. As its name implies: the `RequestManager` is request centric. Instead of answering questions about specific records or types of records, we ask it about the status of a specific request. To initiate a request, we use the `request` method on the store, passing in a request object. The request object is created using builders from `@ember-data/json-api/request`. Specifically, the [`findRecord` builder](../../../models/finding-records/#toc_retrieving-a-single-record) takes a model type (`rentals` in our case) and a model ID (for us, that would be `params.rental_id` from the URL) as arguments and builds fetch options for a single record. On the other hand, the [`query` builder](../../../models/finding-records/#toc_retrieving-multiple-records) takes the model type as an argument and builds fetch options to query for all records of that type.
+As mentioned above, EmberData provides a `store` service, which we can inject into our route using the `@service store;` declaration, making the EmberData store available as `this.store`. It provides the `request` method for making fetch requests using `RequestManager`. As its name implies: the `RequestManager` is request centric. Instead of answering questions about specific records or types of records, we ask it about the status of a specific request. To initiate a request, we use the `request` method on the store, passing in a request object. The request object is created using builders from `@ember-data/json-api/request`. Specifically, the [`findRecord` builder](../../../models/finding-records/#toc_retrieving-a-single-record) takes a model type (`rental` in our case) and a model ID (for us, that would be `params.rental_id` from the URL) as arguments and builds fetch options for a single record. On the other hand, the [`query` builder](../../../models/finding-records/#toc_retrieving-multiple-records) takes the model type as an argument and builds fetch options to query for all records of that type.
 
 The EmberData store acts as a kind of intermediary between our app and the server; it does many important things, including caching the responses that were fetched from the server. If we request some records (instances of model classes) that we had _already_ fetched from the server in the past, EmberData's store ensures that we can access the records immediately, without having to fetch them again unnecessarily and wait for the server to respond. But, if we don't already have that response cached in our store, then it will go off and fetches it from the server. Pretty nice, right?
 
@@ -256,8 +256,8 @@ Darn, there were a couple of failing tests! At the same time, it's great that we
 
 Looking at the failure messages, the problem appears to be that the store went to the wrong URLs when fetching data from the server, resulting in some 404 errors. Specifically:
 
-- When building the `query('rentals')` request, the resulted `url` in request options was `/rentals`, instead of `/api/rentals.json`.
-- When building the `findRecord('rentals', 'grand-old-mansion')` request, the resulted `url` in request options was `/rentals/grand-old-mansion`, instead of `/api/rentals/grand-old-mansion.json`.
+- When building the `query('rental')` request, the resulted `url` in request options was `/rentals`, instead of `/api/rentals.json`.
+- When building the `findRecord('rental', 'grand-old-mansion')` request, the resulted `url` in request options was `/rentals/grand-old-mansion`, instead of `/api/rentals/grand-old-mansion.json`.
 
 Hm, okay, so we have to teach EmberData to fetch data from the correct location. But how does EmberData know how to fetch data from our server in the first place?
 
