@@ -108,45 +108,47 @@ git add tests/unit/models/rental-test.js
 The generator created some boilerplate code for us, which serves as a pretty good starting point for writing our test:
 
 ```run:file:patch lang=js cwd=super-rentals filename=tests/unit/models/rental-test.js
-@@ -6,7 +6,34 @@
+@@ -6,9 +6,35 @@
 
 -  // Replace this with your real tests.
 -  test('it exists', function (assert) {
 +  test('it has the right type', function (assert) {
-     let store = this.owner.lookup('service:store');
--    let model = store.createRecord('rental', {});
--    assert.ok(model);
-+    let rental = store.createRecord('rental', {
-+      id: 'grand-old-mansion',
-+      title: 'Grand Old Mansion',
-+      owner: 'Veruca Salt',
-+      city: 'San Francisco',
+     const store = this.owner.lookup('service:store');
+-    const model = store.createRecord('rental', {});
+-    assert.ok(model, 'model exists');
++    const rental = store.createRecord("rental", {
++      id: "grand-old-mansion",
++      title: "Grand Old Mansion",
++      owner: "Veruca Salt",
++      city: "San Francisco",
 +      location: {
 +        lat: 37.7749,
-+        lng: -122.4194,
++        lng: -122.4194
 +      },
-+      category: 'Estate',
++      category: "Estate",
 +      bedrooms: 15,
 +      image:
-+        'https://upload.wikimedia.org/wikipedia/commons/c/cb/Crane_estate_(5).jpg',
++        "https://upload.wikimedia.org/wikipedia/commons/c/cb/Crane_estate_(5).jpg",
 +      description:
-+        'This grand old mansion sits on over 100 acres of rolling hills and dense redwood forests.',
++        "This grand old mansion sits on over 100 acres of rolling hills and dense redwood forests."
 +    });
 +
-+    assert.strictEqual(rental.type, 'Standalone');
++    assert.strictEqual(rental.type, "Standalone");
 +
-+    rental.category = 'Condo';
-+    assert.strictEqual(rental.type, 'Community');
++    rental.category = "Condo";
++    assert.strictEqual(rental.type, "Community");
 +
-+    rental.category = 'Townhouse';
-+    assert.strictEqual(rental.type, 'Community');
++    rental.category = "Townhouse";
++    assert.strictEqual(rental.type, "Community");
 +
-+    rental.category = 'Apartment';
-+    assert.strictEqual(rental.type, 'Community');
++    rental.category = "Apartment";
++    assert.strictEqual(rental.type, "Community");
 +
-+    rental.category = 'Estate';
-+    assert.strictEqual(rental.type, 'Standalone');
++    rental.category = "Estate";
++    assert.strictEqual(rental.type, "Standalone");
    });
+ });
+-``
 ```
 
 This model test is also known as a *[unit test](../../../testing/testing-models/)*. Unlike any of the other tests that we've written thus far, this test doesn't actually *render* anything. It just instantiates the rental model object and tests the model object directly, manipulating its attributes and asserting their value.
