@@ -115,7 +115,7 @@ The generator created some boilerplate code for us, which serves as a pretty goo
 +  test('it has the right type', function (assert) {
      const store = this.owner.lookup('service:store');
 -    const model = store.createRecord('rental', {});
--    assert.ok(model);
+-    assert.ok(model, 'model exists');
 +    let rental = store.createRecord('rental', {
 +      id: 'grand-old-mansion',
 +      title: 'Grand Old Mansion',
