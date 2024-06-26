@@ -38,6 +38,10 @@ Fortunately, we're not going to do any of that. As it turns out, there's a much 
 
 There's a lot to learn about EmberData, but let's start by uncovering features that help with our immediate problem.
 
+> Zoey says...
+>
+> EmberData works with multiple versions of Ember, please refer Compatibility section of the [EmberData README](https://github.com/emberjs/data/blob/main/README.md#compatibility) while doing your application upgrade.
+
 ## EmberData Models
 
 EmberData is built around the idea of organizing your app's data into _[model objects](../../../models/defining-models/)_. These objects represent units of information that our application presents to the user. For example, the rental property data we have been working with would be a good candidate.
