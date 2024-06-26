@@ -40,7 +40,7 @@ There's a lot to learn about EmberData, but let's start by uncovering features t
 
 > Zoey says...
 >
-> EmberData works with multiple versions of Ember, please refer Compatibility section of the [EmberData README](https://github.com/emberjs/data/blob/main/README.md#compatibility) while doing your application upgrade.
+> RequestManager is available from EmberData 4.12 LTS release. EmberData works with multiple versions of Ember, please refer Compatibility section of the [EmberData README](https://github.com/emberjs/data/blob/main/README.md#compatibility) while doing your application upgrade.
 
 ## EmberData Models
 
