@@ -312,11 +312,11 @@ As you can see, the handler appends `.json` to the URL of each request. Pretty s
 The next step that we need to do, is to configure `RequestManager` to use this handler. Let's create the request-manager service.
 
 ```run:file:create cwd=super-rentals filename=app/services/request-manager.js
-import RequestManager from '@ember-data/request';
+import BaseRequestManager from '@ember-data/request';
 import Fetch from '@ember-data/request/fetch';
 import { JsonSuffixHandler } from 'super-rentals/utils/handlers';
 
-export default class extends RequestManager {
+export default class RequestManager extends BaseRequestManager {
   constructor(args) {
     super(args);
 
