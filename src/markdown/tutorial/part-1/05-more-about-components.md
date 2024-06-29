@@ -104,7 +104,7 @@ wait  #qunit-banner.qunit-pass
 
 Finally, let's invoke this a couple of times from our index template to populate the page.
 
-```run:file:patch lang=js cwd=super-rentals filename=app/templates/index.hbs
+```run:file:patch lang=handlebars cwd=super-rentals filename=app/templates/index.hbs
 @@ -5 +5,9 @@
  </Jumbo>
 +

@@ -38,7 +38,7 @@ git add app/router.js
 
 Now that we have this route in place, we can update our `<Rental>` component to actually *link* to each of our detailed rental properties!
 
-```run:file:patch lang=js cwd=super-rentals filename=app/components/rental.hbs
+```run:file:patch lang=handlebars cwd=super-rentals filename=app/components/rental.hbs
 @@ -6,3 +6,7 @@
    <div class="details">
 -    <h3>{{@rental.title}}</h3>
