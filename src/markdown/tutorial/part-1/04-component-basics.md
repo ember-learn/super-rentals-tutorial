@@ -58,7 +58,7 @@ When invoking a component, Ember will replace the component tag with the content
 
 Let's try it out by editing the index template:
 
-```run:file:patch lang=js cwd=super-rentals filename=app/templates/index.hbs
+```run:file:patch lang=handlebars cwd=super-rentals filename=app/templates/index.hbs
 @@ -1,3 +1,2 @@
 -<div class="jumbo">
 -  <div class="right tomster"></div>
@@ -85,7 +85,7 @@ wait  #qunit-banner.qunit-pass
 
 Let's do the same for our other two pages as well.
 
-```run:file:patch lang=js cwd=super-rentals filename=app/templates/about.hbs
+```run:file:patch lang=handlebars cwd=super-rentals filename=app/templates/about.hbs
 @@ -1,5 +1,4 @@
 -<div class="jumbo">
 -  <div class="right tomster"></div>
@@ -101,7 +101,7 @@ Let's do the same for our other two pages as well.
 +</Jumbo>
 ```
 
-```run:file:patch lang=js cwd=super-rentals filename=app/templates/contact.hbs
+```run:file:patch lang=handlebars cwd=super-rentals filename=app/templates/contact.hbs
 @@ -1,5 +1,4 @@
 -<div class="jumbo">
 -  <div class="right tomster"></div>
@@ -225,19 +225,19 @@ git add app/components/nav-bar.hbs
 
 Next, we will add our `<NavBar>` component to the top of each page:
 
-```run:file:patch lang=js cwd=super-rentals filename=app/templates/about.hbs
+```run:file:patch lang=habdlebars cwd=super-rentals filename=app/templates/about.hbs
 @@ -1 +1,2 @@
 +<NavBar />
  <Jumbo>
 ```
 
-```run:file:patch lang=js cwd=super-rentals filename=app/templates/contact.hbs
+```run:file:patch lang=habdlebars cwd=super-rentals filename=app/templates/contact.hbs
 @@ -1 +1,2 @@
 +<NavBar />
  <Jumbo>
 ```
 
-```run:file:patch lang=js cwd=super-rentals filename=app/templates/index.hbs
+```run:file:patch lang=handlebars cwd=super-rentals filename=app/templates/index.hbs
 @@ -1 +1,2 @@
 +<NavBar />
  <Jumbo>
@@ -335,20 +335,20 @@ While we are at it, we will also add a container element that wraps around the w
 </div>
 ```
 
-```run:file:patch lang=js cwd=super-rentals filename=app/templates/index.hbs
+```run:file:patch lang=handlebars cwd=super-rentals filename=app/templates/index.hbs
 @@ -1,2 +1 @@
 -<NavBar />
  <Jumbo>
 ```
 
 
-```run:file:patch lang=js cwd=super-rentals filename=app/templates/contact.hbs
+```run:file:patch lang=handlebars cwd=super-rentals filename=app/templates/contact.hbs
 @@ -1,2 +1 @@
 -<NavBar />
  <Jumbo>
 ```
 
-```run:file:patch lang=js cwd=super-rentals filename=app/templates/about.hbs
+```run:file:patch lang=handlebars cwd=super-rentals filename=app/templates/about.hbs
 @@ -1,2 +1 @@
 -<NavBar />
  <Jumbo>
