@@ -10,11 +10,11 @@ In this chapter, we will work on removing some code duplication in our route han
 
 During this refactor, you will learn about:
 
-- EmberData models
-- Testing models
-- Loading models in routes
-- The EmberData Store and RequestManager
-- Working with Request builders and handlers
+* EmberData models
+* Testing models
+* Loading models in routes
+* The EmberData Store and RequestManager
+* Working with Request builders and handlers
 
 ## What is EmberData?
 
@@ -23,18 +23,16 @@ Now that we've added some features, it's time to do some clean up again!
 A while back, we added the `rental` route. If memory serves us well, we didn't do anything too fancy when we added that new route; we just copy-pasted a lot of the same logic from the `index` route.
 
 ```run:file:show lang=js cwd=super-rentals filename=app/routes/index.js
-
 ```
 
 ```run:file:show lang=js cwd=super-rentals filename=app/routes/rental.js
-
 ```
 
-This duplication incurred a bit of _[technical debt][todo: link to technical debt]_ for us, making our code base harder to maintain in the long run. For example, if we wanted to change something about how our data-fetching logic worked, we'd have to change it in _both_ the `index` and `rental` routes. If we changed things in one place, but forgot about the other spot, we could end up with really subtle bugs in our app! Yikes!
+This duplication incurred a bit of *[technical debt][TODO: link to technical debt]* for us, making our code base harder to maintain in the long run. For example, if we wanted to change something about how our data-fetching logic worked, we'd have to change it in *both* the `index` and `rental` routes. If we changed things in one place, but forgot about the other spot, we could end up with really subtle bugs in our app! Yikes!
 
 Chances are, as we keep working on this app, we will need to add more routes that fetch data from the server. Since all of our server's API endpoints follow the [JSON:API](https://jsonapi.org/) format, we'd have to keep copying this boilerplate for every single new route we add to the app!
 
-Fortunately, we're not going to do any of that. As it turns out, there's a much better solution here: we can use EmberData! As its name implies, [EmberData](../../../models/) is a library that helps manage data and _[application state][todo: link to application state]_ in Ember applications.
+Fortunately, we're not going to do any of that. As it turns out, there's a much better solution here: we can use EmberData! As its name implies, [EmberData](../../../models/) is a library that helps manage data and *[application state][TODO: link to application state]* in Ember applications.
 
 There's a lot to learn about EmberData, but let's start by uncovering features that help with our immediate problem.
 
@@ -44,7 +42,7 @@ There's a lot to learn about EmberData, but let's start by uncovering features t
 
 ## EmberData Models
 
-EmberData is built around the idea of organizing your app's data into _[model objects](../../../models/defining-models/)_. These objects represent units of information that our application presents to the user. For example, the rental property data we have been working with would be a good candidate.
+EmberData is built around the idea of organizing your app's data into *[model objects](../../../models/defining-models/)*. These objects represent units of information that our application presents to the user. For example, the rental property data we have been working with would be a good candidate.
 
 Enough talking, why don't we give that a try!
 
@@ -73,15 +71,14 @@ export default class RentalModel extends Model {
 }
 ```
 
-Here, we created a `RentalModel` class that extends EmberData's `Model` superclass. When fetching the listing data from the server, each individual rental property will be represented by an instance (also known as a _[record](../../../models/finding-records/)_) of our `RentalModel` class.
+Here, we created a `RentalModel` class that extends EmberData's `Model` superclass. When fetching the listing data from the server, each individual rental property will be represented by an instance (also known as a *[record](../../../models/finding-records/)*) of our `RentalModel` class.
 
 We used the `@attr` decorator to declare the attributes of a rental property. These attributes correspond directly to the `attributes` data we expect the server to provide in its responses:
 
 ```run:file:show lang=json cwd=super-rentals filename=public/api/rentals/grand-old-mansion.json
-
 ```
 
-We can access these attributes for an instance of `RentalModel` using standard dot notation, such as `model.title` or `model.location.lat`. In addition to the attributes we declared here, there will always be an implicit _id_ attribute as well, which is used to uniquely identify the model object and can be accessed using `model.id`.
+We can access these attributes for an instance of `RentalModel` using standard dot notation, such as `model.title` or `model.location.lat`. In addition to the attributes we declared here, there will always be an implicit *id* attribute as well, which is used to uniquely identify the model object and can be accessed using `model.id`.
 
 Model classes in EmberData are no different than any other classes we've worked with so far, in that they allow for a convenient place for adding custom behavior. We took advantage of this feature to move our `type` logic (which is a major source of unnecessary duplication in our route handlers) into a getter on our model class. Once we have everything working here, we will go back to clean that up.
 
@@ -152,9 +149,9 @@ The generator created some boilerplate code for us, which serves as a pretty goo
    });
 ```
 
-This model test is also known as a _[unit test](../../../testing/testing-models/)_. Unlike any of the other tests that we've written thus far, this test doesn't actually _render_ anything. It just instantiates the rental model object and tests the model object directly, manipulating its attributes and asserting their value.
+This model test is also known as a *[unit test](../../../testing/testing-models/)*. Unlike any of the other tests that we've written thus far, this test doesn't actually *render* anything. It just instantiates the rental model object and tests the model object directly, manipulating its attributes and asserting their value.
 
-It is worth pointing out that EmberData provides a `store` _[service](../../../services/)_, also known as the EmberData store. In our test, we used the `this.owner.lookup('service:store')` API to get access to the EmberData store. The store provides a `createRecord` method to instantiate our model object for us. To make this `store` service available, we must add the following file:
+It is worth pointing out that EmberData provides a `store` *[service](../../../services/)*, also known as the EmberData store. In our test, we used the `this.owner.lookup('service:store')` API to get access to the EmberData store. The store provides a `createRecord` method to instantiate our model object for us. To make this `store` service available, we must add the following file:
 
 ```run:file:create cwd=super-rentals filename=app/services/store.js
 export { default } from 'ember-data/store';
@@ -260,8 +257,8 @@ Darn, there were a couple of failing tests! At the same time, it's great that we
 
 Looking at the failure messages, the problem appears to be that the store went to the wrong URLs when fetching data from the server, resulting in some 404 errors. Specifically:
 
-- When building the `query('rental')` request, the resulted `url` in request options was `/rentals`, instead of `/api/rentals.json`.
-- When building the `findRecord('rental', 'grand-old-mansion')` request, the resulted `url` in request options was `/rentals/grand-old-mansion`, instead of `/api/rentals/grand-old-mansion.json`.
+* When building the `query('rental')` request, the resulted `url` in request options was `/rentals`, instead of `/api/rentals.json`.
+* When building the `findRecord('rental', 'grand-old-mansion')` request, the resulted `url` in request options was `/rentals/grand-old-mansion`, instead of `/api/rentals/grand-old-mansion.json`.
 
 Hm, okay, so we have to teach EmberData to fetch data from the correct location. But how does EmberData know how to fetch data from our server in the first place?
 
@@ -269,8 +266,8 @@ Hm, okay, so we have to teach EmberData to fetch data from the correct location.
 
 Let's start customizing the things that didn't work for us by default. Specifically:
 
-- Our resource URLs have an extra `/api` _namespace_ prefix.
-- Our resource URLs have a `.json` extension at the end.
+* Our resource URLs have an extra `/api` *namespace* prefix.
+* Our resource URLs have a `.json` extension at the end.
 
 The first thing we want to do is have our builder respect a configurable default host and/or namespace. Adding a namespace prefix happens to be pretty common across Ember apps, so EmberData provides a global config mechanism for host and namespace. Typically you will want to do this either in your store file or app file.
 
@@ -370,7 +367,7 @@ visit http://localhost:4200/rentals/grand-old-mansion?deterministic
 wait  .rental.detailed
 ```
 
-EmberData offers many, many features (like managing the _relationships_ between different models) and there's a lot more we can learn about it. For example, if your backend's have some inconsistencies across different endpoints, EmberData allows you to define request specific handlers and builders! We are just scratching the surface here. If you want to learn more about EmberData, check out [its own dedicated section](../../../models/) in the guides!
+EmberData offers many, many features (like managing the *relationships* between different models) and there's a lot more we can learn about it. For example, if your backend's have some inconsistencies across different endpoints, EmberData allows you to define request specific handlers and builders! We are just scratching the surface here. If you want to learn more about EmberData, check out [its own dedicated section](../../../models/) in the guides!
 
 ```run:server:stop
 npm start
