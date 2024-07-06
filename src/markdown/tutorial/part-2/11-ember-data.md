@@ -290,7 +290,7 @@ The first thing we want to do is have our builder respect a configurable default
 Adding the `.json` extension is a bit less common, and doesn't have a declarative configuration API of its own. We could just modify request options directly in place of use, but that would be a bit messy. Instead, let's create a handler to do this for us.
 
 ```run:file:create cwd=super-rentals filename=app/utils/handlers.js
-const JsonSuffixHandler = {
+export const JsonSuffixHandler = {
   request(context, next) {
     const { request } = context;
     const updatedRequest = Object.assign({}, request, {
@@ -300,11 +300,9 @@ const JsonSuffixHandler = {
     return next(updatedRequest);
   },
 };
-
-export { JsonSuffixHandler };
 ```
 
-As you can see, the handler appends `.json` to the URL of each request. Pretty simple, right? Then it calls the `next` function with the modified request object. This is how we can chain multiple handlers together to build up a request.
+As you can see, the handler appends `.json` to the URL of each request. Pretty simple, right? Then it calls the `next` function with the modified copy of the request object (because it is immutable). This is how we can chain multiple handlers together to build up a request.
 
 The next step that we need to do, is to configure `RequestManager` to use this handler. Let's create the request-manager service.
 
