@@ -225,13 +225,13 @@ git add app/components/nav-bar.hbs
 
 Next, we will add our `<NavBar>` component to the top of each page:
 
-```run:file:patch lang=habdlebars cwd=super-rentals filename=app/templates/about.hbs
+```run:file:patch lang=handlebars cwd=super-rentals filename=app/templates/about.hbs
 @@ -1 +1,2 @@
 +<NavBar />
  <Jumbo>
 ```
 
-```run:file:patch lang=habdlebars cwd=super-rentals filename=app/templates/contact.hbs
+```run:file:patch lang=handlebars cwd=super-rentals filename=app/templates/contact.hbs
 @@ -1 +1,2 @@
 +<NavBar />
  <Jumbo>
