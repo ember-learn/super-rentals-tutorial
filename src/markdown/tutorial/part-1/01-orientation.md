@@ -270,11 +270,11 @@ As text on the welcome page pointed out, the source code for the page is located
 @@ -1,7 +1 @@
 -{{page-title "SuperRentals"}}
 -
+-{{outlet}}
+-
 -{{! The following component displays Ember's default welcome message. }}
 -<WelcomePage />
 -{{! Feel free to remove this! }}
--
--{{outlet}}
 \ No newline at end of file
 +Hello World!!!
 ```
