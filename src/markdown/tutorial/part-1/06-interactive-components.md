@@ -55,8 +55,8 @@ Ember will create an *[instance][TODO: link to instance]* of the class whenever 
 
 ```run:file:patch lang=js cwd=super-rentals filename=app/components/rental/image.js
 @@ -3 +3,6 @@
--export default class RentalImageComponent extends Component {}
-+export default class RentalImageComponent extends Component {
+-export default class RentalImage extends Component {}
++export default class RentalImage extends Component {
 +  constructor(...args) {
 +    super(...args);
 +    this.isLarge = false;
@@ -121,7 +121,7 @@ Since this pattern of initializing instance variables in the constructor is pret
 
 ```run:file:patch lang=js cwd=super-rentals filename=app/components/rental/image.js
 @@ -3,6 +3,3 @@
- export default class RentalImageComponent extends Component {
+ export default class RentalImage extends Component {
 -  constructor(...args) {
 -    super(...args);
 -    this.isLarge = false;
@@ -149,7 +149,7 @@ Let's modify our class to add a *[method](../../../in-depth-topics/native-classe
 +import { tracked } from '@glimmer/tracking';
 +import { action } from '@ember/object';
 
- export default class RentalImageComponent extends Component {
+ export default class RentalImage extends Component {
 -  isLarge = false;
 +  @tracked isLarge = false;
 +
