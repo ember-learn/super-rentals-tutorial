@@ -87,10 +87,10 @@ Whew! Let's look at the JavaScript class next.
 
 ```run:file:patch lang=js cwd=super-rentals filename=app/components/share-button.js
 @@ -3 +3,27 @@
--export default class ShareButtonComponent extends Component {}
+-export default class ShareButton extends Component {}
 +const TWEET_INTENT = 'https://twitter.com/intent/tweet';
 +
-+export default class ShareButtonComponent extends Component {
++export default class ShareButton extends Component {
 +  get currentURL() {
 +    return window.location.href;
 +  }
@@ -217,7 +217,7 @@ To fix our problem, we would need to do the same. Ember exposes this internal st
 +import { service } from '@ember/service';
  import Component from '@glimmer/component';
 @@ -5,4 +6,6 @@
- export default class ShareButtonComponent extends Component {
+ export default class ShareButton extends Component {
 +  @service router;
 +
    get currentURL() {
