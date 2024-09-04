@@ -12,7 +12,7 @@ In this chapter, we'll work on adding a new search feature, and refactor our `in
 
 During this refactor, you will learn about:
 
-* Using Ember's built-in `<Input>` component
+* Using forms
 * The provider component pattern
 * Using block parameters when invoking components
 * Yielding data to caller components
@@ -21,15 +21,17 @@ During this refactor, you will learn about:
 
 As our app grows and as we add more features to it, one thing that would be really nice to have is some search functionality. It would be great if our users could just type a word into a search box and our app could just respond with matching and relevant rentals. So how could we go about implementing this feature?
 
-Well, we can start simple. Before we worry about implementing the "search" part of this feature, let's just get something on the page. The first step is to add an `<input>` tag to our `index` page, and make it look pretty with a class.
+Well, we can start simple. Before we worry about implementing the "search" part of this feature, let's just get something on the page. The first step is to add a form with an `<input>` tag to our `index` page, and make it look pretty with a class.
 
 ```run:file:patch lang=handlebars cwd=super-rentals filename=app/templates/index.hbs
-@@ -7,2 +7,7 @@
+@@ -7,2 +7,9 @@
  <div class="rentals">
-+  <label>
-+    <span>Where would you like to stay?</span>
-+    <input class="light">
-+  </label>
++  <form>
++    <label>
++      <span>Where would you like to stay?</span>
++      <input class="light">
++    </label>
++  </form>
 +
    <ul class="results">
 ```
@@ -60,10 +62,12 @@ Let's start simple again and begin our refactor by creating a new template for o
 
 ```run:file:create lang=handlebars cwd=super-rentals filename=app/components/rentals.hbs
 <div class="rentals">
-  <label>
-    <span>Where would you like to stay?</span>
-    <input class="light">
-  </label>
+  <form>
+    <label>
+      <span>Where would you like to stay?</span>
+      <input class="light">
+    </label>
+  </form>
 
   <ul class="results">
     {{#each @rentals as |rental|}}
@@ -76,13 +80,15 @@ Let's start simple again and begin our refactor by creating a new template for o
 There is one minor change to note here: while extracting our markup into a component, we also renamed the `@model` argument to be `@rentals` instead, just in order to be a little more specific about what we're iterating over in our `{{#each}}` loop. Otherwise, all we're doing here is copy-pasting what was on our `index.hbs` page into our new component template. Now we just need to actually use our new component in the index template where we started this whole refactor! Let's render our `<Rentals>` component in our `index.hbs` template.
 
 ```run:file:patch lang=handlebars cwd=super-rentals filename=app/templates/index.hbs
-@@ -6,13 +6,2 @@
+@@ -6,15 +6,2 @@
 
 -<div class="rentals">
--  <label>
--    <span>Where would you like to stay?</span>
--    <input class="light">
--  </label>
+-  <form>
+-    <label>
+-      <span>Where would you like to stay?</span>
+-      <input class="light">
+-    </label>
+-  </form>
 -
 -  <ul class="results">
 -    {{#each @model as |rental|}}
@@ -213,32 +219,49 @@ visit http://localhost:4200/tests?nocontainer&nolint&deterministic
 wait  #qunit-banner.qunit-pass
 ```
 
-## Using Ember's `<Input>`
+## Using a `form`
 
-Now that we have our component all set up, we can finally wire up our search box and store our search query! First things first: let's create a component class to store our query state.
+Now that we have our component all set up, we can finally wire up our search box and store our search query! First things first: let's create a component class to store our query state and handle events from the `form` element:
 
 ```run:file:create lang=js cwd=super-rentals filename=app/components/rentals.js
 import Component from '@glimmer/component';
 import { tracked } from '@glimmer/tracking';
+import { action } from '@ember/object';
 
 export default class Rentals extends Component {
   @tracked query = '';
+
+  @action
+  updateQuery(event) {
+    let formData = new FormData(event.currentTarget);
+    this.query = formData.get('rental-search-term');
+  }
+
+  @action
+  handleSubmit(event) {
+    event.preventDefault();
+    this.updateQuery(event);
+  }
 }
 ```
 
 Next, we'll wire up our query state in the component template.
 
 ```run:file:patch lang=handlebars cwd=super-rentals filename=app/components/rentals.hbs
-@@ -3,3 +3,3 @@
-     <span>Where would you like to stay?</span>
--    <input class="light">
-+    <Input @value={{this.query}} class="light" />
-   </label>
+@@ -1,7 +1,8 @@
+ <div class="rentals">
+-  <form>
++  <form {{on "input" this.updateQuery}} {{on "submit" this.handleSubmit}}>
+     <label>
+       <span>Where would you like to stay?</span>
+-      <input class="light">
++      <input name="rental-search-term" class="light">
+     </label>
++    <p>The results below will update as you type.</p>
+   </form>
 ```
 
-Interesting! There are a few things happening in this one-line template change. First, we're moving from using a plain HTML `<input>` tag to using an `<Input>` tag instead! As it turns out, Ember provides us with a helpful little *[`<Input>` component](../../../components/built-in-components/#toc_input)* for this exact use case. The `<Input>` component is actually just a wrapper around the `<input>` element.
-
-Ember's `<Input>` component is pretty neat; it will wire up things behind the scenes such that, whenever the user types something into the input box, `this.query` changes accordingly. In other words, `this.query` is kept in sync with the value of what is being searched; we finally have the perfect way of storing the state of our search query!
+[`FormData`](https://developer.mozilla.org/en-US/docs/Web/API/FormData) is a built-in JavaScript object for handling forms. It requires the `name` attribute on the `input`. We handle both `submit` and `input` events for the form so that the query updates both when the user types into the input and when they submit the form.
 
 > Zoey says...
 >
