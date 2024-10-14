@@ -224,7 +224,7 @@ jobs:
                 echo "$dest (unchanged)"
                 cp "$prev" "$dest"
                 return 0
-              elif perceptualdiff --output "$diff" --downsample 2 --colorfactor 0.5 "$prev" "$src" > /dev/null; then
+              elif perceptualdiff --output "$diff" --downsample 2 --colorfactor 0.5 --threshold 1000 "$prev" "$src" > /dev/null; then
                 echo "$dest (unchanged)"
                 cp "$prev" "$dest"
                 return 0
