@@ -325,9 +325,8 @@ Notice that we are using the `JsonSuffixHandler` we created earlier. We also use
 Lastly, let's update our `store` service to use the new `RequestManager` we created.
 
 ```run:file:patch lang=js cwd=super-rentals filename=app/services/store.js
-@@ -1 +1,7 @@
+@@ -1 +1,6 @@
 -export { default } from 'ember-data/store';
-+// eslint-disable-next-line ember/use-ember-data-rfc-395-imports
 +import BaseStore from 'ember-data/store';
 +import { service } from '@ember/service';
 +
