@@ -11,7 +11,7 @@ on:
 jobs:
   build:
     name: Build (${{ matrix.channel }})
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04 # Update when chromium bug mentioned https://github.com/puppeteer/puppeteer/issues/12818 is resolved
     env:
       CI: 'true'
     strategy:
