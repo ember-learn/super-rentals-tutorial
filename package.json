@@ -23,7 +23,7 @@
     "mkdirp": "^1.0.4",
     "ncp": "^2.0.0",
     "node-glob": "^1.2.0",
-    "puppeteer": "~19.5.2",
+    "puppeteer": "~24.4.0",
     "rehype-stringify": "^6.0.0",
     "remark": "^11.0.1",
     "remark-cli": "^7.0.0",
