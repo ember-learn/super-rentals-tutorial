@@ -128,6 +128,8 @@ For example:
     });
     ```
 
+In both cases, be sure your editor is not set to trim trailing whitespace on lines. This will cause the diff to be error with `error: corrupt patch at line`.
+
 Once you have added the diff to the prose using the `run:file:patch` command, you can remove the `run:pause` command. In order to test that your patch was successfully applied, be sure to:
 
 1. Run `git checkout` any changes in the working directory of `/dist/code/super-rentals/code`.
