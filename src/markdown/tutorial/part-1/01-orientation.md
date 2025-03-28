@@ -194,8 +194,16 @@ del package.json
 
 ```
 
+```run:file:patch hidden=true cwd=super-rentals filename=.prettierignore
+@@ -16 +16,3 @@ 
+ /.node_modules.ember-try/
++
++**/*.hbs
+```
+
 ```run:command hidden=true cwd=super-rentals
 yarn test
+git add .prettierignore
 git add app/index.html
 git add config/environment.js
 git add public/_redirects
