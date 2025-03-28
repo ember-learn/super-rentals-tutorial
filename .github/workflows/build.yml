@@ -85,7 +85,7 @@ jobs:
           name: code (${{ matrix.channel }})
           path: dist/code/super-rentals
           include-hidden-files: true
-      - name: Notify Discord
+      - name: Notify Discord # This is a step rather than a job because of the matrix
         uses: sarisia/actions-status-discord@v1
         if: ${{ failure() && github.event_name == 'schedule' }}
         with:
