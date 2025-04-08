@@ -195,10 +195,10 @@ del package.json
 ```
 
 ```run:file:patch hidden=true cwd=super-rentals filename=.prettierignore
-@@ -16 +16,3 @@ 
- /.node_modules.ember-try/
-+
+@@ -1 +1,2 @@
 +**/*.hbs
+ # unconventional js
+
 ```
 
 ```run:command hidden=true cwd=super-rentals
