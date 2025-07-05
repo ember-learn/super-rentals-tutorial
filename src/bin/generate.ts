@@ -4,7 +4,7 @@ import {
   readFile as _readFile,
   writeFile as _writeFile
 } from 'fs';
-import _glob from 'glob';
+import { glob } from 'glob';
 import mkdirp from 'mkdirp';
 import { ncp as _ncp } from 'ncp';
 import { basename, dirname, join, relative, sep } from 'path';
@@ -17,8 +17,6 @@ import { promisify } from 'util';
 import { VFileOptions } from 'vfile';
 
 import { doNotEdit, retinaImages, runCodeBlocks, todoLinks, zoeySays } from '../lib';
-
-const glob = promisify(_glob);
 const readFile = promisify(_readFile);
 const writeFile = promisify(_writeFile);
 const ncp = promisify(_ncp);
