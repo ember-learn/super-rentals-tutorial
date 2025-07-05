@@ -8,11 +8,13 @@
   "private": true,
   "devDependencies": {
     "@actions/core": "^1.2.6",
+    "@types/glob": "^9.0.0",
     "@types/image-size": "^0.8.0",
     "@types/mdast": "^3.0.2",
     "@types/mkdirp": "^1.0.2",
     "@types/ncp": "^2.0.1",
     "@types/node": "^18.11.18",
+    "@types/rimraf": "^4.0.5",
     "@types/unist": "^2.0.3",
     "@types/vfile": "^4.0.0",
     "chalk": "^2.4.2",
