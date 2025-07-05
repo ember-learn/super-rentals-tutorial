@@ -59,6 +59,33 @@ async function main() {
 
   let inputPaths = await glob(pattern);
 
+  // Sort files to ensure proper dependency order (01-orientation.md must come first)
+  inputPaths.sort((a, b) => {
+    // Extract directory and filename for comparison
+    let aDirName = dirname(a);
+    let bDirName = dirname(b);
+    let aFileName = basename(a);
+    let bFileName = basename(b);
+
+    // First, sort by directory (part-1 before part-2)
+    if (aDirName !== bDirName) {
+      return aDirName.localeCompare(bDirName);
+    }
+
+    // Within same directory, sort by numeric prefix
+    let aMatch = aFileName.match(/^(\d+)-/);
+    let bMatch = bFileName.match(/^(\d+)-/);
+
+    if (aMatch && bMatch) {
+      let aNum = parseInt(aMatch[1], 10);
+      let bNum = parseInt(bMatch[1], 10);
+      return aNum - bNum;
+    }
+
+    // Fallback to alphabetical for files without numeric prefix
+    return aFileName.localeCompare(bFileName);
+  });
+
   let processor = unified()
     .use(markdown)
     .use(frontmatter)
