@@ -41,17 +41,17 @@ Hack: make an empty package.json to convince ember-cli we are really not in an E
 ```
 
 ```run:command
-# We are supposed to (?) use NPM for the guides, but yarn works better
-# for our setup, so we pass the `--yarn` flag but change the output to
+# We are supposed to (?) use NPM for the guides, but pnpm works better
+# for our setup, so we pass the `--pnpm` flag but change the output to
 # pretend we are running NPM.
 
 #[cfg(all(ci, unix))]
 #[display(ember new super-rentals --lang en)]
-ember new super-rentals --lang en --yarn \
-  | awk '{ gsub("Yarn", "npm"); gsub("yarn", "npm"); print }'
+ember new super-rentals --lang en --pnpm \
+  | awk '{ gsub("Pnpm", "npm"); gsub("pnpm", "npm"); print }'
 
 #[cfg(not(all(ci, unix)))]
-ember new super-rentals --lang en --yarn
+ember new super-rentals --lang en --pnpm
 ```
 
 ```run:command hidden=true
@@ -202,7 +202,7 @@ del package.json
 ```
 
 ```run:command hidden=true cwd=super-rentals
-yarn test
+pnpm test
 git add .prettierignore
 git add app/index.html
 git add config/environment.js
@@ -224,17 +224,17 @@ For the rest of the tutorial, all commands should be run within the `super-renta
 # Somewhere in the guides repo's markdown pipeline there is a bug
 # that further turns them into &amp;nbsp;
 
-# Also, try to hide yarn.lock from view and fake a package-lock.json
+# Also, try to hide pnpm-lock.yaml from view and fake a package-lock.json
 
 #[cfg(unix)]
-tree super-rentals -a -I "node_modules|.git|yarn.lock|_redirects" --dirsfirst \
+tree super-rentals -a -I "node_modules|.git|pnpm-lock.yaml|_redirects" --dirsfirst \
   | sed 's/\xC2\xA0/ /g' \
   | awk \
     '/package\.json/ { print $1 " package.json"; print $1 " package-lock.json" } \
     !/package\.json/ { print }'
 
 #[cfg(windows)]
-npx --quiet tree-cli --base super-rentals --ignore node_modules --ignore .git --ignore yarn.lock --ignore _redirects --directoryFirst -a -l 99
+npx --quiet tree-cli --base super-rentals --ignore node_modules --ignore .git --ignore pnpm-lock.yaml --ignore _redirects --directoryFirst -a -l 99
 ```
 
 We'll learn about the purposes of these files and folders as we go. For now, just know that we'll spend most of our time working within the `app` folder.

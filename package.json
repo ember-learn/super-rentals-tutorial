@@ -52,17 +52,17 @@
   },
   "scripts": {
     "clean": "shx rm -rf dist",
-    "lint": "yarn lint:ts && yarn lint:md",
+    "lint": "pnpm lint:ts && pnpm lint:md",
     "lint:ts": "tslint --project .",
     "lint:md": "remark . --frail",
-    "lint:md:src": "yarn lint:md --ignore-pattern dist",
-    "lint:md:dist": "yarn lint:md --ignore-pattern src",
-    "precompile": "yarn lint:ts",
+    "lint:md:src": "pnpm lint:md --ignore-pattern dist",
+    "lint:md:dist": "pnpm lint:md --ignore-pattern src",
+    "precompile": "pnpm lint:ts",
     "compile": "tsc",
     "generate": "node ./dist/bin/generate.js",
-    "prebuild": "yarn clean && yarn compile && yarn lint:md:src",
-    "build": "yarn generate",
-    "postbuild": "yarn lint:md:dist"
+    "prebuild": "pnpm clean && pnpm compile && pnpm lint:md:src",
+    "build": "pnpm generate",
+    "postbuild": "pnpm lint:md:dist"
   },
-  "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
+  "packageManager": "pnpm@10.12.4+sha512.5ea8b0deed94ed68691c9bad4c955492705c5eeb8a87ef86bc62c74a26b037b08ff9570f108b2e4dbd1dd1a9186fea925e527f141c648e85af45631074680184"
 }

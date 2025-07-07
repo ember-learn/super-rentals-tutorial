@@ -28,9 +28,9 @@ export default async function checkpoint(node: Code, options: Options): Promise<
     cwd = join(cwd, args.cwd);
   }
 
-  console.log(`$ yarn test`);
+  console.log(`$ pnpm test`);
 
-  await exec('yarn test', { cwd });
+  await exec('pnpm test', { cwd });
 
   if (args.commit) {
     console.log(`$ git commit -m ${JSON.stringify(title)}`);
