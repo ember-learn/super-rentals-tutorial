@@ -202,6 +202,11 @@ del package.json
 ```
 
 ```run:command hidden=true cwd=super-rentals
+yarn add -D concurrently
+git add package.json
+```
+
+```run:command hidden=true cwd=super-rentals
 yarn test
 git add .prettierignore
 git add app/index.html
