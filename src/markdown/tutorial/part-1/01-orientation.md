@@ -202,6 +202,11 @@ del package.json
 ```
 
 ```run:command hidden=true cwd=super-rentals
+pnpm i --save-dev concurrently
+git add package.json
+```
+
+```run:command hidden=true cwd=super-rentals
 pnpm test
 git add .prettierignore
 git add app/index.html
