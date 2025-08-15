@@ -27,41 +27,42 @@ jobs:
           git config --global user.email "tomster@emberjs.com"
       - name: Checkout
         uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
       - name: Set up Node
         uses: actions/setup-node@v4
         with:
           node-version: '18'
-          cache: 'yarn'
+          cache: 'pnpm'
       - name: Install dependencies (apt-get)
         run: |
           sudo apt-get update -y
           sudo apt-get install -y tree
-      - name: Install dependencies (yarn)
+      - name: Install dependencies (pnpm)
         run: |
           if [[ "$EMBER_RELEASE_CHANNEL" == "beta" ]]; then
-            yarn upgrade ember-cli@beta
+            pnpm upgrade ember-cli@beta
           else
-            yarn upgrade ember-cli
+            pnpm upgrade ember-cli
           fi
 
-          yarn install
+          pnpm install
         env:
           EMBER_RELEASE_CHANNEL: ${{ matrix.channel }}
       - name: Lint (markdown source)
-        run: yarn lint:md:src
+        run: pnpm lint:md:src
       - name: Lint (typescript)
-        run: yarn lint:ts
+        run: pnpm lint:ts
       - name: Compile (typescript)
-        run: yarn tsc
+        run: pnpm tsc
       - name: Generate
-        run: yarn generate
+        run: pnpm generate
         env:
           # This is needed for external PRs to build, since secrets are not
           # available there. Get your own Mapbox token for local development
           # at: https://account.mapbox.com/access-tokens
           MAPBOX_ACCESS_TOKEN: 'pk.eyJ1IjoiZW1iZXJqcyIsImEiOiJjazBydnZjb2wwYXA5M2Rwc3IydGF2eXM0In0.EQiBFsRi9Jm70XFPiXnoHg'
       - name: Lint (markdown output)
-        run: yarn lint:md:dist
+        run: pnpm lint:md:dist
       - name: Prune artifacts
         if: always()
         working-directory: dist/code/super-rentals
