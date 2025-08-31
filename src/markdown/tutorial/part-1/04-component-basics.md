@@ -163,36 +163,32 @@ Here, we used the generator to generate a *[component test](../../../testing/tes
 
 Let's replace the boilerplate code that was generated for us with our own test:
 
-```run:pause
-CHECK YO SELF - tests
-```
-
-
-```run:file:patch lang=js cwd=super-rentals filename=tests/integration/components/jumbo-test.js
-@@ -8,18 +8,8 @@
-
+```run:file:patch lang=js cwd=super-rentals filename=tests/integration/components/jumbo-test.gjs
+@@ -8,20 +8,10 @@ module('Integration | Component | jumbo', function (hooks) {
+ 
 -  test('it renders', async function (assert) {
--    // Set any properties with this.set('myProperty', 'value');
--    // Handle any actions with this.set('myAction', function(val) { ... });
+-    // Updating values is achieved using autotracking, just like in app code. For example:
+-    // class State { @tracked myProperty = 0; }; const state = new State();
+-    // and update using state.myProperty = 1; await rerender();
+-    // Handle any actions with function myAction(val) { ... };
 -
--    await render(hbs`<Jumbo />`);
+-    await render(<template><Jumbo /></template>);
 -
 -    assert.dom().hasText('');
 -
 -    // Template block usage:
--    await render(hbs`
++  test('it renders the content inside a jumbo header with a tomster', async function (assert) {
+     await render(<template>
 -      <Jumbo>
 -        template block text
 -      </Jumbo>
--    `);
--
++      <Jumbo>Hello World</Jumbo>
+     </template>);
+ 
 -    assert.dom().hasText('template block text');
-+  test('it renders the content inside a jumbo header with a tomster', async function (assert) {
-+    await render(hbs`<Jumbo>Hello World</Jumbo>`);
-+
 +    assert.dom('.jumbo').exists();
 +    assert.dom('.jumbo').hasText('Hello World');
-+    assert.dom('.jumbo .tomster').exists();
++    assert.dom('.jumbo .tomster').exists();  
    });
 ```
 
@@ -202,7 +198,7 @@ Just like visit and click, which we used earlier, render is also an async step, 
 
 ```run:command hidden=true cwd=super-rentals
 ember test --path dist
-git add tests/integration/components/jumbo-test.js
+git add tests/integration/components/jumbo-test.gjs
 ```
 
 ```run:screenshot width=1024 height=512 retina=true filename=pass-3.png alt="Tests still passing with our component test"
@@ -212,46 +208,62 @@ wait  #qunit-banner.qunit-pass
 
 We've been refactoring our existing code for a while, so let's change gears and implement a new feature: the site-wide navigation bar.
 
-We can create a `<NavBar>` component at `app/components/nav-bar.hbs`:
+We can create a `<NavBar>` component at `app/components/nav-bar.gjs`:
 
-```run:file:create lang=handlebars cwd=super-rentals filename=app/components/nav-bar.hbs
-<nav class="menu">
-  <LinkTo @route="index" class="menu-index">
-    <h1>SuperRentals</h1>
-  </LinkTo>
-  <div class="links">
-    <LinkTo @route="about" class="menu-about">
-      About
+```run:file:create lang=gjs cwd=super-rentals filename=app/components/nav-bar.gjs
+import { LinkTo } from '@ember/routing'; 
+
+<template>
+  <nav class="menu">
+    <LinkTo @route="index" class="menu-index">
+      <h1>SuperRentals</h1>
     </LinkTo>
-    <LinkTo @route="contact" class="menu-contact">
-      Contact
-    </LinkTo>
-  </div>
-</nav>
+    <div class="links">
+      <LinkTo @route="about" class="menu-about">
+        About
+      </LinkTo>
+      <LinkTo @route="contact" class="menu-contact">
+        Contact
+      </LinkTo>
+    </div>
+  </nav>
+<template>
 ```
 
 ```run:command hidden=true cwd=super-rentals
-git add app/components/nav-bar.hbs
+git add app/components/nav-bar.gjs
 ```
 
 Next, we will add our `<NavBar>` component to the top of each page:
 
-```run:file:patch lang=handlebars cwd=super-rentals filename=app/templates/about.hbs
-@@ -1 +1,2 @@
-+<NavBar />
- <Jumbo>
+```run:file:patch lang=gjs cwd=super-rentals filename=app/templates/about.gjs
+@@ -2,4 +2,6 @@ import { LinkTo } from '@ember/routing';
+ import Jumbo from 'super-rentals/components/jumbo';
++import NavBar from 'super-rentals/components/nav-bar';
+ 
+ <template>
++  <NavBar />
+   <Jumbo>
 ```
 
-```run:file:patch lang=handlebars cwd=super-rentals filename=app/templates/contact.hbs
-@@ -1 +1,2 @@
-+<NavBar />
- <Jumbo>
+```run:file:patch lang=gjs cwd=super-rentals filename=app/templates/contact.gjs
+@@ -2,4 +2,6 @@ import { LinkTo } from '@ember/routing';
+ import Jumbo from 'super-rentals/components/jumbo';
++import NavBar from 'super-rentals/components/nav-bar';
+ 
+ <template>
++  <NavBar />
+   <Jumbo>
 ```
 
-```run:file:patch lang=handlebars cwd=super-rentals filename=app/templates/index.hbs
-@@ -1 +1,2 @@
-+<NavBar />
- <Jumbo>
+```run:file:patch lang=gjs cwd=super-rentals filename=app/templates/index.gjs
+@@ -2,4 +2,6 @@ import { LinkTo } from '@ember/routing';
+ import Jumbo from 'super-rentals/components/jumbo';
++import NavBar from 'super-rentals/components/nav-bar';
+ 
+ <template>
++  <NavBar />
+   <Jumbo>
 ```
 
 Voilà, we made another component!
@@ -261,9 +273,9 @@ visit http://localhost:4200/?deterministic
 ```
 
 ```run:command hidden=true cwd=super-rentals
-git add app/templates/about.hbs
-git add app/templates/contact.hbs
-git add app/templates/index.hbs
+git add app/templates/about.gjs
+git add app/templates/contact.gjs
+git add app/templates/index.gjs
 ```
 
 > Zoey says...
@@ -337,14 +349,21 @@ This template is special in that it does not have its own URL and cannot be navi
 
 While we are at it, we will also add a container element that wraps around the whole page, as requested by our designer for styling purposes.
 
-```run:file:create lang=handlebars cwd=super-rentals filename=app/templates/application.hbs
-<div class="container">
-  <NavBar />
-  <div class="body">
-    {{outlet}}
+```run:file:create lang=gjs cwd=super-rentals filename=app/templates/application.gjs
+<template>
+  <div class="container">
+    <NavBar />
+    <div class="body">
+      {{outlet}}
+    </div>
   </div>
-</div>
+</template>
 ```
+
+```run:pause
+CHECK YO SELF - nav 
+```
+
 
 ```run:file:patch lang=handlebars cwd=super-rentals filename=app/templates/index.hbs
 @@ -1,2 +1 @@
