@@ -33,24 +33,22 @@ During the course of developing an app, it is pretty common to reuse the same UI
 
 Since it is not a lot of code, it may not seem like a big deal to duplicate this structure on each page. However, if our designer wanted us to make a change to the header, we would have to find and update every single copy of this code. As our app gets bigger, this will become even more of a problem.
 
-Components are the perfect solution to this. In its most basic form, a component is just a piece of template that can be referred to by name. Let's start by creating a new file at `app/components/jumbo.hbs` with markup for the "jumbo" header:
+Components are the perfect solution to this. In its most basic form, a component is just a piece of template that can be referred to by name. Let's start by creating a new file at `app/components/jumbo.gjs` with markup for the "jumbo" header:
 
-```run:file:create lang=handlebars cwd=super-rentals filename=app/components/jumbo.hbs
-<div class="jumbo">
-  <div class="right tomster"></div>
-  {{yield}}
-</div>
+```run:file:create lang=gjs cwd=super-rentals filename=app/components/jumbo.gjs
+<template>
+  <div class="jumbo">
+    <div class="right tomster"></div>
+    {{yield}}
+  </div>
+</template>
 ```
 
 ```run:command hidden=true cwd=super-rentals
-git add app/components/jumbo.hbs
+git add app/components/jumbo.gjs
 ```
 
-That's it, we have created our first component! We can now *[invoke][TODO: link to invoke]* this component anywhere in our app, using `<Jumbo>` as the tag name.
-
-> Zoey says...
->
-> Remember, when invoking components, we need to capitalize their names so Ember can tell them apart from regular HTML elements. The `jumbo.hbs` template corresponds to the `<Jumbo>` tag, just like `super-awesome.hbs` corresponds to `<SuperAwesome>`.
+That's it, we have created our first component! We can now *[invoke][TODO: link to invoke]* this component anywhere in our app, by importing it and using it like we saw with `<LinkTo>` previously.
 
 ## Passing Content to Components with `{{yield}}`
 
@@ -58,16 +56,22 @@ When invoking a component, Ember will replace the component tag with the content
 
 Let's try it out by editing the index template:
 
-```run:file:patch lang=handlebars cwd=super-rentals filename=app/templates/index.hbs
-@@ -1,3 +1,2 @@
--<div class="jumbo">
--  <div class="right tomster"></div>
-+<Jumbo>
-   <h2>Welcome to Super Rentals!</h2>
-@@ -5,2 +4,2 @@
-   <LinkTo @route="about" class="button">About Us</LinkTo>
--</div>
-+</Jumbo>
+```run:file:patch lang=gjs cwd=super-rentals filename=app/templates/index.gjs
+@@ -1,6 +1,6 @@
+-import { LinkTo } from '@ember/routing'; 
++import { LinkTo } from '@ember/routing';
++import Jumbo from 'super-rentals/components/jumbo';
+ 
+ <template>
+-  <div class="jumbo">
+-    <div class="right tomster"></div>
++  <Jumbo>
+     <h2>Welcome to Super Rentals!</h2>
+@@ -8,3 +8,3 @@ import { LinkTo } from '@ember/routing';
+     <LinkTo @route="about" class="button">About Us</LinkTo>
+-  </div>
++  </Jumbo>
+ </template>
 ```
 
 ## Refactoring Existing Code
@@ -85,45 +89,47 @@ wait  #qunit-banner.qunit-pass
 
 Let's do the same for our other two pages as well.
 
-```run:file:patch lang=handlebars cwd=super-rentals filename=app/templates/about.hbs
-@@ -1,5 +1,4 @@
--<div class="jumbo">
--  <div class="right tomster"></div>
-+<Jumbo>
-   <h2>About Super Rentals</h2>
-   <p>
-     The Super Rentals website is a delightful project created to explore Ember.
-@@ -7,4 +6,4 @@
-     AND building Ember applications.
-   </p>
-   <LinkTo @route="contact" class="button">Contact Us</LinkTo>
--</div>
-+</Jumbo>
+```run:file:patch lang=gjs cwd=super-rentals filename=app/templates/about.gjs
+@@ -1,6 +1,6 @@
+ import { LinkTo } from '@ember/routing'; 
++import Jumbo from 'super-rentals/components/jumbo';
+ 
+ <template>
+-  <div class="jumbo">
+-    <div class="right tomster"></div>
++  <Jumbo>
+     <h2>About Super Rentals</h2>
+@@ -12,3 +12,3 @@ import { LinkTo } from '@ember/routing';
+     <LinkTo @route="contact" class="button">Contact Us</LinkTo>
+-  </div>
++  </Jumbo>
+ </template>
 ```
 
-```run:file:patch lang=handlebars cwd=super-rentals filename=app/templates/contact.hbs
-@@ -1,5 +1,4 @@
--<div class="jumbo">
--  <div class="right tomster"></div>
-+<Jumbo>
-   <h2>Contact Us</h2>
-   <p>
-     Super Rentals Representatives would love to help you<br>
-@@ -15,4 +14,4 @@
-     <a href="mailto:superrentalsrep@emberjs.com">superrentalsrep@emberjs.com</a>
-   </address>
-   <LinkTo @route="about" class="button">About</LinkTo>
--</div>
-+</Jumbo>
+```run:file:patch lang=gjs cwd=super-rentals filename=app/templates/contact.gjs
+@@ -1,6 +1,6 @@
+ import { LinkTo } from '@ember/routing'; 
++import Jumbo from 'super-rentals/components/jumbo';
+ 
+ <template>
+-  <div class="jumbo">
+-    <div class="right tomster"></div>
++  <Jumbo>
+     <h2>Contact Us</h2>
+@@ -20,3 +20,3 @@ import { LinkTo } from '@ember/routing';
+     <LinkTo @route="about" class="button">About</LinkTo>
+-  </div>
++  </Jumbo>
+ </template>
 ```
 
 After saving, everything should look exactly the same as before, and all the tests should still pass. Very nice!
 
 ```run:command hidden=true cwd=super-rentals
 ember test --path dist
-git add app/templates/index.hbs
-git add app/templates/about.hbs
-git add app/templates/contact.hbs
+git add app/templates/index.gjs
+git add app/templates/about.gjs
+git add app/templates/contact.gjs
 ```
 
 ```run:screenshot width=1024 retina=true filename=about.png alt="About page – nothing changed"
@@ -150,12 +156,17 @@ ember generate component-test jumbo
 ```
 
 ```run:command hidden=true cwd=super-rentals
-git add tests/integration/components/jumbo-test.js
+git add tests/integration/components/jumbo-test.gjs
 ```
 
 Here, we used the generator to generate a *[component test](../../../testing/testing-components/)*, also known as a rendering test. These are used to render and test a single component at a time. This is in contrast to the acceptance tests that we wrote earlier, which have to navigate and render entire pages worth of content.
 
 Let's replace the boilerplate code that was generated for us with our own test:
+
+```run:pause
+CHECK YO SELF - tests
+```
+
 
 ```run:file:patch lang=js cwd=super-rentals filename=tests/integration/components/jumbo-test.js
 @@ -8,18 +8,8 @@
