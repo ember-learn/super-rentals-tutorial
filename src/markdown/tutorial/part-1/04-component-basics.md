@@ -227,7 +227,7 @@ import { LinkTo } from '@ember/routing';
       </LinkTo>
     </div>
   </nav>
-<template>
+</template>
 ```
 
 ```run:command hidden=true cwd=super-rentals
@@ -343,13 +343,15 @@ wait  #qunit-banner.qunit-pass
 
 Before we move on to the next feature, there is one more thing we could clean up. Since the `<NavBar>` is used for site-wide navigation, it really needs to be displayed on *every* page in the app. So far, we have been adding the component on each page manually. This is a bit error-prone, as we could easily forget to do this the next time that we add a new page.
 
-We can solve this problem by moving the nav-bar into a special template called `application.hbs`. You may remember that it was generated for us when we first created the app but we deleted it. Now, it's time for us to bring it back!
+We can solve this problem by moving the nav-bar into a special template called `application.gjs`. You may remember that it was generated for us when we first created the app but we deleted it. Now, it's time for us to bring it back!
 
 This template is special in that it does not have its own URL and cannot be navigated to on its own. Rather, it is used to specify a common layout that is shared by every page in your app. This is a great place to put site-wide UI elements, like a nav-bar and a site footer.
 
 While we are at it, we will also add a container element that wraps around the whole page, as requested by our designer for styling purposes.
 
 ```run:file:create lang=gjs cwd=super-rentals filename=app/templates/application.gjs
+import NavBar from 'super-rentals/components/nav-bar';
+
 <template>
   <div class="container">
     <NavBar />
@@ -360,28 +362,35 @@ While we are at it, we will also add a container element that wraps around the w
 </template>
 ```
 
-```run:pause
-CHECK YO SELF - nav 
+```run:file:patch lang=gjs cwd=super-rentals filename=app/templates/index.gjs
+@@ -2,6 +2,4 @@ import { LinkTo } from '@ember/routing';
+ import Jumbo from 'super-rentals/components/jumbo';
+-import NavBar from 'super-rentals/components/nav-bar';
+ 
+ <template>
+-  <NavBar />
+   <Jumbo>
 ```
 
 
-```run:file:patch lang=handlebars cwd=super-rentals filename=app/templates/index.hbs
-@@ -1,2 +1 @@
--<NavBar />
- <Jumbo>
+```run:file:patch lang=gjs cwd=super-rentals filename=app/templates/contact.gjs
+@@ -2,6 +2,4 @@ import { LinkTo } from '@ember/routing';
+ import Jumbo from 'super-rentals/components/jumbo';
+-import NavBar from 'super-rentals/components/nav-bar';
+ 
+ <template>
+-  <NavBar />
+   <Jumbo>
 ```
 
-
-```run:file:patch lang=handlebars cwd=super-rentals filename=app/templates/contact.hbs
-@@ -1,2 +1 @@
--<NavBar />
- <Jumbo>
-```
-
-```run:file:patch lang=handlebars cwd=super-rentals filename=app/templates/about.hbs
-@@ -1,2 +1 @@
--<NavBar />
- <Jumbo>
+```run:file:patch lang=gjs cwd=super-rentals filename=app/templates/about.gjs
+@@ -2,6 +2,4 @@ import { LinkTo } from '@ember/routing';
+ import Jumbo from 'super-rentals/components/jumbo';
+-import NavBar from 'super-rentals/components/nav-bar';
+ 
+ <template>
+-  <NavBar />
+   <Jumbo>
 ```
 
 The `{{outlet}}` keyword denotes the place where our site's pages should be rendered into, similar to the `{{yield}}` keyword we saw [earlier](#toc_passing-content-to-components-with-yield).
@@ -390,10 +399,10 @@ This is much nicer! We can run our test suite, which confirms that everything st
 
 ```run:command hidden=true cwd=super-rentals
 ember test --path dist
-git add app/templates/application.hbs
-git add app/templates/index.hbs
-git add app/templates/contact.hbs
-git add app/templates/about.hbs
+git add app/templates/application.gjs
+git add app/templates/index.gjs
+git add app/templates/contact.gjs
+git add app/templates/about.gjs
 ```
 
 ```run:screenshot width=1024 height=512 retina=true filename=pass-5.png alt="Tests still passing with {{outlet}}"
