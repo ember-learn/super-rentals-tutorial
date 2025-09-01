@@ -23,63 +23,64 @@ Let's start by creating the `<Rental>` component. This time, we will use the com
 ember generate component rental
 ```
 
-The generator created two new files for us, a component template at `app/components/rental.hbs`, and a component test file at `tests/integration/components/rental-test.js`.
+The generator created two new files for us, a component template at `app/components/rental.gjs`, and a component test file at `tests/integration/components/rental-test.gjs`.
 
 ```run:command hidden=true cwd=super-rentals
 ember test --path dist
-git add app/components/rental.hbs
-git add tests/integration/components/rental-test.js
+git add app/components/rental.gjs
+git add tests/integration/components/rental-test.gjs
 ```
 
-We will start by editing the template. Let's *[hard-code](https://en.wikipedia.org/wiki/Hard_coding)* the details for one rental property for now, and replace it with the real data from the server later on.
+We will start by editing the component template. Let's *[hard-code](https://en.wikipedia.org/wiki/Hard_coding)* the details for one rental property for now, and replace it with the real data from the server later on.
 
-```run:file:patch lang=handlebars cwd=super-rentals filename=app/components/rental.hbs
-@@ -1,1 +1,17 @@
--{{yield}}
-\ No newline at end of file
-+<article class="rental">
-+  <div class="details">
-+    <h3>Grand Old Mansion</h3>
-+    <div class="detail owner">
-+      <span>Owner:</span> Veruca Salt
+```run:file:patch lang=gjs cwd=super-rentals filename=app/components/rental.gjs
+@@ -1,3 +1,19 @@
+ <template>
+-  {{yield}}
++  <article class="rental">
++    <div class="details">
++      <h3>Grand Old Mansion</h3>
++      <div class="detail owner">
++        <span>Owner:</span> Veruca Salt
++      </div>
++      <div class="detail type">
++        <span>Type:</span> Standalone
++      </div>
++      <div class="detail location">
++        <span>Location:</span> San Francisco
++      </div>
++      <div class="detail bedrooms">
++        <span>Number of bedrooms:</span> 15
++      </div>
 +    </div>
-+    <div class="detail type">
-+      <span>Type:</span> Standalone
-+    </div>
-+    <div class="detail location">
-+      <span>Location:</span> San Francisco
-+    </div>
-+    <div class="detail bedrooms">
-+      <span>Number of bedrooms:</span> 15
-+    </div>
-+  </div>
-+</article>
++  </article>
+ </template>
 ```
 
 Then, we will write a test to ensure all of the details are present. We will replace the boilerplate test generated for us with our own assertions, just like we did for the `<Jumbo>` component earlier:
 
-```run:file:patch lang=js cwd=super-rentals filename=tests/integration/components/rental-test.js
-@@ -8,18 +8,11 @@
-
+```run:file:patch lang=gjs cwd=super-rentals filename=tests/integration/components/rental-test.gjs
+@@ -8,20 +8,11 @@ module('Integration | Component | rental', function (hooks) {
+ 
 -  test('it renders', async function (assert) {
--    // Set any properties with this.set('myProperty', 'value');
--    // Handle any actions with this.set('myAction', function(val) { ... });
+-    // Updating values is achieved using autotracking, just like in app code. For example:
+-    // class State { @tracked myProperty = 0; }; const state = new State();
+-    // and update using state.myProperty = 1; await rerender();
+-    // Handle any actions with function myAction(val) { ... };
 -
--    await render(hbs`<Rental />`);
--
++  test('it renders information about a rental property', async function (assert) {
+     await render(<template><Rental /></template>);
+ 
 -    assert.dom().hasText('');
 -
 -    // Template block usage:
--    await render(hbs`
+-    await render(<template>
 -      <Rental>
 -        template block text
 -      </Rental>
--    `);
+-    </template>);
 -
 -    assert.dom().hasText('template block text');
-+  test('it renders information about a rental property', async function (assert) {
-+    await render(hbs`<Rental />`);
-+
 +    assert.dom('article').hasClass('rental');
 +    assert.dom('article h3').hasText('Grand Old Mansion');
 +    assert.dom('article .detail.owner').includesText('Veruca Salt');
@@ -93,8 +94,8 @@ The test should pass.
 
 ```run:command hidden=true cwd=super-rentals
 ember test --path dist
-git add app/components/rental.hbs
-git add tests/integration/components/rental-test.js
+git add app/components/rental.gjs
+git add tests/integration/components/rental-test.gjs
 ```
 
 ```run:screenshot width=1024 height=512 retina=true filename=pass.png alt="Tests passing with the new <Rental> test"
@@ -104,22 +105,27 @@ wait  #qunit-banner.qunit-pass
 
 Finally, let's invoke this a couple of times from our index template to populate the page.
 
-```run:file:patch lang=handlebars cwd=super-rentals filename=app/templates/index.hbs
-@@ -5 +5,9 @@
- </Jumbo>
+```run:file:patch lang=gjs cwd=super-rentals filename=app/templates/index.gjs
+@@ -2,2 +2,3 @@ import { LinkTo } from '@ember/routing';
+ import Jumbo from 'super-rentals/components/jumbo';
++import Rental from 'super-rentals/components/rental';
+ 
+@@ -9,2 +10,10 @@ import Jumbo from 'super-rentals/components/jumbo';
+   </Jumbo>
 +
-+<div class="rentals">
-+  <ul class="results">
-+    <li><Rental /></li>
-+    <li><Rental /></li>
-+    <li><Rental /></li>
-+  </ul>
-+</div>
++  <div class="rentals">
++    <ul class="results">
++      <li><Rental /></li>
++      <li><Rental /></li>
++      <li><Rental /></li>
++    </ul>
++  </div>
+ </template>
 ```
 
 ```run:command hidden=true cwd=super-rentals
 ember test --path dist
-git add app/templates/index.hbs
+git add app/templates/index.gjs
 ```
 
 With that, we should see the `<Rental>` component showing our Grand Old Mansion three times on the page:
@@ -130,6 +136,11 @@ wait  .rentals li:nth-of-type(3) article.rental
 ```
 
 Things are looking pretty convincing already; not bad for just a little bit of work!
+
+
+```run:pause
+CHECK YO SELF - onto rental/image
+```
 
 ## Organizing Code with Namespaced Components
 
