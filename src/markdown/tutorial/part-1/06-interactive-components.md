@@ -160,21 +160,16 @@ git add app/components/rental/image.gjs
 
 Of course, our users cannot edit our source code, so we need a way for them to toggle the image size from the browser. Specifically, we want to toggle the value of `this.isLarge` whenever the user clicks on our component.
 
-
-```run:pause
-CHECK YO SELF - TRACKED PROPS
-```
-
 ## Managing State with Tracked Properties
 
 Let's modify our class to add a *[method](../../../in-depth-topics/native-classes-in-depth/#toc_methods)* for toggling the size:
 
-```run:file:patch lang=js cwd=super-rentals filename=app/components/rental/image.js
+```run:file:patch lang=gjs cwd=super-rentals filename=app/components/rental/image.gjs
 @@ -1,5 +1,11 @@
  import Component from '@glimmer/component';
 +import { tracked } from '@glimmer/tracking';
 +import { action } from '@ember/object';
-
+ 
  export default class RentalImage extends Component {
 -  isLarge = false;
 +  @tracked isLarge = false;
@@ -182,7 +177,12 @@ Let's modify our class to add a *[method](../../../in-depth-topics/native-classe
 +  @action toggleSize() {
 +    this.isLarge = !this.isLarge;
 +  }
- }
+ 
+```
+
+```run:command hidden=true cwd=super-rentals
+ember test --path dist
+git add app/components/rental/image.gjs
 ```
 
 We did a few things here, so let's break it down.
@@ -193,7 +193,7 @@ In our case, whenever we assign a new value to `this.isLarge`, the `@tracked` an
 
 > Zoey says...
 >
-> Don't worry! If you reference a variable in the template but forget to add the `@tracked` decorator, you will get a helpful development mode error when you change its value!
+> Don't worry! If you reference a variable in the template section but forget to add the `@tracked` decorator, you will get a helpful development mode error when you change its value!
 
 ## Responding to User Interaction with Actions
 
@@ -207,7 +207,7 @@ Finally, we added the `@action` decorator to our method. This indicates to Ember
 
 With that, it's time to wire this up in the template:
 
-```run:file:patch lang=handlebars cwd=super-rentals filename=app/components/rental/image.hbs
+```run:file:patch lang=gjs cwd=super-rentals filename=app/components/rental/image.gjs
 @@ -1,11 +1,11 @@
  {{#if this.isLarge}}
 -  <div class="image large">
@@ -250,30 +250,29 @@ wait  .rentals li:first-of-type article.rental .image.large img
 
 ```run:command hidden=true cwd=super-rentals
 ember test --path dist
-git add app/components/rental/image.hbs
-git add app/components/rental/image.js
+git add app/components/rental/image.gjs
 ```
 
 ## Testing User Interactions
 
 Finally, let's write a test for this new behavior:
 
-```run:file:patch lang=js cwd=super-rentals filename=tests/integration/components/rental/image-test.js
-@@ -2,3 +2,3 @@
+```run:file:patch lang=gjs cwd=super-rentals filename=tests/integration/components/rental/image-test.gjs
+@@ -2,3 +2,3 @@ import { module, test } from 'qunit';
  import { setupRenderingTest } from 'super-rentals/tests/helpers';
 -import { render } from '@ember/test-helpers';
 +import { render, click } from '@ember/test-helpers';
- import { hbs } from 'ember-cli-htmlbars';
-@@ -20,2 +21,26 @@
-   });
+ import RentalImage from 'super-rentals/components/rental/image';
+@@ -22,2 +22,26 @@ module('Integration | Component | rental/image', function (hooks) {
+    });
 +
 +  test('clicking on the component toggles its size', async function (assert) {
-+    await render(hbs`
-+      <Rental::Image
++    await render(<template>
++      <RentalImage
 +        src="/assets/images/teaching-tomster.png"
 +        alt="Teaching Tomster"
 +      />
-+    `);
++    </template>);
 +
 +    assert.dom('button.image').exists();
 +
@@ -295,7 +294,7 @@ Finally, let's write a test for this new behavior:
 
 ```run:command hidden=true cwd=super-rentals
 ember test --path dist
-git add tests/integration/components/rental/image-test.js
+git add tests/integration/components/rental/image-test.gjs
 ```
 
 ```run:screenshot width=1024 height=512 retina=true filename=pass.png alt="Tests passing with the new <Rental::Image> test"
@@ -310,46 +309,54 @@ Let's clean up our template before moving on. We introduced a lot of duplication
 
 These changes are buried deep within the large amount of duplicated code. We can reduce the duplication by using an `{{if}}` *[expression](../../../components/conditional-content/#toc_inline-if)* instead:
 
-```run:file:patch lang=handlebars cwd=super-rentals filename=app/components/rental/image.hbs
-@@ -1,11 +1,8 @@
--{{#if this.isLarge}}
--  <button type="button" class="image large" {{on "click" this.toggleSize}}>
--    <img ...attributes>
-+<button type="button" class="image {{if this.isLarge "large"}}" {{on "click" this.toggleSize}}>
-+  <img ...attributes>
-+  {{#if this.isLarge}}
-     <small>View Smaller</small>
--  </button>
--{{else}}
--  <button type="button" class="image" {{on "click" this.toggleSize}}>
--    <img ...attributes>
-+  {{else}}
-     <small>View Larger</small>
--  </button>
--{{/if}}
-+  {{/if}}
-+</button>
+```run:file:patch lang=gjs cwd=super-rentals filename=app/components/rental/image.gjs
+@@ -12,17 +12,12 @@ export default class RentalImage extends Component {
+   <template>
+-    {{#if this.isLarge}}
+-      <div class="image large">
+-      <button type="button" class="image large" {{on "click" this.toggleSize}}>
+-        <img ...attributes>
++    <div class="image large">
++    <button type="button" class="image {{if this.isLarge "large"}}" {{on "click" this.toggleSize}}>
++      <img ...attributes>
++      {{#if this.isLarge}}
+         <small>View Smaller</small>
+-      </div>
+-      </button>
+-    {{else}}
+-      <div class="image">
+-      <button type="button" class="image" {{on "click" this.toggleSize}}>
+-        <img ...attributes>
++      {{else}}
+         <small>View Larger</small>
+-      </div>
+-      </button>
+-    {{/if}}
++      {{/if}}
++    </div>
++    </button>
+   </template>
 ```
 
 The expression version of `{{if}}` takes two arguments. The first argument is the condition. The second argument is the expression that should be evaluated if the condition is true.
 
 ```run:command hidden=true cwd=super-rentals
 ember test --path dist
-git add app/components/rental/image.hbs
+git add app/components/rental/image.gjs
 ```
 
 Optionally, `{{if}}` can take a third argument for what the expression should evaluate into if the condition is false. This means we could rewrite the button label like so:
 
-```run:file:patch lang=handlebars cwd=super-rentals filename=app/components/rental/image.hbs
-@@ -2,7 +2,3 @@
-   <img ...attributes>
--  {{#if this.isLarge}}
--    <small>View Smaller</small>
--  {{else}}
--    <small>View Larger</small>
--  {{/if}}
-+  <small>View {{if this.isLarge "Smaller" "Larger"}}</small>
- </button>
+```run:file:patch lang=gjs cwd=super-rentals filename=app/components/rental/image.gjs
+@@ -15,7 +15,3 @@ export default class RentalImage extends Component {
+       <img ...attributes>
+-      {{#if this.isLarge}}
+-        <small>View Smaller</small>
+-      {{else}}
+-        <small>View Larger</small>
+-      {{/if}}
++      <small>View {{if this.isLarge "Smaller" "Larger"}}</small>
+     </div>
 ```
 
 Whether or not this is an improvement in the clarity of our code is mostly a matter of taste. Either way, we have significantly reduced the duplication in our code, and made the important bits of logic stand out from the rest.
@@ -358,7 +365,7 @@ Run the test suite one last time to confirm our refactor didn't break anything u
 
 ```run:command hidden=true cwd=super-rentals
 ember test --path dist
-git add app/components/rental/image.hbs
+git add app/components/rental/image.gjs
 ```
 
 ```run:screenshot width=1024 height=512 retina=true filename=pass-2.png alt="Tests still passing after the refactor"
