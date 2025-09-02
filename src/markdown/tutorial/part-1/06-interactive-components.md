@@ -57,7 +57,7 @@ ember test --path dist
 git add app/components/rental/image.gjs
 ```
 
-Now our component contains a *[JavaScript class](https://javascript.info/class)*, *[inheriting](https://javascript.info/class-inheritance)* from `@glimmer/component`.
+Now our component contains a *[JavaScript class](https://javascript.info/class)*, *[inheriting](https://javascript.info/class-inheritance)* from `@glimmer/component`. The template is now nested inside the class definition.
 
 > Zoey says...
 >
@@ -205,32 +205,36 @@ Finally, we added the `@action` decorator to our method. This indicates to Ember
 >
 > If you forget to add the `@action` decorator, you will also get a helpful error when clicking on the button in development mode!
 
-With that, it's time to wire this up in the template:
+With that, it's time to wire this up in the template section:
 
 ```run:file:patch lang=gjs cwd=super-rentals filename=app/components/rental/image.gjs
-@@ -1,11 +1,11 @@
- {{#if this.isLarge}}
--  <div class="image large">
-+  <button type="button" class="image large" {{on "click" this.toggleSize}}>
-     <img ...attributes>
-     <small>View Smaller</small>
--  </div>
-+  </button>
- {{else}}
--  <div class="image">
-+  <button type="button" class="image" {{on "click" this.toggleSize}}>
-     <img ...attributes>
-     <small>View Larger</small>
--  </div>
-+  </button>
- {{/if}}
+@@ -3,2 +3,3 @@ import { tracked } from '@glimmer/tracking';
+ import { action } from '@ember/object';
++import { on } from '@ember/modifier';
+ 
+@@ -13,11 +14,11 @@ export default class RentalImage extends Component {
+     {{#if this.isLarge}}
+-      <div class="image large">
++      <button type="button" class="image large" {{on "click" this.toggleSize}}>
+         <img ...attributes>
+         <small>View Smaller</small>
+-      </div>
++      </button>
+     {{else}}
+-      <div class="image">
++      <button type="button" class="image" {{on "click" this.toggleSize}}>
+         <img ...attributes>
+         <small>View Larger</small>
+-      </div>
++      </button>
+     {{/if}}
 ```
 
 We changed two things here.
 
 First, since we wanted to make our component interactive, we switched the containing tag from `<div>` to `<button>` (this is important for accessibility reasons). By using the correct semantic tag, we will also get focusability and keyboard interaction handling "for free".
 
-Next, we used the `{{on}}` *[modifier](../../../components/template-lifecycle-dom-and-modifiers/#toc_event-handlers)* to attach `this.toggleSize` as a click handler on the button.
+Next, we used the `{{on}}` *[modifier](../../../components/template-lifecycle-dom-and-modifiers/#toc_event-handlers)* to attach `this.toggleSize` as a click handler on the button. The `{{on}}` modifier is imported from the `@ember/modifier` package, which is part of Ember.
 
 With that, we have created our first *[interactive][TODO: link to interactive]* component. Go ahead and try it in the browser!
 
@@ -310,30 +314,24 @@ Let's clean up our template before moving on. We introduced a lot of duplication
 These changes are buried deep within the large amount of duplicated code. We can reduce the duplication by using an `{{if}}` *[expression](../../../components/conditional-content/#toc_inline-if)* instead:
 
 ```run:file:patch lang=gjs cwd=super-rentals filename=app/components/rental/image.gjs
-@@ -12,17 +12,12 @@ export default class RentalImage extends Component {
+@@ -13,13 +13,10 @@ export default class RentalImage extends Component {
    <template>
 -    {{#if this.isLarge}}
--      <div class="image large">
 -      <button type="button" class="image large" {{on "click" this.toggleSize}}>
 -        <img ...attributes>
-+    <div class="image large">
 +    <button type="button" class="image {{if this.isLarge "large"}}" {{on "click" this.toggleSize}}>
 +      <img ...attributes>
 +      {{#if this.isLarge}}
          <small>View Smaller</small>
--      </div>
 -      </button>
 -    {{else}}
--      <div class="image">
 -      <button type="button" class="image" {{on "click" this.toggleSize}}>
 -        <img ...attributes>
 +      {{else}}
          <small>View Larger</small>
--      </div>
 -      </button>
 -    {{/if}}
 +      {{/if}}
-+    </div>
 +    </button>
    </template>
 ```
@@ -356,7 +354,7 @@ Optionally, `{{if}}` can take a third argument for what the expression should ev
 -        <small>View Larger</small>
 -      {{/if}}
 +      <small>View {{if this.isLarge "Smaller" "Larger"}}</small>
-     </div>
+     </button>
 ```
 
 Whether or not this is an improvement in the clarity of our code is mostly a matter of taste. Either way, we have significantly reduced the duplication in our code, and made the important bits of logic stand out from the rest.
