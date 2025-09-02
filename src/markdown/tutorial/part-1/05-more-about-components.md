@@ -172,7 +172,10 @@ Let's edit the component's template:
 Instead of hard-coding specific values for the `src` and `alt` attributes on the `<img>` tag, we opted for the `...attributes` keyword instead, which is also sometimes referred to as the *["splattributes"](../../../components/component-arguments-and-html-attributes/#toc_html-attributes)* syntax. This allows arbitrary HTML attributes to be passed in when invoking this component, like so:
 
 ```run:file:patch lang=gjs cwd=super-rentals filename=app/components/rental.gjs
-@@ -2,2 +2,6 @@
+@@ -1,3 +1,9 @@
++import RentalImage from 'super-rentals/components/rental/image';
++
+ <template>
    <article class="rental">
 +    <RentalImage
 +      src="https://upload.wikimedia.org/wikipedia/commons/c/cb/Crane_estate_(5).jpg"
