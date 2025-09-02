@@ -266,26 +266,24 @@ visit http://localhost:4200/tests?nocontainer&nolint&deterministic
 wait  #qunit-banner.qunit-pass
 ```
 
-
-```run:pause
-CHECK YO SELF - patching, have a look
-```
-
-
 Hey, all the tests passed! But does that mean it actually works in practice? Let's find out by invoking the `<Map>` component from the `<Rental>` component's template:
 
-```run:file:patch lang=handlebars cwd=super-rentals filename=app/components/rental.hbs
-@@ -20,2 +20,10 @@
-   </div>
-+  <Map
-+    @lat="37.7749"
-+    @lng="-122.4194"
-+    @zoom="9"
-+    @width="150"
-+    @height="150"
-+    alt="A map of Grand Old Mansion"
-+  />
- </article>
+```run:file:patch lang=gjs cwd=super-rentals filename=app/components/rental.gjs
+@@ -1,2 +1,3 @@
+ import RentalImage from 'super-rentals/components/rental/image';
++import Map from 'super-rentals/components/map';
+ 
+@@ -23,2 +24,10 @@ import RentalImage from 'super-rentals/components/rental/image';
+     </div>
++    <Map
++      @lat="37.7749"
++      @lng="-122.4194"
++      @zoom="9"
++      @width="150"
++      @height="150"
++      alt="A map of Grand Old Mansion"
++    />
+   </article>
 ```
 
 Hey! That's a map!
@@ -303,8 +301,8 @@ wait  .rentals li:nth-of-type(3) article.rental .map
 
 For good measure, we will also add an assertion to the `<Rental>` tests to make sure we rendered the `<Map>` component successfully.
 
-```run:file:patch lang=js cwd=super-rentals filename=tests/integration/components/rental-test.js
-@@ -18,2 +18,3 @@
+```run:file:patch lang=gjs cwd=super-rentals filename=tests/integration/components/rental-test.gjs
+@@ -18,2 +18,3 @@ module('Integration | Component | rental', function (hooks) {
      assert.dom('article .image').exists();
 +    assert.dom('article .map').exists();
    });
@@ -312,27 +310,23 @@ For good measure, we will also add an assertion to the `<Rental>` tests to make 
 
 ```run:command hidden=true cwd=super-rentals
 ember test --path dist
-git add app/components/rental.hbs
-git add tests/integration/components/rental-test.js
+git add app/components/rental.gjs
+git add tests/integration/components/rental-test.gjs
 ```
 
 ## Refactoring with Getters and Auto-track
 
-At this point, a big part of our `<Map>` template is devoted to the `<img>` tag's `src` attribute, which is getting pretty long. One alternative is to move this computation into the JavaScript class instead.
+At this point, a big part of our `<Map>` component's template section is devoted to the `<img>` tag's `src` attribute, which is getting pretty long. One alternative is to move this computation into the JavaScript class instead.
 
-From within our JavaScript class, we have access to our component's arguments using the `this.args.*` API. Using that, we can move the URL logic from the template into a new getter.
+From within our JavaScript class, we have access to our component's arguments using the `this.args.*` API. Using that, we can move the URL logic up from the template into a new getter.
 
 > Zoey says...
 >
 > `this.args` is an API provided by the Glimmer component superclass. You may come across other component superclasses, such as "classic" components in legacy codebases, that provide different APIs for accessing component arguments from JavaScript code.
 
-```run:file:patch lang=js cwd=super-rentals filename=app/components/map.js
-diff --git a/app/components/map.js b/app/components/map.js
-index 78e765f..1cad468 100644
---- a/app/components/map.js
-+++ b/app/components/map.js
-@@ -3,3 +3,15 @@
-
+```run:file:patch lang=js cwd=super-rentals filename=app/components/map.gjs
+@@ -3,3 +3,15 @@ import ENV from 'super-rentals/config/environment';
+ 
 +const MAPBOX_API = 'https://api.mapbox.com/styles/v1/mapbox/streets-v11/static';
 +
  export default class Map extends Component {
@@ -347,22 +341,18 @@ index 78e765f..1cad468 100644
 +  }
 +
    get token() {
-```
-
-```run:file:patch lang=handlebars cwd=super-rentals filename=app/components/map.hbs
-@@ -4,3 +4,3 @@
-     ...attributes
--    src="https://api.mapbox.com/styles/v1/mapbox/streets-v11/static/{{@lng}},{{@lat}},{{@zoom}}/{{@width}}x{{@height}}@2x?access_token={{this.token}}"
-+    src={{this.src}}
-     width={{@width}} height={{@height}}
+@@ -13,3 +25,3 @@ export default class Map extends Component {
+         ...attributes
+-        src="https://api.mapbox.com/styles/v1/mapbox/streets-v11/static/{{@lng}},{{@lat}},{{@zoom}}/{{@width}}x{{@height}}@2x?access_token={{this.token}}"
++        src={{this.src}}
+         width={{@width}} height={{@height}}
 ```
 
 Much nicer! And all of our tests still pass!
 
 ```run:command hidden=true cwd=super-rentals
 ember test --path dist
-git add app/components/map.hbs
-git add app/components/map.js
+git add app/components/map.gjs
 ```
 
 ```run:screenshot width=1024 height=768 retina=true filename=pass-2.png alt="Tests passing after the src getter refactor"
@@ -380,25 +370,37 @@ Ember does this by automatically tracking any variables that were accessed while
 
 Just to be sure, we can add a test for this behavior:
 
-```run:file:patch lang=js cwd=super-rentals filename=tests/integration/components/map-test.js
-@@ -32,2 +32,63 @@
-
+```run:file:patch lang=gjs cwd=super-rentals filename=tests/integration/components/map-test.gjs
+@@ -2,5 +2,6 @@ import { module, test } from 'qunit';
+ import { setupRenderingTest } from 'super-rentals/tests/helpers';
+-import { render, find } from '@ember/test-helpers';
++import { render, find, rerender } from '@ember/test-helpers';
+ import ENV from 'super-rentals/config/environment';
+ import Map from 'super-rentals/components/map';
++import { tracked } from '@glimmer/tracking';
+ 
+@@ -52,2 +53,67 @@ module('Integration | Component | map', function (hooks) {
+ 
 +  test('it updates the `src` attribute when the arguments change', async function (assert) {
-+    this.setProperties({
-+      lat: 37.7749,
-+      lng: -122.4194,
-+      zoom: 10,
-+      width: 150,
-+      height: 120,
-+    });
++    class State { 
++      @tracked lat = 37.7749;
++      @tracked lng = -122.4194;
++      @tracked zoom = 10;
++      @tracked width = 150;
++      @tracked height = 120;
++    };
 +
-+    await render(hbs`<Map
-+      @lat={{this.lat}}
-+      @lng={{this.lng}}
-+      @zoom={{this.zoom}}
-+      @width={{this.width}}
-+      @height={{this.height}}
-+    />`);
++    const state = new State();
++
++    await render(<template>
++      <Map
++        @lat={{state.lat}}
++        @lng={{state.lng}}
++        @zoom={{state.zoom}}
++        @width={{state.width}}
++        @height={{state.height}}
++      />
++    </template>);
 +
 +    let img = find('.map img');
 +
@@ -412,11 +414,11 @@ Just to be sure, we can add a test for this behavior:
 +      'the src should include the width,height and @2x parameter',
 +    );
 +
-+    this.setProperties({
-+      width: 300,
-+      height: 200,
-+      zoom: 12,
-+    });
++    state.width = 300;
++    state.height = 200;
++    state.zoom = 12;
++
++    await rerender();
 +
 +    assert.ok(
 +      img.src.includes('-122.4194,37.7749,12'),
@@ -428,10 +430,10 @@ Just to be sure, we can add a test for this behavior:
 +      'the src should include the width,height and @2x parameter',
 +    );
 +
-+    this.setProperties({
-+      lat: 47.6062,
-+      lng: -122.3321,
-+    });
++    state.lat = 47.6062;
++    state.lng = -122.3321;
++
++    await rerender();
 +
 +    assert.ok(
 +      img.src.includes('-122.3321,47.6062,12'),
@@ -447,17 +449,15 @@ Just to be sure, we can add a test for this behavior:
    test('the default alt attribute can be overridden', async function (assert) {
 ```
 
-Using the special `this.setProperties` testing API, we can pass arbitrary values into our component.
+In this test, we create a local class called `State` and an instance of that class called `state`. There is nothing special about the name `State`&mdash;it's just a regular JavaScript class we use to keep track of data we might want to pass into our component. We use the `@tracked` decorator just like in the application code so whenever we make a change, Ember will update the page automatically.
 
-Note that the value of `this` here does *not* refer to the component instance. We are not directly accessing or modifying the component's internal states (that would be extremely rude!).
-
-Instead, `this` refers to a special *[test context][TODO: link to test context]* object, which we have access to inside the `render` helper. This provides a "bridge" for us to pass dynamic values, in the form of arguments, into our invocation of the component. This allows us to update these values as needed from the test function.
+In tests like this, whenever we make changes to state that is rendered, we call `await rerender()`. This gives Ember a chance to update the display before continuing with the queries and assertions that follow. Following this pattern allows us to update these values as needed from the test function.
 
 With all our tests passing, we are ready to move on!
 
 ```run:command hidden=true cwd=super-rentals
 ember test --path dist
-git add tests/integration/components/map-test.js
+git add tests/integration/components/map-test.gjs
 ```
 
 ```run:screenshot width=1024 height=768 retina=true filename=pass-3.png alt="All our tests are passing"
