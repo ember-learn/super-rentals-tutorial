@@ -137,12 +137,7 @@ wait  .rentals li:nth-of-type(3) article.rental
 
 Things are looking pretty convincing already; not bad for just a little bit of work!
 
-
-```run:pause
-CHECK YO SELF - onto rental/image
-```
-
-## Organizing Code with Namespaced Components
+## Organizing Code in Folders
 
 Next, let's add the image for the rental property. We will use the component generator for this again:
 
@@ -150,21 +145,27 @@ Next, let's add the image for the rental property. We will use the component gen
 ember generate component rental/image
 ```
 
-This time, we had a `/` in the component's name. This resulted in the component being created at `app/components/rental/image.hbs`, which can be invoked as `<Rental::Image>`.
+This time, we had a `/` in the component's name. This resulted in the component being created at `app/components/rental/image.gjs`.
 
 ```run:command hidden=true cwd=super-rentals
 ember test --path dist
-git add app/components/rental/image.hbs
-git add tests/integration/components/rental/image-test.js
+git add app/components/rental/image.gjs
+git add tests/integration/components/rental/image-test.gjs
 ```
 
-Components like these are known as *[namespaced](https://en.wikipedia.org/wiki/Namespace)* components. Namespacing allows us to organize our components by folders according to their purpose. This is completely optional&mdash;namespaced components are not special in any way.
+We can organize our components by folders according to their purpose. This is completely optional&mdash;these components are not special in any way.
 
 ## Forwarding HTML Attributes with `...attributes`
 
+
+```run:pause
+CHECK YO SELF - pre patch all the files
+```
+
+
 Let's edit the component's template:
 
-```run:file:patch lang=handlebars cwd=super-rentals filename=app/components/rental/image.hbs
+```run:file:patch lang=gjs cwd=super-rentals filename=app/components/rental/image.gjs
 @@ -1,1 +1,3 @@
 -{{yield}}
 \ No newline at end of file
@@ -175,7 +176,7 @@ Let's edit the component's template:
 
 Instead of hard-coding specific values for the `src` and `alt` attributes on the `<img>` tag, we opted for the `...attributes` keyword instead, which is also sometimes referred to as the *["splattributes"](../../../components/component-arguments-and-html-attributes/#toc_html-attributes)* syntax. This allows arbitrary HTML attributes to be passed in when invoking this component, like so:
 
-```run:file:patch lang=handlebars cwd=super-rentals filename=app/components/rental.hbs
+```run:file:patch lang=gjs cwd=super-rentals filename=app/components/rental.gjs
 @@ -1,2 +1,6 @@
  <article class="rental">
 +  <Rental::Image
@@ -187,18 +188,18 @@ Instead of hard-coding specific values for the `src` and `alt` attributes on the
 
 We specified a `src` and an `alt` HTML attribute here, which will be passed along to the component and attached to the element where `...attributes` is applied in the component template. You can think of this as being similar to `{{yield}}`, but for HTML attributes specifically, rather than displayed content. In fact, we have already used this feature [earlier](../building-pages/) when we passed a `class` attribute to `<LinkTo>`.
 
-```run:screenshot width=1024 retina=true filename=rental-image.png alt="The <Rental::Image> component in action"
+```run:screenshot width=1024 retina=true filename=rental-image.png alt="The <Image> component in action"
 visit http://localhost:4200/?deterministic
 wait  .rentals li:nth-of-type(3) article.rental .image img
 ```
 
-This way, our `<Rental::Image>` component is not coupled to any specific rental property on the site. Of course, the hard-coding problem still exists (we simply moved it to the `<Rental>` component), but we will deal with that soon. We will limit all the hard-coding to the `<Rental>` component, so that we will have an easier time cleaning it up when we switch to fetching real data.
+This way, our `<Image>` component is not coupled to any specific rental property on the site. Of course, the hard-coding problem still exists (we simply moved it to the `<Rental>` component), but we will deal with that soon. We will limit all the hard-coding to the `<Rental>` component, so that we will have an easier time cleaning it up when we switch to fetching real data.
 
 In general, it is a good idea to add `...attributes` to the primary element in your component. This will allow for maximum flexibility, as the invoker may need to pass along classes for styling or ARIA attributes to improve accessibility.
 
 Let's write a test for our new component!
 
-```run:file:patch lang=js cwd=super-rentals filename=tests/integration/components/rental/image-test.js
+```run:file:patch lang=gjs cwd=super-rentals filename=tests/integration/components/rental/image-test.gjs
 @@ -8,18 +8,15 @@
 
 -  test('it renders', async function (assert) {
@@ -235,26 +236,26 @@ Let's write a test for our new component!
 
 ## Determining the Appropriate Amount of Test Coverage
 
-Finally, we should also update the tests for the `<Rental>` component to confirm that we successfully invoked `<Rental::Image>`.
+Finally, we should also update the tests for the `<Rental>` component to confirm that we successfully invoked `<Image>`.
 
-```run:file:patch lang=js cwd=super-rentals filename=tests/integration/components/rental-test.js
+```run:file:patch lang=gjs cwd=super-rentals filename=tests/integration/components/rental-test.gjs
 @@ -17,2 +17,3 @@
      assert.dom('article .detail.bedrooms').includesText('15');
 +    assert.dom('article .image').exists();
    });
 ```
 
-Because we already tested `<Rental::Image>` extensively on its own, we can omit the details here and keep our assertion to the bare minimum. That way, we won't  *also* have to update the `<Rental>` tests whenever we make changes to `<Rental::Image>`.
+Because we already tested `<Image>` extensively on its own, we can omit the details here and keep our assertion to the bare minimum. That way, we won't  *also* have to update the `<Rental>` tests whenever we make changes to `<Image>`.
 
 ```run:command hidden=true cwd=super-rentals
 ember test --path dist
-git add app/components/rental.hbs
-git add app/components/rental/image.hbs
-git add tests/integration/components/rental-test.js
-git add tests/integration/components/rental/image-test.js
+git add app/components/rental.gjs
+git add app/components/rental/image.gjs
+git add tests/integration/components/rental-test.gjs
+git add tests/integration/components/rental/image-test.gjs
 ```
 
-```run:screenshot width=1024 height=512 retina=true filename=pass-2.png alt="Tests passing with the new <Rental::Image> test"
+```run:screenshot width=1024 height=512 retina=true filename=pass-2.png alt="Tests passing with the new <Image> test"
 visit http://localhost:4200/tests?nocontainer&nolint&deterministic
 wait  #qunit-banner.qunit-pass
 ```
