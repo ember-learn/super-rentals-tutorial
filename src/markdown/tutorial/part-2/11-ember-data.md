@@ -176,6 +176,10 @@ export { default } from 'ember-data/store';
  if (macroCondition(isDevelopingApp())) {
 ```
 
+```run:command hidden=true cwd=super-rentals
+git add app/app.js
+```
+
 Running the tests in the browser confirms that everything is working as intended:
 
 ```run:command hidden=true cwd=super-rentals
@@ -291,9 +295,7 @@ Let's start customizing the things that didn't work for us by default. Specifica
 The first thing we want to do is have our builder respect a configurable default host and/or namespace. Adding a namespace prefix happens to be pretty common across Ember apps, so EmberData provides a global config mechanism for host and namespace. Typically you will want to do this either in your store file or app file.
 
 ```run:file:patch lang=js cwd=super-rentals filename=app/app.js
-@@ -3,6 +3,11 @@ import Resolver from 'ember-resolver';
- import loadInitializers from 'ember-load-initializers';
- import config from 'super-rentals/config/environment';
+@@ -5,2 +5,7 @@
  import { importSync, isDevelopingApp, macroCondition } from '@embroider/macros';
 +import { setBuildURLConfig } from '@ember-data/request-utils';
 +
@@ -301,8 +303,6 @@ The first thing we want to do is have our builder respect a configurable default
 +  namespace: 'api',
 +});
 
- if (macroCondition(isDevelopingApp())) {
-   importSync('./deprecation-workflow');
 ```
 
 Adding the `.json` extension is a bit less common, and doesn't have a declarative configuration API of its own. We could just modify request options directly in place of use, but that would be a bit messy. Instead, let's create a handler to do this for us.
