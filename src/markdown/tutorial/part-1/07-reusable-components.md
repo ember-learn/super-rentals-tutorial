@@ -80,12 +80,12 @@ npm start
 With the Mapbox API key in place, let's generate a new component for our map.
 
 ```run:command cwd=super-rentals
-ember generate component map --with-component-class
+ember generate component map --component-class=@glimmer/component
 ```
 
-Since not every component will necessarily have some defined behavior associated with it, the component generator does not generate a JavaScript file for us by default. As we saw earlier, we can always use the `component-class` generator to add a JavaScript file for a component later on.
+Since not every component will necessarily have some defined behavior associated with it, the component generator does not generate the JavaScript parts of the file for us by default. As we saw earlier, we can always add the JavaScript class to a component later on.
 
-However, in the case of our `<Map>` component, we are pretty sure that we are going to need a JavaScript file for some behavior that we have yet to define! To save a step later, we can pass the `--with-component-class` flag to the component generator so that we have everything we need from the get-go.
+However, in the case of our `<Map>` component, we are pretty sure that we are going to need a JavaScript file for some behavior that we have yet to define! To save a step later, we can pass the `--component-class=@glimmer/component` flag to the component generator so that we have everything we need from the get-go.
 
 > Zoey says...
 >
@@ -93,53 +93,44 @@ However, in the case of our `<Map>` component, we are pretty sure that we are go
 
 ```run:command hidden=true cwd=super-rentals
 ember test --path dist
-git add app/components/map.hbs
-git add app/components/map.js
-git add tests/integration/components/map-test.js
+git add app/components/map.gjs
+git add tests/integration/components/map-test.gjs
 ```
 
 ## Parameterizing Components with Arguments
 
-Let's start with our JavaScript file:
+Let's update our component:
 
-```run:file:patch lang=js cwd=super-rentals filename=app/components/map.js
-@@ -1,3 +1,8 @@
+```run:file:patch lang=gjs cwd=super-rentals filename=app/components/map.gjs
+@@ -1,6 +1,18 @@
  import Component from '@glimmer/component';
 +import ENV from 'super-rentals/config/environment';
-
--export default class Map extends Component {}
-+export default class Map extends Component {
+ 
+ export default class Map extends Component {
 +  get token() {
 +    return encodeURIComponent(ENV.MAPBOX_ACCESS_TOKEN);
 +  }
-+}
++
+   <template>
+-    {{yield}}
++    <div class="map">
++      <img
++        alt="Map image at coordinates {{@lat}},{{@lng}}"
++        ...attributes
++        src="https://api.mapbox.com/styles/v1/mapbox/streets-v11/static/{{@lng}},{{@lat}},{{@zoom}}/{{@width}}x{{@height}}@2x?access_token={{this.token}}"
++        width={{@width}} height={{@height}}
++      >
++    </div>
+   </template>
 ```
 
-Here, we import the access token from the config file and return it from a `token` *[getter](https://javascript.info/property-accessors)*. This allows us to access our token as `this.token` both inside the `Map` class body, as well as the component's template. It is also important to [URL-encode](https://javascript.info/url#encoding-strings) the token, just in case it contains any special characters that are not URL-safe.
-
-## Interpolating Values in Templates
-
-Now, let's move from the JavaScript file to the template:
-
-```run:file:patch lang=handlebars cwd=super-rentals filename=app/components/map.hbs
-@@ -1 +1,8 @@
--{{yield}}
-\ No newline at end of file
-+<div class="map">
-+  <img
-+    alt="Map image at coordinates {{@lat}},{{@lng}}"
-+    ...attributes
-+    src="https://api.mapbox.com/styles/v1/mapbox/streets-v11/static/{{@lng}},{{@lat}},{{@zoom}}/{{@width}}x{{@height}}@2x?access_token={{this.token}}"
-+    width={{@width}} height={{@height}}
-+  >
-+</div>
-```
+Here, we import the access token from the config file and return it from a `token` *[getter](https://javascript.info/property-accessors)*. This allows us to access our token as `this.token` both inside the `Map` class body, as well as the template section. It is also important to [URL-encode](https://javascript.info/url#encoding-strings) the token, just in case it contains any special characters that are not URL-safe.
 
 First, we have a container element for styling purposes.
 
 Then we have an `<img>` tag to request and render the static map image from Mapbox.
 
-Our template contains several values that don't yet exist&mdash;`@lat`, `@lng`, `@zoom`, `@width`, and `@height`. These are *[arguments](../../../components/component-arguments-and-html-attributes/#toc_arguments)* to the `<Map>` component that we will supply when invoking it.
+Our component's template contains several values that don't yet exist&mdash;`@lat`, `@lng`, `@zoom`, `@width`, and `@height`. These are *[arguments](../../../components/component-arguments-and-html-attributes/#toc_arguments)* to the `<Map>` component that we will supply when invoking it.
 
 By *[parameterizing][TODO: link to parameterizing]* our component using arguments, we made a reusable component that can be invoked from different parts of the app and customized to meet the needs for those specific contexts. We have already seen this in action when using the `<LinkTo>` component [earlier](../building-pages/); we had to specify a `@route` argument so that it knew what page to navigate to.
 
@@ -159,29 +150,31 @@ Finally, since we are using the `@2x` "retina" image, we should specify the `wid
 
 We just added a lot of behavior into a single component, so let's write some tests! In particular, we should make sure to have some *[test coverage](../../../testing/)* for the overriding-HTML-attributes behavior we discussed above.
 
-```run:file:patch lang=js cwd=super-rentals filename=tests/integration/components/map-test.js
-@@ -2,4 +2,5 @@
+```run:file:patch lang=gjs cwd=super-rentals filename=tests/integration/components/map-test.gjs
+@@ -2,3 +2,4 @@ import { module, test } from 'qunit';
  import { setupRenderingTest } from 'super-rentals/tests/helpers';
 -import { render } from '@ember/test-helpers';
 +import { render, find } from '@ember/test-helpers';
- import { hbs } from 'ember-cli-htmlbars';
 +import ENV from 'super-rentals/config/environment';
-
-@@ -8,18 +9,73 @@
-
+ import Map from 'super-rentals/components/map';
+@@ -8,20 +9,79 @@ module('Integration | Component | map', function (hooks) {
+ 
 -  test('it renders', async function (assert) {
--    // Set any properties with this.set('myProperty', 'value');
--    // Handle any actions with this.set('myAction', function(val) { ... });
+-    // Updating values is achieved using autotracking, just like in app code. For example:
+-    // class State { @tracked myProperty = 0; }; const state = new State();
+-    // and update using state.myProperty = 1; await rerender();
+-    // Handle any actions with function myAction(val) { ... };
 +  test('it renders a map image for the specified parameters', async function (assert) {
-+    await render(hbs`<Map
-+      @lat="37.7797"
-+      @lng="-122.4184"
-+      @zoom="10"
-+      @width="150"
-+      @height="120"
-+    />`);
-
--    await render(hbs`<Map />`);
++    await render(<template>
++      <Map
++        @lat="37.7797"
++        @lng="-122.4184"
++        @zoom="10"
++        @width="150"
++        @height="120"
++      />
++    </template>);
++
 +    assert
 +      .dom('.map img')
 +      .exists()
@@ -189,33 +182,27 @@ We just added a lot of behavior into a single component, so let's write some tes
 +      .hasAttribute('src')
 +      .hasAttribute('width', '150')
 +      .hasAttribute('height', '120');
-
--    assert.dom().hasText('');
++
 +    let { src } = find('.map img');
 +    let token = encodeURIComponent(ENV.MAPBOX_ACCESS_TOKEN);
-
--    // Template block usage:
--    await render(hbs`
--      <Map>
--        template block text
--      </Map>
--    `);
++
 +    assert.ok(
 +      src.startsWith('https://api.mapbox.com/'),
 +      'the src starts with "https://api.mapbox.com/"',
 +    );
-
--    assert.dom().hasText('template block text');
++
 +    assert.ok(
 +      src.includes('-122.4184,37.7797,10'),
 +      'the src should include the lng,lat,zoom parameter',
 +    );
-+
+ 
+-    await render(<template><Map /></template>);
 +    assert.ok(
 +      src.includes('150x120@2x'),
 +      'the src should include the width,height and @2x parameter',
 +    );
-+
+ 
+-    assert.dom().hasText('');
 +    assert.ok(
 +      src.includes(`access_token=${token}`),
 +      'the src should include the escaped access token',
@@ -223,30 +210,39 @@ We just added a lot of behavior into a single component, so let's write some tes
 +  });
 +
 +  test('the default alt attribute can be overridden', async function (assert) {
-+    await render(hbs`<Map
-+      @lat="37.7797"
-+      @lng="-122.4184"
-+      @zoom="10"
-+      @width="150"
-+      @height="120"
-+      alt="A map of San Francisco"
-+    />`);
++    await render(<template>
++      <Map
++        @lat="37.7797"
++        @lng="-122.4184"
++        @zoom="10"
++        @width="150"
++        @height="120"
++        alt="A map of San Francisco"
++      />
++    </template>);
 +
 +    assert.dom('.map img').hasAttribute('alt', 'A map of San Francisco');
 +  });
-+
+ 
+-    // Template block usage:
 +  test('the src, width and height attributes cannot be overridden', async function (assert) {
-+    await render(hbs`<Map
-+      @lat="37.7797"
-+      @lng="-122.4184"
-+      @zoom="10"
-+      @width="150"
-+      @height="120"
-+      src="/assets/images/teaching-tomster.png"
-+      width="200"
-+      height="300"
-+    />`);
-+
+     await render(<template>
+-      <Map>
+-        template block text
+-      </Map>
++      <Map
++        @lat="37.7797"
++        @lng="-122.4184"
++        @zoom="10"
++        @width="150"
++        @height="120"
++        src="/assets/images/teaching-tomster.png"
++        width="200"
++        height="300"
++      />
+     </template>);
+ 
+-    assert.dom().hasText('template block text');
 +    assert
 +      .dom('.map img')
 +      .hasAttribute('src', /^https:\/\/api\.mapbox\.com\//)
@@ -261,9 +257,8 @@ Note that the `hasAttribute` test helper from [`qunit-dom`](https://github.com/s
 
 ```run:command hidden=true cwd=super-rentals
 ember test --path dist
-git add app/components/map.hbs
-git add app/components/map.js
-git add tests/integration/components/map-test.js
+git add app/components/map.gjs
+git add tests/integration/components/map-test.gjs
 ```
 
 ```run:screenshot width=1024 height=768 retina=true filename=pass.png alt="Tests passing with the new <Map> tests"
@@ -273,18 +268,22 @@ wait  #qunit-banner.qunit-pass
 
 Hey, all the tests passed! But does that mean it actually works in practice? Let's find out by invoking the `<Map>` component from the `<Rental>` component's template:
 
-```run:file:patch lang=handlebars cwd=super-rentals filename=app/components/rental.hbs
-@@ -20,2 +20,10 @@
-   </div>
-+  <Map
-+    @lat="37.7749"
-+    @lng="-122.4194"
-+    @zoom="9"
-+    @width="150"
-+    @height="150"
-+    alt="A map of Grand Old Mansion"
-+  />
- </article>
+```run:file:patch lang=gjs cwd=super-rentals filename=app/components/rental.gjs
+@@ -1,2 +1,3 @@
+ import RentalImage from 'super-rentals/components/rental/image';
++import Map from 'super-rentals/components/map';
+ 
+@@ -23,2 +24,10 @@ import RentalImage from 'super-rentals/components/rental/image';
+     </div>
++    <Map
++      @lat="37.7749"
++      @lng="-122.4194"
++      @zoom="9"
++      @width="150"
++      @height="150"
++      alt="A map of Grand Old Mansion"
++    />
+   </article>
 ```
 
 Hey! That's a map!
@@ -302,8 +301,8 @@ wait  .rentals li:nth-of-type(3) article.rental .map
 
 For good measure, we will also add an assertion to the `<Rental>` tests to make sure we rendered the `<Map>` component successfully.
 
-```run:file:patch lang=js cwd=super-rentals filename=tests/integration/components/rental-test.js
-@@ -18,2 +18,3 @@
+```run:file:patch lang=gjs cwd=super-rentals filename=tests/integration/components/rental-test.gjs
+@@ -18,2 +18,3 @@ module('Integration | Component | rental', function (hooks) {
      assert.dom('article .image').exists();
 +    assert.dom('article .map').exists();
    });
@@ -311,27 +310,23 @@ For good measure, we will also add an assertion to the `<Rental>` tests to make 
 
 ```run:command hidden=true cwd=super-rentals
 ember test --path dist
-git add app/components/rental.hbs
-git add tests/integration/components/rental-test.js
+git add app/components/rental.gjs
+git add tests/integration/components/rental-test.gjs
 ```
 
 ## Refactoring with Getters and Auto-track
 
-At this point, a big part of our `<Map>` template is devoted to the `<img>` tag's `src` attribute, which is getting pretty long. One alternative is to move this computation into the JavaScript class instead.
+At this point, a big part of our `<Map>` component's template section is devoted to the `<img>` tag's `src` attribute, which is getting pretty long. One alternative is to move this computation into the JavaScript class instead.
 
-From within our JavaScript class, we have access to our component's arguments using the `this.args.*` API. Using that, we can move the URL logic from the template into a new getter.
+From within our JavaScript class, we have access to our component's arguments using the `this.args.*` API. Using that, we can move the URL logic up from the template into a new getter.
 
 > Zoey says...
 >
 > `this.args` is an API provided by the Glimmer component superclass. You may come across other component superclasses, such as "classic" components in legacy codebases, that provide different APIs for accessing component arguments from JavaScript code.
 
-```run:file:patch lang=js cwd=super-rentals filename=app/components/map.js
-diff --git a/app/components/map.js b/app/components/map.js
-index 78e765f..1cad468 100644
---- a/app/components/map.js
-+++ b/app/components/map.js
-@@ -3,3 +3,15 @@
-
+```run:file:patch lang=js cwd=super-rentals filename=app/components/map.gjs
+@@ -3,3 +3,15 @@ import ENV from 'super-rentals/config/environment';
+ 
 +const MAPBOX_API = 'https://api.mapbox.com/styles/v1/mapbox/streets-v11/static';
 +
  export default class Map extends Component {
@@ -346,22 +341,18 @@ index 78e765f..1cad468 100644
 +  }
 +
    get token() {
-```
-
-```run:file:patch lang=handlebars cwd=super-rentals filename=app/components/map.hbs
-@@ -4,3 +4,3 @@
-     ...attributes
--    src="https://api.mapbox.com/styles/v1/mapbox/streets-v11/static/{{@lng}},{{@lat}},{{@zoom}}/{{@width}}x{{@height}}@2x?access_token={{this.token}}"
-+    src={{this.src}}
-     width={{@width}} height={{@height}}
+@@ -13,3 +25,3 @@ export default class Map extends Component {
+         ...attributes
+-        src="https://api.mapbox.com/styles/v1/mapbox/streets-v11/static/{{@lng}},{{@lat}},{{@zoom}}/{{@width}}x{{@height}}@2x?access_token={{this.token}}"
++        src={{this.src}}
+         width={{@width}} height={{@height}}
 ```
 
 Much nicer! And all of our tests still pass!
 
 ```run:command hidden=true cwd=super-rentals
 ember test --path dist
-git add app/components/map.hbs
-git add app/components/map.js
+git add app/components/map.gjs
 ```
 
 ```run:screenshot width=1024 height=768 retina=true filename=pass-2.png alt="Tests passing after the src getter refactor"
@@ -379,25 +370,37 @@ Ember does this by automatically tracking any variables that were accessed while
 
 Just to be sure, we can add a test for this behavior:
 
-```run:file:patch lang=js cwd=super-rentals filename=tests/integration/components/map-test.js
-@@ -32,2 +32,63 @@
-
+```run:file:patch lang=gjs cwd=super-rentals filename=tests/integration/components/map-test.gjs
+@@ -2,5 +2,6 @@ import { module, test } from 'qunit';
+ import { setupRenderingTest } from 'super-rentals/tests/helpers';
+-import { render, find } from '@ember/test-helpers';
++import { render, find, rerender } from '@ember/test-helpers';
+ import ENV from 'super-rentals/config/environment';
+ import Map from 'super-rentals/components/map';
++import { tracked } from '@glimmer/tracking';
+ 
+@@ -52,2 +53,67 @@ module('Integration | Component | map', function (hooks) {
+ 
 +  test('it updates the `src` attribute when the arguments change', async function (assert) {
-+    this.setProperties({
-+      lat: 37.7749,
-+      lng: -122.4194,
-+      zoom: 10,
-+      width: 150,
-+      height: 120,
-+    });
++    class State { 
++      @tracked lat = 37.7749;
++      @tracked lng = -122.4194;
++      @tracked zoom = 10;
++      @tracked width = 150;
++      @tracked height = 120;
++    };
 +
-+    await render(hbs`<Map
-+      @lat={{this.lat}}
-+      @lng={{this.lng}}
-+      @zoom={{this.zoom}}
-+      @width={{this.width}}
-+      @height={{this.height}}
-+    />`);
++    const state = new State();
++
++    await render(<template>
++      <Map
++        @lat={{state.lat}}
++        @lng={{state.lng}}
++        @zoom={{state.zoom}}
++        @width={{state.width}}
++        @height={{state.height}}
++      />
++    </template>);
 +
 +    let img = find('.map img');
 +
@@ -411,11 +414,11 @@ Just to be sure, we can add a test for this behavior:
 +      'the src should include the width,height and @2x parameter',
 +    );
 +
-+    this.setProperties({
-+      width: 300,
-+      height: 200,
-+      zoom: 12,
-+    });
++    state.width = 300;
++    state.height = 200;
++    state.zoom = 12;
++
++    await rerender();
 +
 +    assert.ok(
 +      img.src.includes('-122.4194,37.7749,12'),
@@ -427,10 +430,10 @@ Just to be sure, we can add a test for this behavior:
 +      'the src should include the width,height and @2x parameter',
 +    );
 +
-+    this.setProperties({
-+      lat: 47.6062,
-+      lng: -122.3321,
-+    });
++    state.lat = 47.6062;
++    state.lng = -122.3321;
++
++    await rerender();
 +
 +    assert.ok(
 +      img.src.includes('-122.3321,47.6062,12'),
@@ -446,17 +449,15 @@ Just to be sure, we can add a test for this behavior:
    test('the default alt attribute can be overridden', async function (assert) {
 ```
 
-Using the special `this.setProperties` testing API, we can pass arbitrary values into our component.
+In this test, we create a local class called `State` and an instance of that class called `state`. There is nothing special about the name `State`&mdash;it's just a regular JavaScript class we use to keep track of data we might want to pass into our component. We use the `@tracked` decorator just like in the application code so whenever we make a change, Ember will update the page automatically.
 
-Note that the value of `this` here does *not* refer to the component instance. We are not directly accessing or modifying the component's internal states (that would be extremely rude!).
-
-Instead, `this` refers to a special *[test context][TODO: link to test context]* object, which we have access to inside the `render` helper. This provides a "bridge" for us to pass dynamic values, in the form of arguments, into our invocation of the component. This allows us to update these values as needed from the test function.
+In tests like this, whenever we make changes to state that is rendered, we call `await rerender()`. This gives Ember a chance to update the display before continuing with the queries and assertions that follow. Following this pattern allows us to update these values as needed from the test function.
 
 With all our tests passing, we are ready to move on!
 
 ```run:command hidden=true cwd=super-rentals
 ember test --path dist
-git add tests/integration/components/map-test.js
+git add tests/integration/components/map-test.gjs
 ```
 
 ```run:screenshot width=1024 height=768 retina=true filename=pass-3.png alt="All our tests are passing"

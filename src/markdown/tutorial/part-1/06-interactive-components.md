@@ -32,36 +32,56 @@ Here, we are going to do just that! We are going to implement the "View Larger" 
 
 In other words, we want a way to *toggle* the image between one of the two *[states](../../../components/component-state-and-actions/)*. In order to do that, we need a way for the component to store two possible states, and to be aware of which state it is currently in.
 
-Ember optionally allows us to associate JavaScript code with a component for exactly this purpose. We can add a JavaScript file for our `<Rental::Image>` component by running the `component-class` generator:
+Ember optionally allows us to associate JavaScript code with a component for exactly this purpose. We can add JavaScript to our `<RentalImage>` component by "wrapping" the component in a class definition.
 
-```run:command cwd=super-rentals
-ember generate component-class rental/image
+```run:file:patch lang=gjs cwd=super-rentals filename=app/components/rental/image.gjs
+@@ -1,5 +1,9 @@
+-<template>
+-  <div class="image">
+-    <img ...attributes />
+-  </div>
+-</template>
++import Component from '@glimmer/component';
++
++export default class RentalImage extends Component {
++  <template>
++    <div class="image">
++      <img ...attributes />
++    </div>
++  </template>
++}
 ```
 
 ```run:command hidden=true cwd=super-rentals
 ember test --path dist
-git add app/components/rental/image.js
+git add app/components/rental/image.gjs
 ```
 
-This generated a JavaScript file with the same name as our component's template at `app/components/rental/image.js`. It contains a *[JavaScript class](https://javascript.info/class)*, *[inheriting](https://javascript.info/class-inheritance)* from `@glimmer/component`.
+Now our component contains a *[JavaScript class](https://javascript.info/class)*, *[inheriting](https://javascript.info/class-inheritance)* from `@glimmer/component`. The template is now nested inside the class definition.
 
 > Zoey says...
 >
-> `@glimmer/component`, or *[Glimmer component](../../../upgrading/current-edition/glimmer-components/)*, is one of the several component classes available to use. They are a great starting point whenever you want to add behavior to your components. In this tutorial, we will be using Glimmer components exclusively.
+> Until now, all our components have been *[Template-only components][TODO: link to template-only]*. Glimmer components are used exactly like Template-only components and they are both used interchangeably in this tutorial.
 >
-> In general, Glimmer components should be used whenever possible. However, you may also see `@ember/components`, or *[classic components](https://ember-learn.github.io/ember-octane-vs-classic-cheat-sheet/)*, used in older apps. You can tell them apart by looking at their import path (which is helpful for looking up the respective documentation, as they have different and incompatible APIs).
+> In general, whenever you want to add behavior to your components, use a JavaScript Glimmer component, otherwise use a Template-only component. 
+>
 
 Ember will create an *[instance][TODO: link to instance]* of the class whenever our component is invoked. We can use that instance to store our state:
 
-```run:file:patch lang=js cwd=super-rentals filename=app/components/rental/image.js
-@@ -3 +3,6 @@
--export default class RentalImage extends Component {}
-+export default class RentalImage extends Component {
+```run:file:patch lang=gjs cwd=super-rentals filename=app/components/rental/image.gjs
+@@ -3,2 +3,7 @@ import Component from '@glimmer/component';
+ export default class RentalImage extends Component {
 +  constructor(...args) {
 +    super(...args);
 +    this.isLarge = false;
 +  }
-+}
++
+   <template>
+```
+
+```run:command hidden=true cwd=super-rentals
+ember test --path dist
+git add app/components/rental/image.gjs
 ```
 
 Here, in the *[component's constructor][TODO: link to component's constructor]*, we *[initialized][TODO: link to initialized]* the *[instance variable][TODO: link to instance variable]* `this.isLarge` with the value `false`, since this is the default state that we want for our component.
@@ -70,36 +90,37 @@ Here, in the *[component's constructor][TODO: link to component's constructor]*,
 
 Let's update our template to use this state we just added:
 
-```run:file:patch lang=handlebars cwd=super-rentals filename=app/components/rental/image.hbs
-@@ -1,3 +1,11 @@
--<div class="image">
--  <img ...attributes>
--</div>
-+{{#if this.isLarge}}
-+  <div class="image large">
-+    <img ...attributes>
-+    <small>View Smaller</small>
-+  </div>
-+{{else}}
-+  <div class="image">
-+    <img ...attributes>
-+    <small>View Larger</small>
-+  </div>
-+{{/if}}
+```run:file:patch lang=gjs cwd=super-rentals filename=app/components/rental/image.gjs
+@@ -9,5 +9,13 @@ export default class RentalImage extends Component {
+   <template>
+-    <div class="image">
+-      <img ...attributes />
+-    </div>
++    {{#if this.isLarge}}
++      <div class="image large">
++        <img ...attributes>
++        <small>View Smaller</small>
++      </div>
++    {{else}}
++      <div class="image">
++        <img ...attributes>
++        <small>View Larger</small>
++      </div>
++    {{/if}}
+   </template>
 ```
 
-In the template, we have access to the component's instance variables. The `{{#if ...}}...{{else}}...{{/if}}` *[conditionals](../../../components/conditional-content/)* syntax allows us to render different content based on a condition (in this case, the value of the instance variable `this.isLarge`). Combining these two features, we can render either the small or the large version of the image accordingly.
+In the component's template section, we have access to the component's JavaScript instance variables. The `{{#if ...}}...{{else}}...{{/if}}` *[conditionals](../../../components/conditional-content/)* syntax allows us to render different content based on a condition (in this case, the value of the instance variable `this.isLarge`). Combining these two features, we can render either the small or the large version of the image accordingly.
 
 ```run:command hidden=true cwd=super-rentals
 ember test --path dist
-git add app/components/rental/image.hbs
-git add app/components/rental/image.js
+git add app/components/rental/image.gjs
 ```
 
 We can verify this works by temporarily changing the initial value in our JavaScript file. If we change `app/components/rental/image.js` to initialize `this.isLarge = true;` in the constructor, we should see the large version of the property image in the browser. Cool!
 
-```run:file:patch hidden=true cwd=super-rentals filename=app/components/rental/image.js
-@@ -5,3 +5,3 @@
+```run:file:patch lang=gjs hidden=true cwd=super-rentals filename=app/components/rental/image.gjs
+@@ -5,3 +5,3 @@ export default class RentalImage extends Component {
      super(...args);
 -    this.isLarge = false;
 +    this.isLarge = true;
@@ -114,27 +135,27 @@ wait  .rentals li:nth-of-type(3) article.rental .image.large img
 Once we've tested this out, we can change `this.isLarge` back to `false`.
 
 ```run:command hidden=true cwd=super-rentals
-git checkout app/components/rental/image.js
+git checkout app/components/rental/image.gjs
 ```
 
 Since this pattern of initializing instance variables in the constructor is pretty common, there happens to be a much more concise syntax for it:
 
-```run:file:patch lang=js cwd=super-rentals filename=app/components/rental/image.js
-@@ -3,6 +3,3 @@
+```run:file:patch lang=gjs cwd=super-rentals filename=app/components/rental/image.gjs
+@@ -3,6 +3,3 @@ import Component from '@glimmer/component';
  export default class RentalImage extends Component {
 -  constructor(...args) {
 -    super(...args);
 -    this.isLarge = false;
 -  }
 +  isLarge = false;
- }
+ 
 ```
 
 This does exactly the same thing as before, but it's much shorter and less to type!
 
 ```run:command hidden=true cwd=super-rentals
 ember test --path dist
-git add app/components/rental/image.js
+git add app/components/rental/image.gjs
 ```
 
 Of course, our users cannot edit our source code, so we need a way for them to toggle the image size from the browser. Specifically, we want to toggle the value of `this.isLarge` whenever the user clicks on our component.
@@ -143,12 +164,12 @@ Of course, our users cannot edit our source code, so we need a way for them to t
 
 Let's modify our class to add a *[method](../../../in-depth-topics/native-classes-in-depth/#toc_methods)* for toggling the size:
 
-```run:file:patch lang=js cwd=super-rentals filename=app/components/rental/image.js
+```run:file:patch lang=gjs cwd=super-rentals filename=app/components/rental/image.gjs
 @@ -1,5 +1,11 @@
  import Component from '@glimmer/component';
 +import { tracked } from '@glimmer/tracking';
 +import { action } from '@ember/object';
-
+ 
  export default class RentalImage extends Component {
 -  isLarge = false;
 +  @tracked isLarge = false;
@@ -156,7 +177,12 @@ Let's modify our class to add a *[method](../../../in-depth-topics/native-classe
 +  @action toggleSize() {
 +    this.isLarge = !this.isLarge;
 +  }
- }
+ 
+```
+
+```run:command hidden=true cwd=super-rentals
+ember test --path dist
+git add app/components/rental/image.gjs
 ```
 
 We did a few things here, so let's break it down.
@@ -167,7 +193,7 @@ In our case, whenever we assign a new value to `this.isLarge`, the `@tracked` an
 
 > Zoey says...
 >
-> Don't worry! If you reference a variable in the template but forget to add the `@tracked` decorator, you will get a helpful development mode error when you change its value!
+> Don't worry! If you reference a variable in the template section but forget to add the `@tracked` decorator, you will get a helpful development mode error when you change its value!
 
 ## Responding to User Interaction with Actions
 
@@ -179,32 +205,36 @@ Finally, we added the `@action` decorator to our method. This indicates to Ember
 >
 > If you forget to add the `@action` decorator, you will also get a helpful error when clicking on the button in development mode!
 
-With that, it's time to wire this up in the template:
+With that, it's time to wire this up in the template section:
 
-```run:file:patch lang=handlebars cwd=super-rentals filename=app/components/rental/image.hbs
-@@ -1,11 +1,11 @@
- {{#if this.isLarge}}
--  <div class="image large">
-+  <button type="button" class="image large" {{on "click" this.toggleSize}}>
-     <img ...attributes>
-     <small>View Smaller</small>
--  </div>
-+  </button>
- {{else}}
--  <div class="image">
-+  <button type="button" class="image" {{on "click" this.toggleSize}}>
-     <img ...attributes>
-     <small>View Larger</small>
--  </div>
-+  </button>
- {{/if}}
+```run:file:patch lang=gjs cwd=super-rentals filename=app/components/rental/image.gjs
+@@ -3,2 +3,3 @@ import { tracked } from '@glimmer/tracking';
+ import { action } from '@ember/object';
++import { on } from '@ember/modifier';
+ 
+@@ -13,11 +14,11 @@ export default class RentalImage extends Component {
+     {{#if this.isLarge}}
+-      <div class="image large">
++      <button type="button" class="image large" {{on "click" this.toggleSize}}>
+         <img ...attributes>
+         <small>View Smaller</small>
+-      </div>
++      </button>
+     {{else}}
+-      <div class="image">
++      <button type="button" class="image" {{on "click" this.toggleSize}}>
+         <img ...attributes>
+         <small>View Larger</small>
+-      </div>
++      </button>
+     {{/if}}
 ```
 
 We changed two things here.
 
 First, since we wanted to make our component interactive, we switched the containing tag from `<div>` to `<button>` (this is important for accessibility reasons). By using the correct semantic tag, we will also get focusability and keyboard interaction handling "for free".
 
-Next, we used the `{{on}}` *[modifier](../../../components/template-lifecycle-dom-and-modifiers/#toc_event-handlers)* to attach `this.toggleSize` as a click handler on the button.
+Next, we used the `{{on}}` *[modifier](../../../components/template-lifecycle-dom-and-modifiers/#toc_event-handlers)* to attach `this.toggleSize` as a click handler on the button. The `{{on}}` modifier is imported from the `@ember/modifier` package, which is part of Ember.
 
 With that, we have created our first *[interactive][TODO: link to interactive]* component. Go ahead and try it in the browser!
 
@@ -224,30 +254,29 @@ wait  .rentals li:first-of-type article.rental .image.large img
 
 ```run:command hidden=true cwd=super-rentals
 ember test --path dist
-git add app/components/rental/image.hbs
-git add app/components/rental/image.js
+git add app/components/rental/image.gjs
 ```
 
 ## Testing User Interactions
 
 Finally, let's write a test for this new behavior:
 
-```run:file:patch lang=js cwd=super-rentals filename=tests/integration/components/rental/image-test.js
-@@ -2,3 +2,3 @@
+```run:file:patch lang=gjs cwd=super-rentals filename=tests/integration/components/rental/image-test.gjs
+@@ -2,3 +2,3 @@ import { module, test } from 'qunit';
  import { setupRenderingTest } from 'super-rentals/tests/helpers';
 -import { render } from '@ember/test-helpers';
 +import { render, click } from '@ember/test-helpers';
- import { hbs } from 'ember-cli-htmlbars';
-@@ -20,2 +21,26 @@
-   });
+ import RentalImage from 'super-rentals/components/rental/image';
+@@ -22,2 +22,26 @@ module('Integration | Component | rental/image', function (hooks) {
+    });
 +
 +  test('clicking on the component toggles its size', async function (assert) {
-+    await render(hbs`
-+      <Rental::Image
++    await render(<template>
++      <RentalImage
 +        src="/assets/images/teaching-tomster.png"
 +        alt="Teaching Tomster"
 +      />
-+    `);
++    </template>);
 +
 +    assert.dom('button.image').exists();
 +
@@ -269,7 +298,7 @@ Finally, let's write a test for this new behavior:
 
 ```run:command hidden=true cwd=super-rentals
 ember test --path dist
-git add tests/integration/components/rental/image-test.js
+git add tests/integration/components/rental/image-test.gjs
 ```
 
 ```run:screenshot width=1024 height=512 retina=true filename=pass.png alt="Tests passing with the new <Rental::Image> test"
@@ -284,46 +313,48 @@ Let's clean up our template before moving on. We introduced a lot of duplication
 
 These changes are buried deep within the large amount of duplicated code. We can reduce the duplication by using an `{{if}}` *[expression](../../../components/conditional-content/#toc_inline-if)* instead:
 
-```run:file:patch lang=handlebars cwd=super-rentals filename=app/components/rental/image.hbs
-@@ -1,11 +1,8 @@
--{{#if this.isLarge}}
--  <button type="button" class="image large" {{on "click" this.toggleSize}}>
--    <img ...attributes>
-+<button type="button" class="image {{if this.isLarge "large"}}" {{on "click" this.toggleSize}}>
-+  <img ...attributes>
-+  {{#if this.isLarge}}
-     <small>View Smaller</small>
--  </button>
--{{else}}
--  <button type="button" class="image" {{on "click" this.toggleSize}}>
--    <img ...attributes>
-+  {{else}}
-     <small>View Larger</small>
--  </button>
--{{/if}}
-+  {{/if}}
-+</button>
+```run:file:patch lang=gjs cwd=super-rentals filename=app/components/rental/image.gjs
+@@ -13,13 +13,10 @@ export default class RentalImage extends Component {
+   <template>
+-    {{#if this.isLarge}}
+-      <button type="button" class="image large" {{on "click" this.toggleSize}}>
+-        <img ...attributes>
++    <button type="button" class="image {{if this.isLarge "large"}}" {{on "click" this.toggleSize}}>
++      <img ...attributes>
++      {{#if this.isLarge}}
+         <small>View Smaller</small>
+-      </button>
+-    {{else}}
+-      <button type="button" class="image" {{on "click" this.toggleSize}}>
+-        <img ...attributes>
++      {{else}}
+         <small>View Larger</small>
+-      </button>
+-    {{/if}}
++      {{/if}}
++    </button>
+   </template>
 ```
 
 The expression version of `{{if}}` takes two arguments. The first argument is the condition. The second argument is the expression that should be evaluated if the condition is true.
 
 ```run:command hidden=true cwd=super-rentals
 ember test --path dist
-git add app/components/rental/image.hbs
+git add app/components/rental/image.gjs
 ```
 
 Optionally, `{{if}}` can take a third argument for what the expression should evaluate into if the condition is false. This means we could rewrite the button label like so:
 
-```run:file:patch lang=handlebars cwd=super-rentals filename=app/components/rental/image.hbs
-@@ -2,7 +2,3 @@
-   <img ...attributes>
--  {{#if this.isLarge}}
--    <small>View Smaller</small>
--  {{else}}
--    <small>View Larger</small>
--  {{/if}}
-+  <small>View {{if this.isLarge "Smaller" "Larger"}}</small>
- </button>
+```run:file:patch lang=gjs cwd=super-rentals filename=app/components/rental/image.gjs
+@@ -15,7 +15,3 @@ export default class RentalImage extends Component {
+       <img ...attributes>
+-      {{#if this.isLarge}}
+-        <small>View Smaller</small>
+-      {{else}}
+-        <small>View Larger</small>
+-      {{/if}}
++      <small>View {{if this.isLarge "Smaller" "Larger"}}</small>
+     </button>
 ```
 
 Whether or not this is an improvement in the clarity of our code is mostly a matter of taste. Either way, we have significantly reduced the duplication in our code, and made the important bits of logic stand out from the rest.
@@ -332,7 +363,7 @@ Run the test suite one last time to confirm our refactor didn't break anything u
 
 ```run:command hidden=true cwd=super-rentals
 ember test --path dist
-git add app/components/rental/image.hbs
+git add app/components/rental/image.gjs
 ```
 
 ```run:screenshot width=1024 height=512 retina=true filename=pass-2.png alt="Tests still passing after the refactor"
