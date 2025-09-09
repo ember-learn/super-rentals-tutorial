@@ -45,20 +45,18 @@ git add app/router.js
 
 ## Using Route Templates
 
-With that in place, we can create a new `app/templates/about.gjs` template with the following content:
+With that in place, we can create a new `app/templates/about.hbs` template with the following content:
 
-```run:file:create lang=gjs cwd=super-rentals filename=app/templates/about.gjs
-<template>
-  <div class="jumbo">
-    <div class="right tomster"></div>
-    <h2>About Super Rentals</h2>
-    <p>
-      The Super Rentals website is a delightful project created to explore Ember.
-      By building a property rental site, we can simultaneously imagine traveling
-      AND building Ember applications.
-    </p>
-  </div>
-</template>
+```run:file:create lang=handlebars cwd=super-rentals filename=app/templates/about.hbs
+<div class="jumbo">
+  <div class="right tomster"></div>
+  <h2>About Super Rentals</h2>
+  <p>
+    The Super Rentals website is a delightful project created to explore Ember.
+    By building a property rental site, we can simultaneously imagine traveling
+    AND building Ember applications.
+  </p>
+</div>
 ```
 
 To see this in action, navigate to `http://localhost:4200/about`.
@@ -68,7 +66,7 @@ visit http://localhost:4200/about?deterministic
 ```
 
 ```run:command hidden=true cwd=super-rentals
-git add app/templates/about.gjs
+git add app/templates/about.hbs
 ```
 
 With that, our second page is done!
@@ -92,28 +90,26 @@ Here, we added the `contact` route, but explicitly specified a path for the rout
 git add app/router.js
 ```
 
-Speaking of the template, let's create that as well. We'll add a `app/templates/contact.gjs` file:
+Speaking of the template, let's create that as well. We'll add a `app/templates/contact.hbs` file:
 
-```run:file:create lang=gjs cwd=super-rentals filename=app/templates/contact.gjs
-<template>
-  <div class="jumbo">
-    <div class="right tomster"></div>
-    <h2>Contact Us</h2>
+```run:file:create lang=handlebars cwd=super-rentals filename=app/templates/contact.hbs
+<div class="jumbo">
+  <div class="right tomster"></div>
+  <h2>Contact Us</h2>
+  <p>
+    Super Rentals Representatives would love to help you<br>
+    choose a destination or answer any questions you may have.
+  </p>
+  <address>
+    Super Rentals HQ
     <p>
-      Super Rentals Representatives would love to help you<br>
-      choose a destination or answer any questions you may have.
+      1212 Test Address Avenue<br>
+      Testington, OR 97233
     </p>
-    <address>
-      Super Rentals HQ
-      <p>
-        1212 Test Address Avenue<br>
-        Testington, OR 97233
-      </p>
-      <a href="tel:503.555.1212">+1 (503) 555-1212</a><br>
-      <a href="mailto:superrentalsrep@emberjs.com">superrentalsrep@emberjs.com</a>
-    </address>
-  </div>
-</template>
+    <a href="tel:503.555.1212">+1 (503) 555-1212</a><br>
+    <a href="mailto:superrentalsrep@emberjs.com">superrentalsrep@emberjs.com</a>
+  </address>
+</div>
 ```
 
 Ember comes with strong *[conventions][TODO: link to conventions]* and sensible defaults&mdash;if we were starting from scratch, we wouldn't mind the default `/contact` URL. However, if the defaults don't work for us, it is no problem at all to customize Ember for our needs!
@@ -125,7 +121,7 @@ visit http://localhost:4200/getting-in-touch?deterministic
 ```
 
 ```run:command hidden=true cwd=super-rentals
-git add app/templates/contact.gjs
+git add app/templates/contact.hbs
 ```
 
 ## Linking Pages with the `<LinkTo>` Component
@@ -136,43 +132,30 @@ Since Ember offers great support for URLs out-of-the-box, we *could* just link o
 
 With Ember, we can do better than that! Instead of the plain-old `<a>` tag, Ember provides an alternative called `<LinkTo>`. For example, here is how you would use it on the pages we just created:
 
-```run:file:patch lang=gjs cwd=super-rentals filename=app/templates/index.gjs
-@@ -1 +1,3 @@
-+import { LinkTo } from '@ember/routing'; 
-+
- <template>
-@@ -5,2 +7,3 @@
-     <p>We hope you find exactly what you're looking for in a place to stay.</p>
-+    <LinkTo @route="about" class="button">About Us</LinkTo>
-   </div>
+```run:file:patch lang=handlebars cwd=super-rentals filename=app/templates/index.hbs
+@@ -4,2 +4,3 @@
+   <p>We hope you find exactly what you're looking for in a place to stay.</p>
++  <LinkTo @route="about" class="button">About Us</LinkTo>
+ </div>
 ```
 
-```run:file:patch lang=gjs cwd=super-rentals filename=app/templates/about.gjs
-@@ -1 +1,3 @@
-+import { LinkTo } from '@ember/routing'; 
-+
- <template>
-@@ -9,2 +11,3 @@
-     </p>
-+    <LinkTo @route="contact" class="button">Contact Us</LinkTo>
-   </div>
+```run:file:patch lang=handlebars cwd=super-rentals filename=app/templates/about.hbs
+@@ -8,2 +8,3 @@
+   </p>
++  <LinkTo @route="contact" class="button">Contact Us</LinkTo>
+ </div>
 ```
 
-```run:file:patch lang=gjs cwd=super-rentals filename=app/templates/contact.gjs
-@@ -1 +1,3 @@
-+import { LinkTo } from '@ember/routing'; 
-+
- <template>
-@@ -17,2 +19,3 @@
-     </address>
-+    <LinkTo @route="about" class="button">About</LinkTo>
-   </div>
+```run:file:patch lang=handlebars cwd=super-rentals filename=app/templates/contact.hbs
+@@ -16,2 +16,3 @@
+   </address>
++  <LinkTo @route="about" class="button">About</LinkTo>
+ </div>
 ```
-
 
 There is quite a bit going on here, so let's break it down.
 
-`<LinkTo>` is an example of a *[component](../../../components/introducing-components/)* in Ember. Along with regular HTML tags, components are a key building block that we can use to build up an app's user interface. Unlike regular HTML tags, components need to be imported before they can be used. In this case, `<LinkTo>` is imported from the `@ember/routing` package that is part of Ember.
+`<LinkTo>` is an example of a *[component](../../../components/introducing-components/)* in Ember&mdash;you can tell them apart from regular HTML tags because they start with an uppercase letter. Along with regular HTML tags, components are a key building block that we can use to build up an app's user interface.
 
 We have a lot more to say about components later, but for now, you can think of them as a way to provide *[custom tags][TODO: link to custom tags]* to supplement the built-in ones that came with the browser.
 
@@ -199,9 +182,9 @@ visit http://localhost:4200/getting-in-touch?deterministic
 ```
 
 ```run:command hidden=true cwd=super-rentals
-git add app/templates/index.gjs
-git add app/templates/about.gjs
-git add app/templates/contact.gjs
+git add app/templates/index.hbs
+git add app/templates/about.hbs
+git add app/templates/contact.hbs
 ```
 
 We will learn more about how all of this works soon. In the meantime, go ahead and click on the link in the browser. Did you notice how snappy that was?

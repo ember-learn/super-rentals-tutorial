@@ -46,12 +46,12 @@ Hack: make an empty package.json to convince ember-cli we are really not in an E
 # pretend we are running NPM.
 
 #[cfg(all(ci, unix))]
-#[display(ember new super-rentals --lang en --strict)]
-ember new super-rentals --lang en --strict --pnpm \
+#[display(ember new super-rentals --lang en)]
+ember new super-rentals --lang en --pnpm \
   | awk '{ gsub("Pnpm", "npm"); gsub("pnpm", "npm"); print }'
 
 #[cfg(not(all(ci, unix)))]
-ember new super-rentals --lang en --strict --pnpm
+ember new super-rentals --lang en --pnpm
 ```
 
 ```run:command hidden=true
@@ -196,7 +196,7 @@ del package.json
 
 ```run:file:patch hidden=true cwd=super-rentals filename=.prettierignore
 @@ -1 +1,2 @@
-+**/*.gjs
++**/*.hbs
  # unconventional js
 
 ```
@@ -277,24 +277,20 @@ You can exit out of the development server at any time by typing `Ctrl + C` into
 
 The development server has a feature called *live reload*, which monitors your app for file changes, automatically re-compiles everything, and refreshes any open browser pages. This comes in really handy during development, so let's give that a try!
 
-As text on the welcome page pointed out, the source code for the page is located in `app/templates/application.gjs`. Let's try to edit that file and replace it with our own content:
+As text on the welcome page pointed out, the source code for the page is located in `app/templates/application.hbs`. Let's try to edit that file and replace it with our own content:
 
-```run:file:patch lang=gjs cwd=super-rentals filename=app/templates/application.gjs
-@@ -1,12 +1,3 @@
--import pageTitle from 'ember-page-title/helpers/page-title';
--import WelcomePage from 'ember-welcome-page/components/welcome-page';
+```run:file:patch lang=handlebars cwd=super-rentals filename=app/templates/application.hbs
+@@ -1,7 +1 @@
+-{{page-title "SuperRentals"}}
 -
- <template>
--  {{pageTitle "SuperRentals"}}
+-{{outlet}}
 -
--  {{outlet}}
--
--  {{! The following component displays Ember's default welcome message. }}
--  <WelcomePage />
--  {{! Feel free to remove this! }}
-+  Hello World!!!
- </template>
- ```
+-{{! The following component displays Ember's default welcome message. }}
+-<WelcomePage />
+-{{! Feel free to remove this! }}
+\ No newline at end of file
++Hello World!!!
+```
 
 Soon after saving the file, your browser should automatically refresh and render our greetings to the world. Neat!
 
@@ -302,29 +298,27 @@ Soon after saving the file, your browser should automatically refresh and render
 visit http://localhost:4200/?deterministic
 ```
 
-When you are done experimenting, go ahead and delete the `app/templates/application.gjs` file. We won't be needing this for a while, so let's start afresh. We can add it back later when we have a need for it.
+When you are done experimenting, go ahead and delete the `app/templates/application.hbs` file. We won't be needing this for a while, so let's start afresh. We can add it back later when we have a need for it.
 
 ```run:command hidden=true cwd=super-rentals
-git rm -f app/templates/application.gjs
+git rm -f app/templates/application.hbs
 ```
 
 Again, if you still have your browser tab open, your tab will automatically re-render a blank page as soon as you delete the file. This reflects the fact that we no longer have an application template in our app.
 
 ## Working with HTML, CSS and Assets in an Ember App
 
-Create a `app/templates/index.gjs` file and paste the following markup.
+Create a `app/templates/index.hbs` file and paste the following markup.
 
-```run:file:create lang=gjs cwd=super-rentals filename=app/templates/index.gjs
-<template>
-  <div class="jumbo">
-    <div class="right tomster"></div>
-    <h2>Welcome to Super Rentals!</h2>
-    <p>We hope you find exactly what you're looking for in a place to stay.</p>
-  </div>
-</template>
+```run:file:create lang=handlebars cwd=super-rentals filename=app/templates/index.hbs
+<div class="jumbo">
+  <div class="right tomster"></div>
+  <h2>Welcome to Super Rentals!</h2>
+  <p>We hope you find exactly what you're looking for in a place to stay.</p>
+</div>
 ```
 
-If you are thinking, "Hey, that looks like HTML!", then you would be right! In their simplest form, Ember templates are really just HTML wrapped in a `<template>` tag. If you are already familiar with HTML, you should feel right at home here.
+If you are thinking, "Hey, that looks like HTML!", then you would be right! In their simplest form, Ember templates are really just HTML. If you are already familiar with HTML, you should feel right at home here.
 
 Of course, unlike HTML, Ember templates can do a lot more than just displaying static content. We will see that in action soon.
 
@@ -335,7 +329,7 @@ visit http://localhost:4200/?deterministic
 ```
 
 ```run:command hidden=true cwd=super-rentals
-git add app/templates/index.gjs
+git add app/templates/index.hbs
 ```
 
 Before we do anything else, let's add some styling to our app. We spend enough time staring at the computer screen as it is, so we must protect our eyesight against unstyled markup!

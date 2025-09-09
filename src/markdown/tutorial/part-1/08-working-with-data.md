@@ -71,12 +71,12 @@ So, now that we've prepared some model data for our route, let's use it in our t
 
 To test that this is working, let's modify our template and try to render the `title` property from our model:
 
-```run:file:patch lang=gjs cwd=super-rentals filename=app/templates/index.gjs
-@@ -11,2 +11,4 @@ import Rental from 'super-rentals/components/rental';
- 
-+  <h1>{{@model.title}}</h1>
+```run:file:patch lang=handlebars cwd=super-rentals filename=app/templates/index.hbs
+@@ -6,2 +6,4 @@
+
++<h1>{{@model.title}}</h1>
 +
-   <div class="rentals">
+ <div class="rentals">
 ```
 
 If we look at our page in the browser, we should see our model data reflected as a new header.
@@ -91,7 +91,7 @@ Awesome!
 ```run:command hidden=true cwd=super-rentals
 ember test --path dist
 git add app/routes/index.js
-git add app/templates/index.gjs
+git add app/templates/index.hbs
 ```
 
 Okay, now that we know that we have a model to use at our disposal, let's remove some of the hard-coding that we did earlier! Instead of explicitly hard-coding the rental information into our `<Rental>` component, we can pass the model object to our component instead.
@@ -100,63 +100,66 @@ Let's try it out.
 
 First, let's pass in our model to our `<Rental>` component as the `@rental` argument. We will also remove the extraneous `<h1>` tag we added earlier, now that we know things are working:
 
-```run:file:patch lang=gjs cwd=super-rentals filename=app/templates/index.gjs
-@@ -11,9 +11,7 @@ import Rental from 'super-rentals/components/rental';
- 
--  <h1>{{@model.title}}</h1>
+```run:file:patch lang=handlebars cwd=super-rentals filename=app/templates/index.hbs
+@@ -6,9 +6,7 @@
+
+-<h1>{{@model.title}}</h1>
 -
-   <div class="rentals">
-     <ul class="results">
--      <li><Rental /></li>
--      <li><Rental /></li>
--      <li><Rental /></li>
-+      <li><Rental @rental={{@model}} /></li>
-+      <li><Rental @rental={{@model}} /></li>
-+      <li><Rental @rental={{@model}} /></li>
-     </ul>
+ <div class="rentals">
+   <ul class="results">
+-    <li><Rental /></li>
+-    <li><Rental /></li>
+-    <li><Rental /></li>
++    <li><Rental @rental={{@model}} /></li>
++    <li><Rental @rental={{@model}} /></li>
++    <li><Rental @rental={{@model}} /></li>
+   </ul>
 ```
 
 By passing in `@model` into the `<Rental>` component as the `@rental` argument, we will have access to our "Grand Old Mansion" model object in the `<Rental>` component's template! Now, we can replace our hard-coded values in this component by using the values that live on our `@rental` model.
 
-```run:file:patch lang=gjs cwd=super-rentals filename=app/components/rental.gjs
-@@ -6,18 +6,18 @@ import Map from 'super-rentals/components/map';
-     <RentalImage
--      src="https://upload.wikimedia.org/wikipedia/commons/c/cb/Crane_estate_(5).jpg"
--      alt="A picture of Grand Old Mansion"
-+      src={{@rental.image}}
-+      alt="A picture of {{@rental.title}}"
-     />
-     <div class="details">
--      <h3>Grand Old Mansion</h3>
-+      <h3>{{@rental.title}}</h3>
-       <div class="detail owner">
--        <span>Owner:</span> Veruca Salt
-+        <span>Owner:</span> {{@rental.owner}}
-       </div>
-       <div class="detail type">
--        <span>Type:</span> Standalone
-+        <span>Type:</span> {{@rental.type}}
-       </div>
-       <div class="detail location">
--        <span>Location:</span> San Francisco
-+        <span>Location:</span> {{@rental.city}}
-       </div>
-       <div class="detail bedrooms">
--        <span>Number of bedrooms:</span> 15
-+        <span>Number of bedrooms:</span> {{@rental.bedrooms}}
-       </div>
-@@ -25,4 +25,4 @@ import Map from 'super-rentals/components/map';
-     <Map
--      @lat="37.7749"
--      @lng="-122.4194"
-+      @lat={{@rental.location.lat}}
-+      @lng={{@rental.location.lng}}
-       @zoom="9"
-@@ -30,3 +30,3 @@ import Map from 'super-rentals/components/map';
-       @height="150"
--      alt="A map of Grand Old Mansion"
-+      alt="A map of {{@rental.title}}"
-     />
+```run:file:patch lang=handlebars cwd=super-rentals filename=app/components/rental.hbs
+@@ -2,18 +2,18 @@
+   <Rental::Image
+-    src="https://upload.wikimedia.org/wikipedia/commons/c/cb/Crane_estate_(5).jpg"
+-    alt="A picture of Grand Old Mansion"
++    src={{@rental.image}}
++    alt="A picture of {{@rental.title}}"
+   />
+   <div class="details">
+-    <h3>Grand Old Mansion</h3>
++    <h3>{{@rental.title}}</h3>
+     <div class="detail owner">
+-      <span>Owner:</span> Veruca Salt
++      <span>Owner:</span> {{@rental.owner}}
+     </div>
+     <div class="detail type">
+-      <span>Type:</span> Standalone
++      <span>Type:</span> {{@rental.type}}
+     </div>
+     <div class="detail location">
+-      <span>Location:</span> San Francisco
++      <span>Location:</span> {{@rental.city}}
+     </div>
+     <div class="detail bedrooms">
+-      <span>Number of bedrooms:</span> 15
++      <span>Number of bedrooms:</span> {{@rental.bedrooms}}
+     </div>
+@@ -21,8 +21,8 @@
+   <Map
+-    @lat="37.7749"
+-    @lng="-122.4194"
+-    @zoom="9"
+-    @width="150"
+-    @height="150"
+-    alt="A map of Grand Old Mansion"
++    @lat={{@rental.location.lat}}
++    @lng={{@rental.location.lng}}
++    @zoom="9"
++    @width="150"
++    @height="150"
++    alt="A map of {{@rental.title}}"
+   />
 ```
 
 Since the model object contains exactly the same data as the previously-hard-coded "Grand Old Mansion", the page should look exactly the same as before the change.
@@ -170,18 +173,14 @@ Now, we have one last thing to do: update the tests to reflect this change.
 
 Because component tests are meant to render and test a single component in isolation from the rest of the app, they do not perform any routing, which means we won't have access to the same data returned from the `model` hook.
 
-Therefore, in our `<Rental>` component's test, we will have to feed the data into it some other way. We can do this using the same `State` mechanism we learned about from the [previous chapter](../reusable-components/).
+Therefore, in our `<Rental>` component's test, we will have to feed the data into it some other way. We can do this using the `setProperties` we learned about from the [previous chapter](../reusable-components/).
 
-```run:file:patch lang=gjs cwd=super-rentals filename=tests/integration/components/rental-test.gjs
-@@ -4,2 +4,3 @@ import { render } from '@ember/test-helpers';
- import Rental from 'super-rentals/components/rental';
-+import { tracked } from '@glimmer/tracking';
- 
-@@ -9,3 +10,24 @@ module('Integration | Component | rental', function (hooks) {
+```run:file:patch lang=js cwd=super-rentals filename=tests/integration/components/rental-test.js
+@@ -9,3 +9,22 @@
    test('it renders information about a rental property', async function (assert) {
--    await render(<template><Rental /></template>);
-+    class State { 
-+      @tracked rental = {
+-    await render(hbs`<Rental />`);
++    this.setProperties({
++      rental: {
 +        title: 'Grand Old Mansion',
 +        owner: 'Veruca Salt',
 +        city: 'San Francisco',
@@ -196,22 +195,20 @@ Therefore, in our `<Rental>` component's test, we will have to feed the data int
 +          'https://upload.wikimedia.org/wikipedia/commons/c/cb/Crane_estate_(5).jpg',
 +        description:
 +          'This grand old mansion sits on over 100 acres of rolling hills and dense redwood forests.',
-+      };
-+    };
++      },
++    });
 +
-+    const state = new State();
-+
-+    await render(<template><Rental @rental={{state.rental}} /></template>);
- 
++    await render(hbs`<Rental @rental={{this.rental}} />`);
+
 ```
 
 Notice that we also need to update the invocation of the `<Rental>` component in the `render` function call to also have a `@rental` argument passed into it. If we run our tests now, they should all pass!
 
 ```run:command hidden=true cwd=super-rentals
 ember test --path dist
-git add app/components/rental.gjs
-git add app/templates/index.gjs
-git add tests/integration/components/rental-test.gjs
+git add app/components/rental.hbs
+git add app/templates/index.hbs
+git add tests/integration/components/rental-test.js
 ```
 
 ```run:screenshot width=1024 height=768 retina=true filename=pass.png alt="All our tests are passing"
@@ -351,16 +348,16 @@ The last change we'll need to make is to our `index.hbs` route template, where w
 
 Let's see how.
 
-```run:file:patch lang=gjs cwd=super-rentals filename=app/templates/index.gjs
-@@ -13,5 +13,5 @@ import Rental from 'super-rentals/components/rental';
-     <ul class="results">
--      <li><Rental @rental={{@model}} /></li>
--      <li><Rental @rental={{@model}} /></li>
--      <li><Rental @rental={{@model}} /></li>
-+      {{#each @model as |rental|}}
-+        <li><Rental @rental={{rental}} /></li>
-+      {{/each}}
-     </ul>
+```run:file:patch lang=handlebars cwd=super-rentals filename=app/templates/index.hbs
+@@ -8,5 +8,5 @@
+   <ul class="results">
+-    <li><Rental @rental={{@model}} /></li>
+-    <li><Rental @rental={{@model}} /></li>
+-    <li><Rental @rental={{@model}} /></li>
++    {{#each @model as |rental|}}
++      <li><Rental @rental={{rental}} /></li>
++    {{/each}}
+   </ul>
 ```
 
 We can use the `{{#each}}...{{/each}}` syntax to iterate and loop through the array returned by the model hook. For each iteration through the array&mdash;for each item in the array&mdash;we will render the block that is passed to it once. In our case, the block is our `<Rental>` component, surrounded by `<li>` tags.
@@ -381,7 +378,7 @@ Better yet, all of our tests are still passing too!
 ```run:command hidden=true cwd=super-rentals
 ember test --path dist
 git add app/routes/index.js
-git add app/templates/index.gjs
+git add app/templates/index.hbs
 ```
 
 ```run:screenshot width=1024 height=768 retina=true filename=pass-2.png alt="All our tests are passing"

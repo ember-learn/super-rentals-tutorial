@@ -48,23 +48,49 @@ For our app, it probably makes the most sense for our share button to automatica
 Now that we have a better understanding of the scope of this feature, let's get to work and generate a `share-button` component.
 
 ```run:command cwd=super-rentals
-ember generate component share-button -gc
+ember generate component share-button --with-component-class
 ```
 
 ```run:command hidden=true cwd=super-rentals
 ember test --path dist
-git add app/components/share-button.gjs
-git add tests/integration/components/share-button-test.gjs
+git add app/components/share-button.hbs
+git add app/components/share-button.js
+git add tests/integration/components/share-button-test.js
 ```
 
-Let's start with the template that was generated for this component. We already have some markup for the share button in the `<RentalDetailed>` component we made earlier, so let's just copy that over into our new `<ShareButton>` component.
+Let's start with the template that was generated for this component. We already have some markup for the share button in the `<Rental::Detailed>` component we made earlier, so let's just copy that over into our new `<ShareButton>` component.
 
-```run:file:patch lang=gjs cwd=super-rentals filename=app/components/share-button.gjs
-@@ -1,6 +1,39 @@
- import Component from '@glimmer/component';
+```run:file:patch lang=handlebars cwd=super-rentals filename=app/components/share-button.hbs
+@@ -1 +1,9 @@
+-{{yield}}
+\ No newline at end of file
++<a
++  ...attributes
++  href={{this.shareURL}}
++  target="_blank"
++  rel="external nofollow noopener noreferrer"
++  class="share button"
++>
++  {{yield}}
++</a>
+```
+
+Notice that we added `...attributes` to our `<a>` tag here. As [we learned earlier](../../part-1/reusable-components/) when working on our `<Map>` component, the order of `...attributes` relative to other attributes is significant. We don't want to allow `href`, `target`, or `rel` to be overridden by the invoker, so we specified those attributes after `...attributes`.
+
+But what happens to the `class` attribute? Well, as it turns out, the `class` attribute is the one exception to how these component attributes are overridden! While all other HTML attributes follow the "last-write wins" rule, the values for the `class` attribute are merged together (concatenated) instead. There is a good reason for this: it allows the component to specify whatever classes that *it* needs, while allowing the invokers of the component to freely add any extra classes that *they* need for styling purposes.
+
+We also have a `{{yield}}` inside of our `<a>` tag so that we can customize the text for the link later when invoking the `<ShareButton>` component.
+
+## Accessing the Current Page URL
+
+Whew! Let's look at the JavaScript class next.
+
+```run:file:patch lang=js cwd=super-rentals filename=app/components/share-button.js
+@@ -3 +3,27 @@
+-export default class ShareButton extends Component {}
 +const TWEET_INTENT = 'https://twitter.com/intent/tweet';
-
- export default class ShareButton extends Component {
++
++export default class ShareButton extends Component {
 +  get currentURL() {
 +    return window.location.href;
 +  }
@@ -88,54 +114,28 @@ Let's start with the template that was generated for this component. We already 
 +
 +    return url;
 +  }
-+
-   <template>
--    {{yield}}
-+    <a
-+      ...attributes
-+      href={{this.shareURL}}
-+      target="_blank"
-+      rel="external nofollow noopener noreferrer"
-+      class="share button"
-+    >
-+      {{yield}}
-+    </a>
-   </template>
++}
 ```
-
-Looking at the template section, notice that we added `...attributes` to our `<a>` tag here. As [we learned earlier](../../part-1/reusable-components/) when working on our `<Map>` component, the order of `...attributes` relative to other attributes is significant. We don't want to allow `href`, `target`, or `rel` to be overridden by the invoker, so we specified those attributes after `...attributes`.
-
-But what happens to the `class` attribute? Well, as it turns out, the `class` attribute is the one exception to how these component attributes are overridden! While all other HTML attributes follow the "last-write wins" rule, the values for the `class` attribute are merged together (concatenated) instead. There is a good reason for this: it allows the component to specify whatever classes that *it* needs, while allowing the invokers of the component to freely add any extra classes that *they* need for styling purposes.
-
-We also have a `{{yield}}` inside of our `<a>` tag so that we can customize the text for the link later when invoking the `<ShareButton>` component.
-
-## Accessing the Current Page URL
-
-Whew! Let's look at the JavaScript part next.
 
 The key functionality of this class is to build the appropriate URL for the Twitter Web Intent API, which is exposed to the template via the `this.shareURL` getter. It mainly involves "gluing together" the component's arguments and setting the appropriate query params on the resulting URL. Conveniently, the browser provides a handy [`URL` class](https://javascript.info/url) that handles escaping and joining of query params for us.
 
 The other notable functionality of this class has to do with getting the current page's URL and automatically adding it to the Twitter Intent URL. To accomplish this, we defined a `currentURL` getter that simply used the browser's global [`Location` object](https://developer.mozilla.org/en-US/docs/Web/API/Window/location), which we could access at `window.location`. Among other things, it has a `href` property (`window.location.href`) that reports the current page's URL.
 
-Let's put this component to use by invoking it from the `<RentalDetailed>` component!
+Let's put this component to use by invoking it from the `<Rental::Detailed>` component!
 
-```run:file:patch lang=gjs cwd=super-rentals filename=app/components/rental/detailed.gjs
-@@ -3,2 +3,3 @@ import RentalImage from 'super-rentals/components/rental/image';
- import Map from 'super-rentals/components/map';
-+import ShareButton from 'super-rentals/components/share-button';
- 
-@@ -8,5 +9,9 @@ import Map from 'super-rentals/components/map';
-     <p>Nice find! This looks like a nice place to stay near {{@rental.city}}.</p>
--    <a href="#" target="_blank" rel="external nofollow noopener noreferrer" class="share button">
-+    <ShareButton
-+      @text="Check out {{@rental.title}} on Super Rentals!"
-+      @hashtags="vacation,travel,authentic,blessed,superrentals"
-+      @via="emberjs"
-+    >
-       Share on Twitter
--    </a>
-+    </ShareButton>
-   </Jumbo>
+```run:file:patch lang=handlebars cwd=super-rentals filename=app/components/rental/detailed.hbs
+@@ -3,5 +3,9 @@
+   <p>Nice find! This looks like a nice place to stay near {{@rental.city}}.</p>
+-  <a href="#" target="_blank" rel="external nofollow noopener noreferrer" class="share button">
++  <ShareButton
++    @text="Check out {{@rental.title}} on Super Rentals!"
++    @hashtags="vacation,travel,authentic,blessed,superrentals"
++    @via="emberjs"
++  >
+     Share on Twitter
+-  </a>
++  </ShareButton>
+ </Jumbo>
 ```
 
 With that, we should have a working share button!
@@ -151,8 +151,9 @@ wait  .share.button
 
 ```run:command hidden=true cwd=super-rentals
 ember test --path dist
-git add app/components/rental/detailed.gjs
-git add app/components/share-button.gjs
+git add app/components/rental/detailed.hbs
+git add app/components/share-button.hbs
+git add app/components/share-button.js
 git add tests/acceptance/super-rentals-test.js
 ```
 
@@ -211,12 +212,11 @@ However, during tests, the router is configured to maintain the "logical" URL in
 
 To fix our problem, we would need to do the same. Ember exposes this internal state through the *[router service](https://api.emberjs.com/ember/release/classes/RouterService)*, which we can *[inject](../../../services/#toc_accessing-services)* into our component:
 
-```run:file:patch lang=gjs cwd=super-rentals filename=app/components/share-button.gjs
-@@ -1,2 +1,3 @@
- import Component from '@glimmer/component';
+```run:file:patch lang=js cwd=super-rentals filename=app/components/share-button.js
+@@ -1 +1,2 @@
 +import { service } from '@ember/service';
- const TWEET_INTENT = 'https://twitter.com/intent/tweet';
-@@ -4,4 +5,6 @@ const TWEET_INTENT = 'https://twitter.com/intent/tweet';
+ import Component from '@glimmer/component';
+@@ -5,4 +6,6 @@
  export default class ShareButton extends Component {
 +  @service router;
 +
@@ -232,7 +232,7 @@ With this change, everything is now working the way we intended.
 
 ```run:command hidden=true cwd=super-rentals
 ember test --path dist
-git add app/components/share-button.gjs
+git add app/components/share-button.js
 git add tests/acceptance/super-rentals-test.js
 ```
 
@@ -257,49 +257,47 @@ More importantly, services are designed to be easily *swappable*. In our compone
 
 We will take advantage of this capability in our component test:
 
-```run:file:patch lang=gjs cwd=super-rentals filename=tests/integration/components/share-button-test.gjs
-@@ -2,2 +2,3 @@ import { module, test } from 'qunit';
+```run:file:patch lang=js cwd=super-rentals filename=tests/integration/components/share-button-test.js
+@@ -2,2 +2,3 @@
  import { setupRenderingTest } from 'super-rentals/tests/helpers';
 +import Service from '@ember/service';
  import { render } from '@ember/test-helpers';
-@@ -5,23 +6,36 @@ import ShareButton from 'super-rentals/components/share-button';
- 
--module('Integration | Component | share-button', function (hooks) {
--  setupRenderingTest(hooks);
+@@ -5,2 +6,13 @@
+
 +const MOCK_URL = new URL(
 +  '/foo/bar?baz=true#some-section',
 +  window.location.origin,
 +);
- 
--  test('it renders', async function (assert) {
--    // Updating values is achieved using autotracking, just like in app code. For example:
--    // class State { @tracked myProperty = 0; }; const state = new State();
--    // and update using state.myProperty = 1; await rerender();
--    // Handle any actions with function myAction(val) { ... };
++
 +class MockRouterService extends Service {
 +  get currentURL() {
 +    return '/foo/bar?baz=true#some-section';
 +  }
 +}
- 
--    await render(<template><ShareButton /></template>);
-+module('Integration | Component | share-button', function (hooks) {
-+  setupRenderingTest(hooks);
- 
++
+ module('Integration | Component | share-button', function (hooks) {
+@@ -8,18 +20,20 @@
+
+-  test('it renders', async function (assert) {
+-    // Set any properties with this.set('myProperty', 'value');
+-    // Handle any actions with this.set('myAction', function(val) { ... });
+-
+-    await render(hbs`<ShareButton />`);
+-
 -    assert.dom().hasText('');
 +  hooks.beforeEach(function () {
 +    this.owner.register('service:router', MockRouterService);
 +  });
- 
+
 -    // Template block usage:
-+  test('basic usage', async function (assert) {
-     await render(<template>
+-    await render(hbs`
 -      <ShareButton>
 -        template block text
 -      </ShareButton>
-+      <ShareButton>Tweet this!</ShareButton>
-     </template>);
- 
+-    `);
++  test('basic usage', async function (assert) {
++    await render(hbs`<ShareButton>Tweet this!</ShareButton>`);
+
 -    assert.dom().hasText('template block text');
 +    assert
 +      .dom('a')
@@ -323,31 +321,27 @@ By using service injections and mocks, Ember allows us to build *[loosely couple
 
 ```run:command hidden=true cwd=super-rentals
 ember test --path dist
-git add tests/integration/components/share-button-test.gjs
+git add tests/integration/components/share-button-test.js
 ```
 
 While we are here, let's add some more tests for the various functionalities of the `<ShareButton>` component:
 
-```run:file:patch lang=gjs cwd=super-rentals filename=tests/integration/components/share-button-test.gjs
-@@ -3,3 +3,3 @@ import { setupRenderingTest } from 'super-rentals/tests/helpers';
+```run:file:patch lang=js cwd=super-rentals filename=tests/integration/components/share-button-test.js
+@@ -3,3 +3,3 @@
  import Service from '@ember/service';
 -import { render } from '@ember/test-helpers';
 +import { find, render } from '@ember/test-helpers';
- import ShareButton from 'super-rentals/components/share-button';
-@@ -17,2 +17,8 @@ class MockRouterService extends Service {
- 
-+function tweetParam(param) {
-+  let link = find('a');
-+  let url = new URL(link.href);
-+  return url.searchParams.get(param);
-+}
-+
- module('Integration | Component | share-button', function (hooks) {
-@@ -22,2 +28,3 @@ module('Integration | Component | share-button', function (hooks) {
+ import { hbs } from 'ember-cli-htmlbars';
+@@ -22,2 +22,8 @@
      this.owner.register('service:router', MockRouterService);
 +
++    this.tweetParam = (param) => {
++      let link = find('a');
++      let url = new URL(link.href);
++      return url.searchParams.get(param);
++    };
    });
-@@ -33,6 +40,3 @@ module('Integration | Component | share-button', function (hooks) {
+@@ -31,6 +37,3 @@
        .hasAttribute('rel', 'external nofollow noopener noreferrer')
 -      .hasAttribute(
 -        'href',
@@ -355,40 +349,37 @@ While we are here, let's add some more tests for the various functionalities of 
 -      )
 +      .hasAttribute('href', /^https:\/\/twitter\.com\/intent\/tweet/)
        .hasClass('share')
-@@ -40,3 +44,55 @@ module('Integration | Component | share-button', function (hooks) {
+@@ -38,2 +41,50 @@
        .containsText('Tweet this!');
 +
-+    assert.strictEqual(tweetParam('url'), MOCK_URL.href);
++    assert.strictEqual(this.tweetParam('url'), MOCK_URL.href);
 +  });
 +
 +  test('it supports passing @text', async function (assert) {
-+    await render(<template>
-+      <ShareButton @text="Hello Twitter!">Tweet this!</ShareButton>
-+    </template>);
++    await render(
++      hbs`<ShareButton @text="Hello Twitter!">Tweet this!</ShareButton>`,
++    );
 +
-+    assert.strictEqual(tweetParam('text'), 'Hello Twitter!');
++    assert.strictEqual(this.tweetParam('text'), 'Hello Twitter!');
 +  });
 +
 +  test('it supports passing @hashtags', async function (assert) {
-+    await render(<template>
-+      <ShareButton @hashtags="foo,bar,baz">Tweet this!</ShareButton>
-+    </template>);
++    await render(
++      hbs`<ShareButton @hashtags="foo,bar,baz">Tweet this!</ShareButton>`,
++    );
 +
-+    assert.strictEqual(tweetParam('hashtags'), 'foo,bar,baz');
++    assert.strictEqual(this.tweetParam('hashtags'), 'foo,bar,baz');
 +  });
 +
 +  test('it supports passing @via', async function (assert) {
-+    await render(<template>
-+      <ShareButton @via="emberjs">Tweet this!</ShareButton>
-+    </template>);
-+
-+    assert.strictEqual(tweetParam('via'), 'emberjs');
-   });
++    await render(hbs`<ShareButton @via="emberjs">Tweet this!</ShareButton>`);
++    assert.strictEqual(this.tweetParam('via'), 'emberjs');
++  });
 +
 +  test('it supports adding extra classes', async function (assert) {
-+    await render(<template>
-+      <ShareButton class="extra things">Tweet this!</ShareButton>
-+    </template>);
++    await render(
++      hbs`<ShareButton class="extra things">Tweet this!</ShareButton>`,
++    );
 +
 +    assert
 +      .dom('a')
@@ -399,27 +390,25 @@ While we are here, let's add some more tests for the various functionalities of 
 +  });
 +
 +  test('the target, rel and href attributes cannot be overridden', async function (assert) {
-+    await render(<template>
-+      <ShareButton target="_self" rel="" href="/">Not a Tweet!</ShareButton>
-+    </template>);
++    await render(
++      hbs`<ShareButton target="_self" rel="" href="/">Not a Tweet!</ShareButton>`,
++    );
 +
 +    assert
 +      .dom('a')
 +      .hasAttribute('target', '_blank')
 +      .hasAttribute('rel', 'external nofollow noopener noreferrer')
 +      .hasAttribute('href', /^https:\/\/twitter\.com\/intent\/tweet/);
-+   });
-+
- });
+   });
 ```
 
-The main goal here is to test the key functionalities of the component individually. That way, if any of these features regresses in the future, these tests can help pinpoint the source of the problem for us. Because a lot of these tests require parsing the URL and accessing its query params, we setup our own `tweetParam` utility test helper function. This pattern allows us to easily share functionality between tests. We were even able to refactor the previous test using this new helper!
+The main goal here is to test the key functionalities of the component individually. That way, if any of these features regresses in the future, these tests can help pinpoint the source of the problem for us. Because a lot of these tests require parsing the URL and accessing its query params, we setup our own `this.tweetParam` test helper function in the `beforeEach` hook. This pattern allows us to easily share functionality between tests. We were even able to refactor the previous test using this new helper!
 
 With that, everything should be good to go, and our `<ShareButton>` component should now work everywhere!
 
 ```run:command hidden=true cwd=super-rentals
 ember test --path dist
-git add tests/integration/components/share-button-test.gjs
+git add tests/integration/components/share-button-test.js
 ```
 
 ```run:screenshot width=1024 height=960 retina=true filename=pass-2.png alt="All the tests pass!"

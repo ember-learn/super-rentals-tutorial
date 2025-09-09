@@ -120,17 +120,13 @@ wait  #qunit-banner.qunit-pass
 
 It happens really quickly though&mdash;blink and you might miss it! In fact, I had to slow this animation down by a hundred times just so you can see it in action. I told you the robot has really, really fast hands!
 
-As much as I enjoy watching this robot hard at work, the important thing here is that the test we wrote has *[passed][TODO: link to passed]*, meaning everything is working exactly as we expect and the test UI is all green and happy. If you want, you can go to `index.gjs`, delete the `<LinkTo>` component and see what things look like when we have *[a failing test][TODO: link to a failing test]*.
+As much as I enjoy watching this robot hard at work, the important thing here is that the test we wrote has *[passed][TODO: link to passed]*, meaning everything is working exactly as we expect and the test UI is all green and happy. If you want, you can go to `index.hbs`, delete the `<LinkTo>` component and see what things look like when we have *[a failing test][TODO: link to a failing test]*.
 
-```run:file:patch hidden=true cwd=super-rentals filename=app/templates/index.gjs
-@@ -1,3 +1 @@
--import { LinkTo } from '@ember/routing'; 
--
- <template>
-@@ -7,3 +5,2 @@ import { LinkTo } from '@ember/routing';
-     <p>We hope you find exactly what you're looking for in a place to stay.</p>
--    <LinkTo @route="about" class="button">About Us</LinkTo>
-   </div>
+```run:file:patch hidden=true cwd=super-rentals filename=app/templates/index.hbs
+@@ -4,3 +4,2 @@
+   <p>We hope you find exactly what you're looking for in a place to stay.</p>
+-  <LinkTo @route="about" class="button">About Us</LinkTo>
+ </div>
 ```
 
 ```run:screenshot width=1024 height=768 retina=true filename=fail.png alt="A failing test"
@@ -141,7 +137,7 @@ wait  #qunit-banner.qunit-fail
 Don't forget to put that line back in when you are done!
 
 ```run:command hidden=true cwd=super-rentals
-git checkout app/templates/index.gjs
+git checkout app/templates/index.hbs
 ember test --path dist
 ```
 
