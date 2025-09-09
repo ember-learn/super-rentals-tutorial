@@ -25,7 +25,7 @@ function js(v: JSONValue): string {
   return JSON.stringify(v);
 }
 
-function compile(steps: string, path: string, args: Args): string {
+function compile(steps: string, path: `${string}.png`, args: Args): string {
   let { width, height, x, y, retina } = args;
 
   let viewport: Viewport & JSONObject = {
@@ -156,9 +156,8 @@ export default async function screenshot(node: Code, options: Options, vfile: VF
   }
 
   await mkdirp(dir, {});
-
-  let path = join(dir, filename);
-
+  
+  let path = join(dir, filename) as `${string}.png`;
   let script = compile(node.value, path, args);
 
   console.log(`$ node -\n${script.trimRight()}`);
