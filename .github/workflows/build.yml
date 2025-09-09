@@ -11,7 +11,7 @@ on:
 jobs:
   build:
     name: Build (${{ matrix.channel }})
-    runs-on: ubuntu-22.04 # Update when chromium bug mentioned https://github.com/puppeteer/puppeteer/issues/12818 is resolved
+    runs-on: ubuntu-latest
     env:
       CI: 'true'
     strategy:
@@ -37,6 +37,25 @@ jobs:
         run: |
           sudo apt-get update -y
           sudo apt-get install -y tree
+          
+      - name: Disable AppArmor
+        # Ubuntu >= 23 has AppArmor enabled by default, which breaks Puppeteer.
+        # See https://github.com/puppeteer/puppeteer/issues/12818 "No usable sandbox!"
+        # this is taken from the solution used in Puppeteer's own CI: https://github.com/puppeteer/puppeteer/pull/13196
+        # The alternative is to pin Ubuntu 22 or to use aa-exec to disable AppArmor for commands that need Puppeteer.
+        # This is also suggested by Chromium https://chromium.googlesource.com/chromium/src/+/main/docs/security/apparmor-userns-restrictions.md
+        run: echo 0 | sudo tee /proc/sys/kernel/apparmor_restrict_unprivileged_userns
+
+      - uses: actions/cache@v4
+        name: Setup cache for puppeteer
+        with:
+          # See .puppeteerrc.cjs, where we set this as the place puppeteer
+          # installs the browser. It needs to be cached the same as our pnpm
+          # packages are because it won't get reinstalled if our modules are
+          # cached.
+          path: .puppeteer-cache
+          key: ${{ runner.os }}-puppeteer-${{ hashFiles('**/pnpm-lock.yaml') }}
+
       - name: Install dependencies (pnpm)
         run: |
           if [[ "$EMBER_RELEASE_CHANNEL" == "beta" ]]; then
