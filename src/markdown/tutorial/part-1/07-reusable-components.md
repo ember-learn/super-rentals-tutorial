@@ -111,7 +111,7 @@ Let's update our component:
 +      <img
 +        alt="Map image at coordinates {{@lat}},{{@lng}}"
 +        ...attributes
-+        src="https://api.mapbox.com/styles/v1/mapbox/streets-v11/static/{{@lng}},{{@lat}},{{@zoom}}/{{@width}}x{{@height}}@2x?access_token={{this.token}}"
++        src="https://api.tomtom.com/map/1/staticimage?key={{this.token}}&zoom={{@zoom}}&center={{@lng}},{{@lat}}&width={{@width}}&height={{@height}}"
 +        width={{@width}} height={{@height}}
 +      >
 +    </div>
@@ -186,19 +186,19 @@ We just added a lot of behavior into a single component, so let's write some tes
 +    );
 +
 +    assert.ok(
-+      src.includes('-122.4184,37.7797,10'),
-+      'the src should include the lng,lat,zoom parameter',
++      src.includes('zoom=10'),
++      'the src should include the zoom parameter',
 +    );
  
 -    await render(<template><Map /></template>);
 +    assert.ok(
-+      src.includes('150x120@2x'),
-+      'the src should include the width,height and @2x parameter',
++      src.includes('center=-122.4184,37.7797'),
++      'the src should include the lng,lat parameter',
 +    );
  
 -    assert.dom().hasText('');
 +    assert.ok(
-+      src.includes(`access_token=${token}`),
++      src.includes(`key=${token}`),
 +      'the src should include the escaped access token',
 +    );
 +  });
@@ -373,7 +373,7 @@ Just to be sure, we can add a test for this behavior:
  import Map from 'super-rentals/components/map';
 +import { tracked } from '@glimmer/tracking';
  
-@@ -52,2 +53,67 @@ module('Integration | Component | map', function (hooks) {
+@@ -52,2 +53,82 @@ module('Integration | Component | map', function (hooks) {
  
 +  test('it updates the `src` attribute when the arguments change', async function (assert) {
 +    class State { 
@@ -399,13 +399,23 @@ Just to be sure, we can add a test for this behavior:
 +    let img = find('.map img');
 +
 +    assert.ok(
-+      img.src.includes('-122.4194,37.7749,10'),
-+      'the src should include the lng,lat,zoom parameter',
++      img.src.includes('zoom=10'),
++      'the src should include the zoom parameter',
 +    );
 +
 +    assert.ok(
-+      img.src.includes('150x120@2x'),
-+      'the src should include the width,height and @2x parameter',
++      img.src.includes('-122.4194,37.7749'),
++      'the src should include the lng,lat parameter',
++    );
++
++    assert.ok(
++      img.src.includes('width=150'),
++      'the src should include the width parameter',
++    );
++
++    assert.ok(
++      img.src.includes('height=120'),
++      'the src should include the height parameter',
 +    );
 +
 +    state.width = 300;
@@ -415,13 +425,23 @@ Just to be sure, we can add a test for this behavior:
 +    await rerender();
 +
 +    assert.ok(
-+      img.src.includes('-122.4194,37.7749,12'),
-+      'the src should include the lng,lat,zoom parameter',
++      img.src.includes('-122.4194,37.7749'),
++      'the src should still include the lng,lat parameter',
 +    );
 +
 +    assert.ok(
-+      img.src.includes('300x200@2x'),
-+      'the src should include the width,height and @2x parameter',
++      img.src.includes('width=300'),
++      'the src should include the updated width parameter',
++    );
++
++    assert.ok(
++      img.src.includes('height=200'),
++      'the src should include the updated height parameter',
++    );
++
++    assert.ok(
++      img.src.includes('zoom=12'),
++      'the src should include the updated zoom parameter',
 +    );
 +
 +    state.lat = 47.6062;
@@ -430,13 +450,8 @@ Just to be sure, we can add a test for this behavior:
 +    await rerender();
 +
 +    assert.ok(
-+      img.src.includes('-122.3321,47.6062,12'),
-+      'the src should include the lng,lat,zoom parameter',
-+    );
-+
-+    assert.ok(
-+      img.src.includes('300x200@2x'),
-+      'the src should include the width,height and @2x parameter',
++      img.src.includes('center=-122.3321,47.6062'),
++      'the src should include the updated lng,lat parameter',
 +    );
 +  });
 +
