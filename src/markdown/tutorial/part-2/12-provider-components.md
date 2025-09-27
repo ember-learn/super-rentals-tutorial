@@ -23,24 +23,24 @@ As our app grows and as we add more features to it, one thing that would be real
 
 Well, we can start simple. Before we worry about implementing the "search" part of this feature, let's just get something on the page. The first step is to add a form with an `<input>` tag to our `index` page, and make it look pretty with a class.
 
-```run:file:patch lang=handlebars cwd=super-rentals filename=app/templates/index.hbs
-@@ -7,2 +7,9 @@
- <div class="rentals">
-+  <form>
-+    <label>
-+      <span>Where would you like to stay?</span>
-+      <input class="light">
-+    </label>
-+  </form>
-+
-   <ul class="results">
+```run:file:patch lang=gjs cwd=super-rentals filename=app/templates/index.gjs
+@@ -12,2 +12,9 @@ import Rental from 'super-rentals/components/rental';
+   <div class="rentals">
++    <form>
++      <label>
++        <span>Where would you like to stay?</span>
++        <input class="light">
++      </label>
++    </form>
++  
+     <ul class="results">
 ```
 
 Now if we refresh the UI, it has an `<input>` element on the page.
 
 ```run:command hidden=true cwd=super-rentals
 ember test --path dist
-git add app/templates/index.hbs
+git add app/templates/index.gjs
 ```
 
 ```run:screenshot width=1024 retina=true filename=homepage-with-inert-search.png alt="The homepage with a search box, but it doesn't work yet."
@@ -58,45 +58,62 @@ But where are we going to put this newly-introduced piece of state? In order to 
 
 Wait...why don't we just refactor the search box into a component? Once we do that, this will all be a bit easier&mdash;hooray!
 
-Let's start simple again and begin our refactor by creating a new template for our component, which we will call `rentals.hbs`.
+Let's start simple again and begin our refactor by creating a new component, which we will call `<Rentals>`&mdash;notice the "s" at the end. We know we're going to add some state, so we're using a Glimmer component.
 
-```run:file:create lang=handlebars cwd=super-rentals filename=app/components/rentals.hbs
-<div class="rentals">
-  <form>
-    <label>
-      <span>Where would you like to stay?</span>
-      <input class="light">
-    </label>
-  </form>
+```run:file:create lang=gjs cwd=super-rentals filename=app/components/rentals.gjs
+import Component from '@glimmer/component';
+import Rental from 'super-rentals/components/rental';
 
-  <ul class="results">
-    {{#each @rentals as |rental|}}
-      <li><Rental @rental={{rental}} /></li>
-    {{/each}}
-  </ul>
-</div>
+export default class Rentals extends Component {
+  <template>
+    <div class="rentals">
+      <form>
+        <label>
+          <span>Where would you like to stay?</span>
+          <input class="light">
+        </label>
+      </form>
+
+      <ul class="results">
+        {{#each @rentals as |rental|}}
+          <li><Rental @rental={{rental}} /></li>
+        {{/each}}
+      </ul>
+    </div>
+  </template>
+}
 ```
 
-There is one minor change to note here: while extracting our markup into a component, we also renamed the `@model` argument to be `@rentals` instead, just in order to be a little more specific about what we're iterating over in our `{{#each}}` loop. Otherwise, all we're doing here is copy-pasting what was on our `index.hbs` page into our new component template. Now we just need to actually use our new component in the index template where we started this whole refactor! Let's render our `<Rentals>` component in our `index.hbs` template.
+```run:command hidden=true cwd=super-rentals
+git add app/components/rentals.gjs
+```
 
-```run:file:patch lang=handlebars cwd=super-rentals filename=app/templates/index.hbs
-@@ -6,15 +6,2 @@
+There is one minor change to note here: while extracting our markup into a component, we also renamed the `@model` argument to be `@rentals` instead, just in order to be a little more specific about what we're iterating over in our `{{#each}}` loop. Otherwise, all we're doing here is copy-pasting what was on our `index.gjs` page into our new component template. Now we just need to actually use our new component in the index template where we started this whole refactor! Let's import and render our `<Rentals>` component in our `index.gjs` template.
 
--<div class="rentals">
--  <form>
--    <label>
--      <span>Where would you like to stay?</span>
--      <input class="light">
--    </label>
--  </form>
--
--  <ul class="results">
--    {{#each @model as |rental|}}
--      <li><Rental @rental={{rental}} /></li>
--    {{/each}}
--  </ul>
--</div>
-+<Rentals @rentals={{@model}} />
+```run:file:patch lang=gjs cwd=super-rentals filename=app/templates/index.gjs
+@@ -2,3 +2,3 @@ import { LinkTo } from '@ember/routing';
+ import Jumbo from 'super-rentals/components/jumbo';
+-import Rental from 'super-rentals/components/rental';
++import Rentals from 'super-rentals/components/rentals';
+ 
+@@ -11,16 +11,3 @@ import Rental from 'super-rentals/components/rental';
+ 
+-  <div class="rentals">
+-    <form>
+-      <label>
+-        <span>Where would you like to stay?</span>
+-        <input class="light">
+-      </label>
+-    </form>
+-  
+-    <ul class="results">
+-      {{#each @model as |rental|}}
+-        <li><Rental @rental={{rental}} /></li>
+-      {{/each}}
+-    </ul>
+-  </div>
++  <Rentals @rentals={{@model}} />
+ </template>
 ```
 
 Remember the small change we made in the markup when we extracted our `<Rentals>` component? We renamed the `@model` argument to be `@rentals`. Because we made that change in our component, we now need to pass the `@model` argument into the `<Rentals>` component as `@rentals`. Once we do this, everything should be wired up properly so that the `@model` is passed into `<Rentals>` as `@rentals`, just as we expect.
@@ -105,8 +122,8 @@ Let's check our UI as well to make sure that we didn't break anything during thi
 
 ```run:command hidden=true cwd=super-rentals
 ember test --path dist
-git add app/components/rentals.hbs
-git add app/templates/index.hbs
+git add app/components/rentals.gjs
+git add app/templates/index.gjs
 ```
 
 ```run:screenshot width=1024 retina=true filename=homepage-with-rentals-component.png alt="The homepage looks exactly the same as before!"
@@ -118,73 +135,78 @@ Awesome, it looks exactly the same!
 
 Now that we've finished our refactor and tried it out in the UI, let's write a test for it as well.
 
-```run:file:create lang=js cwd=super-rentals filename=tests/integration/components/rentals-test.js
+```run:file:create lang=gjs cwd=super-rentals filename=tests/integration/components/rentals-test.gjs
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'super-rentals/tests/helpers';
 import { render } from '@ember/test-helpers';
-import { hbs } from 'ember-cli-htmlbars';
+import { tracked } from '@glimmer/tracking';
+import Rentals from 'super-rentals/components/rentals';
+
+class State {
+  @tracked rentals = {};
+}
+
+const state = new State();
 
 module('Integration | Component | rentals', function (hooks) {
   setupRenderingTest(hooks);
 
   test('it renders all given rental properties by default', async function (assert) {
-    this.setProperties({
-      rentals: [
-        {
-          id: 'grand-old-mansion',
-          title: 'Grand Old Mansion',
-          owner: 'Veruca Salt',
-          city: 'San Francisco',
-          location: {
-            lat: 37.7749,
-            lng: -122.4194,
-          },
-          category: 'Estate',
-          type: 'Standalone',
-          bedrooms: 15,
-          image:
-            'https://upload.wikimedia.org/wikipedia/commons/c/cb/Crane_estate_(5).jpg',
-          description:
-            'This grand old mansion sits on over 100 acres of rolling hills and dense redwood forests.',
+    state.rentals = [
+      {
+        id: 'grand-old-mansion',
+        title: 'Grand Old Mansion',
+        owner: 'Veruca Salt',
+        city: 'San Francisco',
+        location: {
+          lat: 37.7749,
+          lng: -122.4194,
         },
-        {
-          id: 'urban-living',
-          title: 'Urban Living',
-          owner: 'Mike Teavee',
-          city: 'Seattle',
-          location: {
-            lat: 47.6062,
-            lng: -122.3321,
-          },
-          category: 'Condo',
-          type: 'Community',
-          bedrooms: 1,
-          image:
-            'https://upload.wikimedia.org/wikipedia/commons/2/20/Seattle_-_Barnes_and_Bell_Buildings.jpg',
-          description:
-            'A commuters dream. This rental is within walking distance of 2 bus stops and the Metro.',
+        category: 'Estate',
+        type: 'Standalone',
+        bedrooms: 15,
+        image:
+          'https://upload.wikimedia.org/wikipedia/commons/c/cb/Crane_estate_(5).jpg',
+        description:
+          'This grand old mansion sits on over 100 acres of rolling hills and dense redwood forests.',
+      },
+      {
+        id: 'urban-living',
+        title: 'Urban Living',
+        owner: 'Mike Teavee',
+        city: 'Seattle',
+        location: {
+          lat: 47.6062,
+          lng: -122.3321,
         },
-        {
-          id: 'downtown-charm',
-          title: 'Downtown Charm',
-          owner: 'Violet Beauregarde',
-          city: 'Portland',
-          location: {
-            lat: 45.5175,
-            lng: -122.6801,
-          },
-          category: 'Apartment',
-          type: 'Community',
-          bedrooms: 3,
-          image:
-            'https://upload.wikimedia.org/wikipedia/commons/f/f7/Wheeldon_Apartment_Building_-_Portland_Oregon.jpg',
-          description:
-            'Convenience is at your doorstep with this charming downtown rental. Great restaurants and active night life are within a few feet.',
+        category: 'Condo',
+        type: 'Community',
+        bedrooms: 1,
+        image:
+          'https://upload.wikimedia.org/wikipedia/commons/2/20/Seattle_-_Barnes_and_Bell_Buildings.jpg',
+        description:
+          'A commuters dream. This rental is within walking distance of 2 bus stops and the Metro.',
+      },
+      {
+        id: 'downtown-charm',
+        title: 'Downtown Charm',
+        owner: 'Violet Beauregarde',
+        city: 'Portland',
+        location: {
+          lat: 45.5175,
+          lng: -122.6801,
         },
-      ],
-    });
+        category: 'Apartment',
+        type: 'Community',
+        bedrooms: 3,
+        image:
+          'https://upload.wikimedia.org/wikipedia/commons/f/f7/Wheeldon_Apartment_Building_-_Portland_Oregon.jpg',
+        description:
+          'Convenience is at your doorstep with this charming downtown rental. Great restaurants and active night life are within a few feet.',
+      },
+    ];
 
-    await render(hbs`<Rentals @rentals={{this.rentals}} />`);
+    await render(<template><Rentals @rentals={{state.rentals}} /></template>);
 
     assert.dom('.rentals').exists();
     assert.dom('.rentals input').exists();
@@ -211,7 +233,7 @@ Now, if we try running our tests, they should all pass after making this change.
 
 ```run:command hidden=true cwd=super-rentals
 ember test --path dist
-git add tests/integration/components/rentals-test.js
+git add tests/integration/components/rentals-test.gjs
 ```
 
 ```run:screenshot width=1024 height=1024 retina=true filename=pass-1.png alt="The new test is passing."
@@ -221,44 +243,42 @@ wait  #qunit-banner.qunit-pass
 
 ## Using a `form`
 
-Now that we have our component all set up, we can finally wire up our search box and store our search query! First things first: let's create a component class to store our query state and handle events from the `form` element:
+Now that we have our component all set up, we can finally wire up our search box and store our search query! Let's create a component class to store our query state and handle events from the `form` element and wire up our query state in the component template:
 
-```run:file:create lang=js cwd=super-rentals filename=app/components/rentals.js
-import Component from '@glimmer/component';
-import { tracked } from '@glimmer/tracking';
-import { action } from '@ember/object';
-
-export default class Rentals extends Component {
-  @tracked query = '';
-
-  @action
-  updateQuery(event) {
-    let formData = new FormData(event.currentTarget);
-    this.query = formData.get('rental-search-term');
-  }
-
-  @action
-  handleSubmit(event) {
-    event.preventDefault();
-    this.updateQuery(event);
-  }
-}
-```
-
-Next, we'll wire up our query state in the component template.
-
-```run:file:patch lang=handlebars cwd=super-rentals filename=app/components/rentals.hbs
-@@ -1,7 +1,8 @@
- <div class="rentals">
--  <form>
-+  <form {{on "input" this.updateQuery}} {{on "submit" this.handleSubmit}}>
-     <label>
-       <span>Where would you like to stay?</span>
--      <input class="light">
-+      <input name="rental-search-term" class="light">
-     </label>
-+    <p>The results below will update as you type.</p>
-   </form>
+```run:file:patch lang=gjs cwd=super-rentals filename=app/components/rentals.gjs
+@@ -1,2 +1,5 @@
+ import Component from '@glimmer/component';
++import { tracked } from '@glimmer/tracking';
++import { action } from '@ember/object';
++import { on } from '@ember/modifier';
+ import Rental from 'super-rentals/components/rental';
+@@ -4,9 +7,24 @@ import Rental from 'super-rentals/components/rental';
+ export default class Rentals extends Component {
++  @tracked query = '';
++
++  @action
++  updateQuery(event) {
++    let formData = new FormData(event.currentTarget);
++    this.query = formData.get('rental-search-term');
++  }
++
++  @action
++  handleSubmit(event) {
++    event.preventDefault();
++    this.updateQuery(event);
++  }
++
+   <template>
+     <div class="rentals">
+-      <form>
++      <form {{on "input" this.updateQuery}} {{on "submit" this.handleSubmit}}>
+         <label>
+           <span>Where would you like to stay?</span>
+-          <input class="light">
++          <input name="rental-search-term" class="light">
+         </label>
++        <p>The results below will update as you type.</p>
+       </form>
 ```
 
 [`FormData`](https://developer.mozilla.org/en-US/docs/Web/API/FormData) is a built-in JavaScript object for handling forms. It requires the `name` attribute on the `input`. We handle both `submit` and `input` events for the form so that the query updates both when the user types into the input and when they submit the form.
@@ -269,15 +289,14 @@ Next, we'll wire up our query state in the component template.
 
 ```run:command hidden=true cwd=super-rentals
 ember test --path dist
-git add app/components/rentals.hbs
-git add app/components/rentals.js
+git add app/components/rentals.gjs
 ```
 
-## Adding the `<Rentals::Filter>` Provider Component
+## Adding the `<RentalsFilter>` Provider Component
 
-Now that our search query is wired up to our `<Rentals>` component, we can get into the really fun stuff! Namely, we can make our component *filter* results based on our search query. In order to encapsulate this functionality, we'll create another component called `<Rentals::Filter>`.
+Now that our search query is wired up to our `<Rentals>` component, we can get into the really fun stuff! Namely, we can make our component *filter* results based on our search query. In order to encapsulate this functionality, we'll create another component called `<RentalsFilter>`.
 
-```run:file:create lang=js cwd=super-rentals filename=app/components/rentals/filter.js
+```run:file:create lang=gjs cwd=super-rentals filename=app/components/rentals/filter.gjs
 import Component from '@glimmer/component';
 
 export default class RentalsFilter extends Component {
@@ -290,36 +309,40 @@ export default class RentalsFilter extends Component {
 
     return rentals;
   }
+
+  <template>
+    {{yield this.results}}
+  </template>
 }
 ```
 
-```run:file:create lang=handlebars cwd=super-rentals filename=app/components/rentals/filter.hbs
-{{yield this.results}}
-```
-
-In the `<Rentals::Filter>` component class, we have created a getter to do the work of filtering through our rentals based on two arguments: `@rentals` and `@query`. Inside of our getter function, we have these arguments accessible to us from `this.args`.
+In the `<RentalsFilter>` component class, we have created a getter to do the work of filtering through our rentals based on two arguments: `@rentals` and `@query`. Inside of our getter function, we have these arguments accessible to us from `this.args`.
 
 In our component template, we are not actually *rendering* anything. Instead, we're yielding to something, using the `{{yield}}` keyword, a syntax that [we have seen before](../../part-1/component-basics/). As we might recall, the purpose of `{{yield}}` is to render the *block* that is passed in by the component's *caller*, which is the thing that is invoking the current component (a template or another component, for example). But in this specific case, we don't just have a `{{yield}}` keyword. Instead, we have `this.results` *inside* of our `{{yield}}` keyword. What is that doing, exactly?
 
 Well, in order to answer this question, let's look at how the data that we're yielding is being used in the `<Rentals>` component.
 
-```run:file:patch lang=handlebars cwd=super-rentals filename=app/components/rentals.hbs
-@@ -7,5 +7,7 @@
-   <ul class="results">
--    {{#each @rentals as |rental|}}
--      <li><Rental @rental={{rental}} /></li>
--    {{/each}}
-+    <Rentals::Filter @rentals={{@rentals}} @query={{this.query}} as |results|>
-+      {{#each results as |rental|}}
-+        <li><Rental @rental={{rental}} /></li>
-+      {{/each}}
-+    </Rentals::Filter>
-   </ul>
+```run:file:patch lang=gjs cwd=super-rentals filename=app/components/rentals.gjs
+@@ -5,2 +5,3 @@ import { on } from '@ember/modifier';
+ import Rental from 'super-rentals/components/rental';
++import RentalsFilter from 'super-rentals/components/rentals/filter';
+ 
+@@ -32,5 +33,7 @@ export default class Rentals extends Component {
+       <ul class="results">
+-        {{#each @rentals as |rental|}}
+-          <li><Rental @rental={{rental}} /></li>
+-        {{/each}}
++        <RentalsFilter @rentals={{@rentals}} @query={{this.query}} as |results|>
++          {{#each results as |rental|}}
++            <li><Rental @rental={{rental}} /></li>
++          {{/each}}
++        </RentalsFilter>
+       </ul>
 ```
 
-Here, we're invoking `<Rentals::Filter>` similar to how we've invoked other components. We're passing in `@rentals` and `@query` as arguments, and we're also passing in a block. The block is the content that is enclosed in between the component's opening and closing tags (`<Rentals::Filter>...</Rentals::Filter>`). We have seen both of these before.
+Here, we're invoking `<RentalsFilter>` similar to how we've invoked other components. We're passing in `@rentals` and `@query` as arguments, and we're also passing in a block. The block is the content that is enclosed in between the component's opening and closing tags (`<RentalsFilter>...</RentalsFilter>`). We have seen both of these before.
 
-However, the main difference here is the use of `as |results|` when we are invoking our `<Rentals::Filter>` component. Incidentally, this new syntax goes hand-in-hand with the `{{yield this.results}}` syntax we were introduced to in the component template.
+However, the main difference here is the use of `as |results|` when we are invoking our `<RentalsFilter>` component. Incidentally, this new syntax goes hand-in-hand with the `{{yield this.results}}` syntax we were introduced to in the component template.
 
 The `as |results|` syntax might look a little new to us, but it isn't the first time that we've seen this feature in action. Back when we first learned about the `{{#each}}` syntax, which we use to loop over a collection, we wrote something like this: `{{#each @items as |item|}}...some content here...{{/each}}`.
 
@@ -329,16 +352,16 @@ Inside of our block, we need to be able to access the current item *somehow*. Th
 
 The need to provide some data to a block is not unique to the `{{#each}}` syntax. In this case, our `<Rentals::Filter>` component wants to take the unfiltered list of rental properties and match them against the user's query. Once the component has matched the rentals against the query, it will need to provide a filtered list of rental properties to its caller (the `<Rentals>` component).
 
-As it turns out, this ability to provide block params is not a superpower that only built-in syntaxes like `{{#each}}` can use. We can do this with our own components as well. In fact, Ember allows us to pass arbitrary data to blocks in the form of passing in additional arguments to the `{{yield}}` keyword. Indeed, this is exactly what we did with `{{yield this.results}}` in the `<Rentals::Filter>` component.
+As it turns out, this ability to provide block params is not a superpower that only built-in syntaxes like `{{#each}}` can use. We can do this with our own components as well. In fact, Ember allows us to pass arbitrary data to blocks in the form of passing in additional arguments to the `{{yield}}` keyword. Indeed, this is exactly what we did with `{{yield this.results}}` in the `<RentalsFilter>` component.
 
-In our `<Rentals>` component, we used the `as |results|` syntax when invoking `<Rentals::Filter>`. Just like with the `{{#each}}` syntax, this block parameter syntax allowed our block to access the yielded data using the local variable `results`. The yielded data came from `{{yield this.results}}`, where `this.results` is our filtered list of rental properties.
+In our `<Rentals>` component, we used the `as |results|` syntax when invoking `<RentalsFilter>`. Just like with the `{{#each}}` syntax, this block parameter syntax allowed our block to access the yielded data using the local variable `results`. The yielded data came from `{{yield this.results}}`, where `this.results` is our filtered list of rental properties.
 
 > Zoey says...
 >
 > The local variable name `results` is arbitrary, and isn't special in any way! You could name it anything: `as |data|`, `as |filtered|`, or even `as |banana|`! In fact, the `... as |banana|` syntax is the same as declaring a local variable in JavaScript.
 > Just as we can create a variable like `let banana = ...`, and then have access to that variable whenever we call `banana`, we can also have access to the yielded item by using whatever variable name we gave to our block parameter. The important thing here is that however you name the block param is how you will have access to the yielded data from inside the block.
 
-Interestingly, if we take a look at our `<Rentals::Filter>` component template, we see that we don't actually render any content. Instead, this component's only responsibility is to set up some piece of state (`this.results`, the list of filtered rental properties), and then yield that state back up to its caller (`<Rentals>`) in the form of a block parameter (`as |results|`).
+Interestingly, if we take a look at our `<RentalsFilter>` component template, we see that we don't actually render any content. Instead, this component's only responsibility is to set up some piece of state (`this.results`, the list of filtered rental properties), and then yield that state back up to its caller (`<Rentals>`) in the form of a block parameter (`as |results|`).
 
 This is called the *[provider component pattern][TODO: link to provider component pattern]*, which we see in action with one component providing data up to its caller.
 
@@ -353,28 +376,28 @@ wait  .rental
 
 Hooray, it works! Awesome. Now that we've tried this out manually in the UI, let's write a test for this new behavior as well.
 
-```run:file:patch lang=js cwd=super-rentals filename=tests/integration/components/rentals-test.js
-@@ -2,3 +2,3 @@
+```run:file:patch lang=gjs cwd=super-rentals filename=tests/integration/components/rentals-test.gjs
+@@ -2,3 +2,3 @@ import { module, test } from 'qunit';
  import { setupRenderingTest } from 'super-rentals/tests/helpers';
 -import { render } from '@ember/test-helpers';
 +import { render, fillIn } from '@ember/test-helpers';
- import { hbs } from 'ember-cli-htmlbars';
-@@ -8,3 +8,3 @@
-
+ import { tracked } from '@glimmer/tracking';
+@@ -15,3 +15,3 @@ module('Integration | Component | rentals', function (hooks) {
+ 
 -  test('it renders all given rental properties by default', async function (assert) {
 +  hooks.beforeEach(function () {
-     this.setProperties({
-@@ -64,3 +64,5 @@
-     });
+     state.rentals = [
+@@ -69,2 +69,5 @@ module('Integration | Component | rentals', function (hooks) {
+     ];
 +  });
-
++
 +  test('it renders all given rental properties by default', async function (assert) {
-     await render(hbs`<Rentals @rentals={{this.rentals}} />`);
-@@ -85,2 +87,21 @@
+ 
+@@ -90,2 +93,21 @@ module('Integration | Component | rentals', function (hooks) {
    });
 +
 +  test('it updates the results according to the search query', async function (assert) {
-+    await render(hbs`<Rentals @rentals={{this.rentals}} />`);
++    await render(<template><Rentals @rentals={{state.rentals}} /></template>);
 +
 +    assert.dom('.rentals').exists();
 +    assert.dom('.rentals input').exists();
@@ -402,10 +425,9 @@ Great! In the process of adding this test, we'll notice that we also extracted o
 
 ```run:command hidden=true cwd=super-rentals
 ember test --path dist
-git add app/components/rentals.hbs
-git add app/components/rentals/filter.hbs
-git add app/components/rentals/filter.js
-git add tests/integration/components/rentals-test.js
+git add app/components/rentals.gjs
+git add app/components/rentals/filter.gjs
+git add tests/integration/components/rentals-test.gjs
 ```
 
 ```run:screenshot width=1024 height=1024 retina=true filename=pass-2.png alt="The new test is passing."

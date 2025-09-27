@@ -38,22 +38,26 @@ git add app/router.js
 
 Now that we have this route in place, we can update our `<Rental>` component to actually *link* to each of our detailed rental properties!
 
-```run:file:patch lang=handlebars cwd=super-rentals filename=app/components/rental.hbs
-@@ -6,3 +6,7 @@
-   <div class="details">
--    <h3>{{@rental.title}}</h3>
-+    <h3>
-+      <LinkTo @route="rental" @model={{@rental}}>
-+        {{@rental.title}}
-+      </LinkTo>
-+    </h3>
-     <div class="detail owner">
+```run:file:patch lang=gjs cwd=super-rentals filename=app/components/rental.gjs
+@@ -2,2 +2,3 @@ import RentalImage from 'super-rentals/components/rental/image';
+ import Map from 'super-rentals/components/map';
++import { LinkTo } from '@ember/routing';
+ 
+@@ -10,3 +11,7 @@ import Map from 'super-rentals/components/map';
+     <div class="details">
+-      <h3>{{@rental.title}}</h3>
++      <h3>
++        <LinkTo @route="rental" @model={{@rental}}>
++          {{@rental.title}}
++        </LinkTo>
++      </h3>
+       <div class="detail owner">
 ```
 
 Since we know that we're linking to the `rental` route that we just created, we also know that this route requires a dynamic segment. Thus, we need to pass in a `@model` argument so that the `<LinkTo>` component can generate the appropriate URL for that model.
 
 ```run:command hidden=true cwd=super-rentals
-git add app/components/rental.hbs
+git add app/components/rental.gjs
 ```
 
 Let's see this in action. If we go back to our browser and refresh the page, we should see our links, but something isn't quite right yet!
@@ -97,12 +101,12 @@ git add app/routes/index.js
 
 Alright, we have just one more step left here: updating the tests. We can add an `id` to the rental that we defined in our test using `setProperties` and add an assertion for the expected URL, too.
 
-```run:file:patch lang=js cwd=super-rentals filename=tests/integration/components/rental-test.js
-@@ -11,2 +11,3 @@
-       rental: {
+```run:file:patch lang=gjs cwd=super-rentals filename=tests/integration/components/rental-test.gjs
+@@ -12,2 +12,3 @@ module('Integration | Component | rental', function (hooks) {
+       @tracked rental = {
 +        id: 'grand-old-mansion',
          title: 'Grand Old Mansion',
-@@ -30,2 +31,5 @@
+@@ -35,2 +36,5 @@ module('Integration | Component | rental', function (hooks) {
      assert.dom('article h3').hasText('Grand Old Mansion');
 +    assert
 +      .dom('article h3 a')
@@ -111,7 +115,7 @@ Alright, we have just one more step left here: updating the tests. We can add an
 ```
 
 ```run:command hidden=true cwd=super-rentals
-git add tests/integration/components/rental-test.js
+git add tests/integration/components/rental-test.gjs
 ```
 
 If we run the tests in the browser, everything should just pass!
@@ -165,7 +169,7 @@ git add app/routes/rental.js
 
 ## Displaying Model Details with a Component
 
-Next, let's make a `<Rental::Detailed>` component.
+Next, let's make a `<RentalDetailed>` component.
 
 ```run:command cwd=super-rentals
 ember generate component rental/detailed
@@ -173,58 +177,63 @@ ember generate component rental/detailed
 
 ```run:command hidden=true cwd=super-rentals
 ember test --path dist
-git add app/components/rental/detailed.hbs
-git add tests/integration/components/rental/detailed-test.js
+git add app/components/rental/detailed.gjs
+git add tests/integration/components/rental/detailed-test.gjs
 ```
 
-```run:file:patch lang=handlebars cwd=super-rentals filename=app/components/rental/detailed.hbs
-@@ -1 +1,44 @@
--{{yield}}
-\ No newline at end of file
-+<Jumbo>
-+  <h2>{{@rental.title}}</h2>
-+  <p>Nice find! This looks like a nice place to stay near {{@rental.city}}.</p>
-+  <a href="#" target="_blank" rel="external nofollow noopener noreferrer" class="share button">
-+    Share on Twitter
-+  </a>
-+</Jumbo>
+```run:file:patch lang=gjs cwd=super-rentals filename=app/components/rental/detailed.gjs
+@@ -1,3 +1,50 @@
++import Jumbo from 'super-rentals/components/jumbo';
++import RentalImage from 'super-rentals/components/rental/image';
++import Map from 'super-rentals/components/map';
 +
-+<article class="rental detailed">
-+  <Rental::Image
-+    src={{@rental.image}}
-+    alt="A picture of {{@rental.title}}"
-+  />
+ <template>
+-  {{yield}}
++  <Jumbo>
++    <h2>{{@rental.title}}</h2>
++    <p>Nice find! This looks like a nice place to stay near {{@rental.city}}.</p>
++    <a href="#" target="_blank" rel="external nofollow noopener noreferrer" class="share button">
++      Share on Twitter
++    </a>
++  </Jumbo>
 +
-+  <div class="details">
-+    <h3>About {{@rental.title}}</h3>
++  <article class="rental detailed">
++    <RentalImage
++      src={{@rental.image}}
++      alt="A picture of {{@rental.title}}"
++    />
 +
-+    <div class="detail owner">
-+      <span>Owner:</span> {{@rental.owner}}
-+    </div>
-+    <div class="detail type">
-+      <span>Type:</span> {{@rental.type}} – {{@rental.category}}
-+    </div>
-+    <div class="detail location">
-+      <span>Location:</span> {{@rental.city}}
-+    </div>
-+    <div class="detail bedrooms">
-+      <span>Number of bedrooms:</span> {{@rental.bedrooms}}
-+    </div>
-+    <div class="detail description">
-+      <p>{{@rental.description}}</p>
-+    </div>
-+  </div>
++    <div class="details">
++      <h3>About {{@rental.title}}</h3>
 +
-+  <Map
-+    @lat={{@rental.location.lat}}
-+    @lng={{@rental.location.lng}}
-+    @zoom="12"
-+    @width="894"
-+    @height="600"
-+    alt="A map of {{@rental.title}}"
-+    class="large"
-+  />
-+</article>
++      <div class="detail owner">
++        <span>Owner:</span> {{@rental.owner}}
++      </div>
++      <div class="detail type">
++        <span>Type:</span> {{@rental.type}} – {{@rental.category}}
++      </div>
++      <div class="detail location">
++        <span>Location:</span> {{@rental.city}}
++      </div>
++      <div class="detail bedrooms">
++        <span>Number of bedrooms:</span> {{@rental.bedrooms}}
++      </div>
++      <div class="detail description">
++        <p>{{@rental.description}}</p>
++      </div>
++    </div>
++
++    <Map
++      @lat={{@rental.location.lat}}
++      @lng={{@rental.location.lng}}
++      @zoom="12"
++      @width="894"
++      @height="600"
++      alt="A map of {{@rental.title}}"
++      class="large"
++    />
++  </article>
+ </template>
 ```
 
 This component is similar to our `<Rental>` component, except for the following differences.
@@ -238,38 +247,52 @@ This component is similar to our `<Rental>` component, except for the following 
 
 Now that we have this template in place, we can add some tests for this new component of ours.
 
-```run:file:patch lang=handlebars cwd=super-rentals filename=tests/integration/components/rental/detailed-test.js
-@@ -8,18 +8,46 @@
-
+```run:file:patch lang=gjs cwd=super-rentals filename=tests/integration/components/rental/detailed-test.gjs
+@@ -3,3 +3,10 @@ import { setupRenderingTest } from 'super-rentals/tests/helpers';
+ import { render } from '@ember/test-helpers';
+-import Detailed from 'super-rentals/components/rental/detailed';
++import { tracked } from '@glimmer/tracking';
++import RentalDetailed from 'super-rentals/components/rental/detailed';
++
++class State {
++  @tracked rental = {};
++}
++
++const state = new State();
+ 
+@@ -8,20 +15,48 @@ module('Integration | Component | rental/detailed', function (hooks) {
+ 
 -  test('it renders', async function (assert) {
--    // Set any properties with this.set('myProperty', 'value');
--    // Handle any actions with this.set('myAction', function(val) { ... });
+-    // Updating values is achieved using autotracking, just like in app code. For example:
+-    // class State { @tracked myProperty = 0; }; const state = new State();
+-    // and update using state.myProperty = 1; await rerender();
+-    // Handle any actions with function myAction(val) { ... };
 +  hooks.beforeEach(function () {
-+    this.setProperties({
-+      rental: {
-+        id: 'grand-old-mansion',
-+        title: 'Grand Old Mansion',
-+        owner: 'Veruca Salt',
-+        city: 'San Francisco',
-+        location: {
-+          lat: 37.7749,
-+          lng: -122.4194,
-+        },
-+        category: 'Estate',
-+        type: 'Standalone',
-+        bedrooms: 15,
-+        image:
-+          'https://upload.wikimedia.org/wikipedia/commons/c/cb/Crane_estate_(5).jpg',
-+        description:
-+          'This grand old mansion sits on over 100 acres of rolling hills and dense redwood forests.',
++    state.rental = {
++      id: 'grand-old-mansion',
++      title: 'Grand Old Mansion',
++      owner: 'Veruca Salt',
++      city: 'San Francisco',
++      location: {
++        lat: 37.7749,
++        lng: -122.4194,
 +      },
-+    });
++      category: 'Estate',
++      type: 'Standalone',
++      bedrooms: 15,
++      image:
++        'https://upload.wikimedia.org/wikipedia/commons/c/cb/Crane_estate_(5).jpg',
++      description:
++        'This grand old mansion sits on over 100 acres of rolling hills and dense redwood forests.',
++    };
 +  });
-
--    await render(hbs`<Rental::Detailed />`);
+ 
+-    await render(<template><Detailed /></template>);
 +  test('it renders a header with a share button', async function (assert) {
-+    await render(hbs`<Rental::Detailed @rental={{this.rental}} />`);
-
++    await render(<template>
++      <RentalDetailed @rental={{state.rental}} />
++    </template>);
+ 
 -    assert.dom().hasText('');
 +    assert.dom('.jumbo').exists();
 +    assert.dom('.jumbo h2').containsText('Grand Old Mansion');
@@ -278,16 +301,16 @@ Now that we have this template in place, we can add some tests for this new comp
 +      .containsText('a nice place to stay near San Francisco');
 +    assert.dom('.jumbo a.button').containsText('Share on Twitter');
 +  });
-
+ 
 -    // Template block usage:
--    await render(hbs`
--      <Rental::Detailed>
--        template block text
--      </Rental::Detailed>
--    `);
 +  test('it renders detailed information about a rental property', async function (assert) {
-+    await render(hbs`<Rental::Detailed @rental={{this.rental}} />`);
-
+     await render(<template>
+-      <Detailed>
+-        template block text
+-      </Detailed>
++      <RentalDetailed @rental={{state.rental}} />
+     </template>);
+ 
 -    assert.dom().hasText('template block text');
 +    assert.dom('article').hasClass('rental');
 +    assert.dom('article h3').containsText('About Grand Old Mansion');
@@ -308,8 +331,8 @@ We can use the `beforeEach` hook to share some boilerplate code, which allows us
 
 ```run:command hidden=true cwd=super-rentals
 ember test --path dist
-git add app/components/rental/detailed.hbs
-git add tests/integration/components/rental/detailed-test.js
+git add app/components/rental/detailed.gjs
+git add tests/integration/components/rental/detailed-test.gjs
 ```
 
 ```run:screenshot width=1024 height=768 retina=true filename=pass-2.png alt="Tests are passing as expected"
@@ -319,10 +342,14 @@ wait  #qunit-banner.qunit-pass
 
 ## Adding a Route Template
 
-Finally, let's add a `rental` template to actually *invoke* our `<Rental::Detailed>` component, as well as adding an acceptance test for this new behavior in our app.
+Finally, let's add a `rental` template to actually *invoke* our `<RentalDetailed>` component, as well as adding an acceptance test for this new behavior in our app.
 
-```run:file:create lang=handlebars cwd=super-rentals filename=app/templates/rental.hbs
-<Rental::Detailed @rental={{@model}} />
+```run:file:create lang=handlebars cwd=super-rentals filename=app/templates/rental.gjs
+import RentalDetailed from 'super-rentals/components/rental/detailed';
+
+<template>
+  <RentalDetailed @rental={{@model}} />
+</template>
 ```
 
 ```run:file:patch lang=js cwd=super-rentals filename=tests/acceptance/super-rentals-test.js
@@ -360,7 +387,7 @@ And if we run our tests now...
 
 ```run:command hidden=true cwd=super-rentals
 ember test --path dist
-git add app/templates/rental.hbs
+git add app/templates/rental.gjs
 git add tests/acceptance/super-rentals-test.js
 ```
 
