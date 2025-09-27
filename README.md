@@ -592,9 +592,9 @@ Options:
 * Requires `git`
 * Probably only works on Unix/bash for now (PRs welcome)
   * Should probably run the build in a docker container anyway
-* `yarn install`
-* `MAPBOX_ACCESS_TOKEN=your-token-here yarn build`
-  * Please note that you will need a Mapbox token in order to successfully run `yarn build`, otherwise the build will fail due to failing to load the map images. You can get your own token [here](https://account.mapbox.com/access-tokens). Once you have a token, you should assign it to the `MAPBOX_ACCESS_TOKEN` environment variable.
+* `pnpm install`
+* `TOMTOM_ACCESS_TOKEN=your-token-here yarn build`
+  * Please note that you will need a TomTom token in order to successfully run `pnpm build`, otherwise the build will fail due to failing to load the map images. You can get your own token [here](https://developer.tomtom.com). Once you have a token, you should assign it to the `TOMTOM_ACCESS_TOKEN` environment variable.
 * Processed markdown can be found in `dist/markdown`
 * The `super-rentals` code can be found in `dist/code/super-rentals`
 
