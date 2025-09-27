@@ -79,7 +79,7 @@ jobs:
           # This is needed for external PRs to build, since secrets are not
           # available there. Get your own TomTom token for local development
           # at: https://developer.tomtom.com
-          TOMTOM_ACCESS_TOKEN: 'FIXME:real-token-here'
+          TOMTOM_ACCESS_TOKEN: 'gI4oJc3MF9PREfA3SIbN4ak7giIJPYcf'
       - name: Lint (markdown output)
         run: pnpm lint:md:dist
       - name: Prune artifacts
