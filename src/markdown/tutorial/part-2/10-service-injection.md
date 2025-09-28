@@ -177,7 +177,7 @@ To be sure, let's add some tests! Let's start with an acceptance test:
 +
 +    assert.strictEqual(
 +      tweetURL.searchParams.get('url'),
-+      `${window.location.origin}/rentals/grand-old-mansion`,
++      `${window.location.origin}/rentals/grand-old-mansion`
 +    );
    });
 ```
