@@ -157,29 +157,6 @@ It is worth pointing out that EmberData provides a `store` *[service](../../../s
 export { default } from 'ember-data/store';
 ```
 
-```run:file:patch hidden=true lang=js cwd=super-rentals filename=app/app.js
-@@ -6,2 +6,15 @@
-
-+/* This is to account for a deprecation that shipped in ember-cli 6.4
-+   with ember-data v5.6 which needs a blueprint update to avoid the
-+   deprecation that is otherwise irrelevant for tutorial purposes.
-+*/
-+import { registerDeprecationHandler } from '@ember/debug';
-+registerDeprecationHandler((message, options, next) => {
-+  if (message.includes('Using WarpDrive with EmberJS requires')) {
-+    return;
-+  } else {
-+    next(message, options);
-+  }
-+});
-+
- if (macroCondition(isDevelopingApp())) {
-```
-
-```run:command hidden=true cwd=super-rentals
-git add app/app.js
-```
-
 Running the tests in the browser confirms that everything is working as intended:
 
 ```run:command hidden=true cwd=super-rentals

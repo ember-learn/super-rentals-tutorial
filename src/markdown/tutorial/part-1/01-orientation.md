@@ -64,10 +64,12 @@ rm package.json
 del package.json
 ```
 
-```run:file:patch hidden=true cwd=super-rentals filename=app/index.html
-@@ -14,2 +14,17 @@
-
+```run:file:patch hidden=true cwd=super-rentals filename=index.html
+@@ -13,2 +13,19 @@
+ 
 +    <script>
++      // if we take a screenshot with ?deterministic we turn off animations
++      // to make screenshots more deterministic and reduce diffs
 +      if (window.location.search.indexOf('deterministic') >= 0) {
 +        let style = document.createElement('style');
 +
@@ -97,103 +99,6 @@ del package.json
 /* /index.html 200
 ```
 
-```run:file:patch hidden=true cwd=super-rentals filename=tests/index.html
-@@ -28,2 +28,93 @@
-     <script src="{{rootURL}}assets/tests.js"></script>
-+    <script>
-+      if (QUnit.urlParams.deterministic) {
-+        // Not Very Good Pseudo Random-ish Number Generator
-+        // Based on https://stackoverflow.com/a/19303725
-+        class SeededRandomish {
-+          constructor(seed) {
-+            this.seed = seed;
-+          }
-+
-+          next() {
-+            let x = Math.sin(this.seed++) * 10000;
-+            return x - Math.floor(x);
-+          }
-+        }
-+
-+        class RandomishMonotonicClock {
-+          constructor(seed) {
-+            this.prng = new SeededRandomish(seed);
-+            this.ms = 1;
-+          }
-+
-+          tick() {
-+            // Heavily biased towards 0
-+            let biased = this.prng.next() * this.prng.next() * this.prng.next();
-+
-+            // Tick up to 25ms but likely much smaller
-+            this.ms += biased * 25;
-+
-+            return this.current;
-+          }
-+
-+          get current() {
-+            return Math.floor(this.ms);
-+          }
-+        }
-+
-+        let seeds = new SeededRandomish(41937);
-+        let totalRuntime = 0;
-+        let clock;
-+
-+        // HAX: ensure our callbacks runs before the reporter UI
-+
-+        QUnit.config.callbacks.testStart.unshift(details => {
-+          let seed = Math.floor(seeds.next() * 100000);
-+          clock = new RandomishMonotonicClock(seed);
-+          for(let i=0; i<20; i++) {
-+            clock.tick();
-+          }
-+        });
-+
-+        QUnit.config.callbacks.log.unshift(details => {
-+          details.runtime = clock.tick();
-+
-+          if (details.source) {
-+            Object.defineProperty(details, 'source', {
-+              value: details.source.replace(/\.js((:[0-9]+)?:[0-9]+)/g, '.js')
-+            });
-+          }
-+        });
-+
-+        QUnit.config.callbacks.testDone.unshift(details => {
-+          let current;
-+
-+          for(let i=0; i<10; i++) {
-+            current = clock.tick();
-+          }
-+
-+          clock = undefined;
-+          totalRuntime += current;
-+          details.runtime = current;
-+
-+          if (details.source) {
-+            Object.defineProperty(details, 'source', {
-+              value: details.source.replace(/\.js((:[0-9]+)?:[0-9]+)/g, '.js')
-+            });
-+          }
-+        });
-+
-+        QUnit.begin(details => {
-+          let ua = document.getElementById('qunit-userAgent');
-+          ua.innerText = ua.innerText.replace(/QUnit [0-9\.]+/g, 'QUnit');
-+          ua.innerText = ua.innerText.replace(/(WebKit|Chrome|Safari)\/[0-9\.]+/g, '$1');
-+        });
-+
-+        QUnit.on('runEnd', () => {
-+          let display = document.getElementById('qunit-testresult-display');
-+          display.innerText = display.innerText
-+            .replace(/in [.0-9]+ milliseconds/, `in ${totalRuntime} milliseconds`);
-+        });
-+      }
-+    </script>
-
-```
-
 ```run:file:patch hidden=true cwd=super-rentals filename=.prettierignore
 @@ -1 +1,2 @@
 +**/*.gjs
@@ -206,10 +111,24 @@ pnpm i --save-dev concurrently
 git add package.json
 ```
 
+```run:file:patch hidden=true lang=js cwd=super-rentals filename=app/deprecation-workflow.js
+@@ -22,2 +22,9 @@ setupDeprecationWorkflow({
+     /* { handler: 'silence', matchId: 'template-action' }, */
++    /**
++     * This is to account for a deprecation that shipped in ember-cli 6.4
++     * with ember-data v5.6 which needs a blueprint update to avoid the
++     * deprecation that is otherwise irrelevant for tutorial purposes.
++     */
++    { handler: 'silence', matchId: 'ember-data:deprecate-legacy-imports' },
++    { handler: 'silence', matchId: 'warp-drive.deprecate-tracking-package' },
+   ],
+```
+
 ```run:command hidden=true cwd=super-rentals
 pnpm test
 git add .prettierignore
-git add app/index.html
+git add index.html
+git add app/deprecation-workflow.js
 git add config/environment.js
 git add public/_redirects
 git add tests/index.html
@@ -248,7 +167,7 @@ We'll learn about the purposes of these files and folders as we go. For now, jus
 
 Ember CLI comes with a lot of different commands for a variety of development tasks, such as the `ember new` command that we saw earlier. It also comes with a *development server*, which we can launch within the project with the `npm start` command:
 
-```run:server:start cwd=super-rentals expect="Serving on http://localhost:4200/"
+```run:server:start cwd=super-rentals expect="Local:   http://localhost:4200/"
 #[cfg(all(ci, unix))]
 #[display(npm start)]
 npm start | awk '{ \
@@ -281,8 +200,8 @@ As text on the welcome page pointed out, the source code for the page is located
 
 ```run:file:patch lang=gjs cwd=super-rentals filename=app/templates/application.gjs
 @@ -1,12 +1,3 @@
--import pageTitle from 'ember-page-title/helpers/page-title';
--import WelcomePage from 'ember-welcome-page/components/welcome-page';
+-import { pageTitle } from 'ember-page-title';
+-import { WelcomePage } from 'ember-welcome-page';
 -
  <template>
 -  {{pageTitle "SuperRentals"}}
