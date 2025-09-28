@@ -156,6 +156,11 @@ ember generate component-test jumbo
 ```
 
 ```run:command hidden=true cwd=super-rentals
+# hack until https://github.com/emberjs/ember.js/pull/20988 is fixed
+pnpm uninstall ember-cli-htmlbars-inline-precompile
+# reset package.json so there aren't any dirty files
+git checkout HEAD package.json
+
 git add tests/integration/components/jumbo-test.gjs
 ```
 
