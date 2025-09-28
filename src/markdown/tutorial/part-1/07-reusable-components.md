@@ -56,7 +56,7 @@ After saving the changes to our configuration file, we will need to restart our 
 
 You can stop the server by finding the terminal window where `npm start` is running, then type `Ctrl + C`. That is, typing the "C" key on your keyboard *while* holding down the "Ctrl" key at the same time. Once it has stopped, you can start it back up again with the same `npm start` command.
 
-```run:server:start cwd=super-rentals expect="Serving on http://localhost:4200/"
+```run:server:start cwd=super-rentals expect="Local:   http://localhost:4200/"
 #[cfg(all(ci, unix))]
 #[display(npm start)]
 npm start | awk '{ \

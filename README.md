@@ -496,7 +496,7 @@ Start a server (background task).
 
 Example:
 
-    ```run:server:start cwd=super-rentals expect="Serving on http://localhost:4200/"
+    ```run:server:start cwd=super-rentals expect="Local:   http://localhost:4200/"
     npm start
     ```
 

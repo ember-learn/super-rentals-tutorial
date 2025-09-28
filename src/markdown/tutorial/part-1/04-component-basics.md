@@ -1,6 +1,6 @@
 <!--lint disable no-undefined-references-->
 
-```run:server:start hidden=true cwd=super-rentals expect="Serving on http://localhost:4200/"
+```run:server:start hidden=true cwd=super-rentals expect="Local:   http://localhost:4200/"
 npm start
 ```
 
