@@ -33,7 +33,7 @@ Once you have signed up, grab your *[default public token](https://developer.tom
 As its name implies, `config/environment.js` is used to *configure* our app and store API keys like these. These values can be accessed from other parts of our app, and they can have different values depending on the current environment (which might be development, test, or production).
 
 ```run:command hidden=true cwd=super-rentals
-pnpm ember test
+pnpm test
 git add config/environment.js
 ```
 
@@ -46,7 +46,7 @@ git add config/environment.js
 ```
 
 ```run:command hidden=true cwd=super-rentals
-pnpm ember test
+pnpm test
 git add config/environment.js
 ```
 
@@ -86,7 +86,7 @@ However, in the case of our `<Map>` component, we are pretty sure that we are go
 > Too much typing? Use `ember g component map -gc` instead. The `-gc` flag stands for **G**limmer **c**omponent, but you may also remember it as **g**enerate **c**lass.
 
 ```run:command hidden=true cwd=super-rentals
-ember test --path dist
+pnpm test
 git add app/components/map.gjs
 git add tests/integration/components/map-test.gjs
 ```
@@ -250,7 +250,7 @@ Note that the `hasAttribute` test helper from [`qunit-dom`](https://github.com/s
 *Fingers crossed...* Let's run our tests.
 
 ```run:command hidden=true cwd=super-rentals
-ember test --path dist
+pnpm test
 git add app/components/map.gjs
 git add tests/integration/components/map-test.gjs
 ```
@@ -303,7 +303,7 @@ For good measure, we will also add an assertion to the `<Rental>` tests to make 
 ```
 
 ```run:command hidden=true cwd=super-rentals
-ember test --path dist
+pnpm test
 git add app/components/rental.gjs
 git add tests/integration/components/rental-test.gjs
 ```
@@ -345,7 +345,7 @@ From within our JavaScript class, we have access to our component's arguments us
 Much nicer! And all of our tests still pass!
 
 ```run:command hidden=true cwd=super-rentals
-ember test --path dist
+pnpm test
 git add app/components/map.gjs
 ```
 
@@ -465,7 +465,7 @@ In tests like this, whenever we make changes to state that is rendered, we call 
 With all our tests passing, we are ready to move on!
 
 ```run:command hidden=true cwd=super-rentals
-ember test --path dist
+pnpm test
 git add tests/integration/components/map-test.gjs
 ```
 

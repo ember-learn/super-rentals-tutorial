@@ -103,7 +103,7 @@ Finally, we asserted that clicking on the link should bring us to the `/about` U
 > Here, we are writing the tests in a framework called QUnit, which is where the functions `module`, `test` and `assert` come from. We also have additional helpers like `click`, `visit`, and `currentURL` provided by the `@ember/test-helpers` package. You can tell what comes from which package based on the `import` paths at the top of the file. Knowing this will be helpful when you need to search for documentation on the Internet or ask for help.
 
 ```run:command hidden=true cwd=super-rentals
-ember test --path dist
+pnpm test
 git add tests/acceptance/super-rentals-test.js
 ```
 
@@ -142,7 +142,7 @@ Don't forget to put that line back in when you are done!
 
 ```run:command hidden=true cwd=super-rentals
 git checkout app/templates/index.gjs
-ember test --path dist
+pnpm test
 ```
 
 ## Practicing the Testing Workflow
@@ -187,7 +187,7 @@ wait  #qunit-banner.qunit-pass
 ```
 
 ```run:command hidden=true cwd=super-rentals
-ember test --path dist
+pnpm test
 git add tests/acceptance/super-rentals-test.js
 ```
 

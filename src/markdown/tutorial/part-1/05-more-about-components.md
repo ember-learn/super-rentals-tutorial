@@ -26,7 +26,7 @@ ember generate component rental
 The generator created two new files for us, a component template at `app/components/rental.gjs`, and a component test file at `tests/integration/components/rental-test.gjs`.
 
 ```run:command hidden=true cwd=super-rentals
-ember test --path dist
+pnpm test
 git add app/components/rental.gjs
 git add tests/integration/components/rental-test.gjs
 ```
@@ -93,7 +93,7 @@ Then, we will write a test to ensure all of the details are present. We will rep
 The test should pass.
 
 ```run:command hidden=true cwd=super-rentals
-ember test --path dist
+pnpm test
 git add app/components/rental.gjs
 git add tests/integration/components/rental-test.gjs
 ```
@@ -124,7 +124,7 @@ Finally, let's invoke this a couple of times from our index template to populate
 ```
 
 ```run:command hidden=true cwd=super-rentals
-ember test --path dist
+pnpm test
 git add app/templates/index.gjs
 ```
 
@@ -148,7 +148,7 @@ ember generate component rental/image
 This time, we had a `/` in the component's name. This resulted in the component being created at `app/components/rental/image.gjs`.
 
 ```run:command hidden=true cwd=super-rentals
-ember test --path dist
+pnpm test
 git add app/components/rental/image.gjs
 git add tests/integration/components/rental/image-test.gjs
 ```
@@ -252,7 +252,7 @@ Finally, we should also update the tests for the `<Rental>` component to confirm
 Because we already tested `<RentalImage>` extensively on its own, we can omit the details here and keep our assertion to the bare minimum. That way, we won't  *also* have to update the `<Rental>` tests whenever we make changes to `<RentalImage>`.
 
 ```run:command hidden=true cwd=super-rentals
-ember test --path dist
+pnpm test
 git add app/components/rental.gjs
 git add app/components/rental/image.gjs
 git add tests/integration/components/rental-test.gjs

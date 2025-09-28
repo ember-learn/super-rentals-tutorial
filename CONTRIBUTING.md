@@ -73,7 +73,7 @@ For example:
     git add app/templates/about.hbs
     ```
 
-If you are adding a _test_ file, be sure to run `ember test --path dist` before adding the test file. This way, the generator will run the tests before adding them, and will fail in generating broken code if the tests themselves fail. The `--path` flag will speed up the test build and prevent test timeouts.
+If you are adding a _test_ file, be sure to run `pnpm test` before adding the test file. This way, the generator will run the tests before adding them, and will fail in generating broken code if the tests themselves fail.
 
 #### Using `run:pause`
 

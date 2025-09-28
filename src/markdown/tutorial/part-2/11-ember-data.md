@@ -85,7 +85,7 @@ Model classes in EmberData are no different than any other classes we've worked 
 Attributes declared with the `@attr` decorator work with the auto-track feature (which we learned about [in a previous chapter](../../part-1/reusable-components/)). Therefore, we are free to reference any model attributes in our getter (`this.category`), and Ember will know when to invalidate its result.
 
 ```run:command hidden=true cwd=super-rentals
-ember test --path dist
+pnpm test
 git add app/models/rental.js
 ```
 
@@ -160,7 +160,7 @@ export { default } from 'ember-data/store';
 Running the tests in the browser confirms that everything is working as intended:
 
 ```run:command hidden=true cwd=super-rentals
-ember test --path dist
+pnpm test
 git add app/services/store.js
 git add tests/unit/models/rental-test.js
 ```
@@ -333,7 +333,7 @@ Lastly, let's update our `store` service to use the new `RequestManager` we crea
 With our new EmberData configuration in place, all our tests should pass again.
 
 ```run:command hidden=true cwd=super-rentals
-ember test --path dist
+pnpm test
 git add app/app.js
 git add app/routes/index.js
 git add app/routes/rental.js

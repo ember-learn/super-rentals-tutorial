@@ -176,7 +176,7 @@ ember generate component rental/detailed
 ```
 
 ```run:command hidden=true cwd=super-rentals
-ember test --path dist
+pnpm test
 git add app/components/rental/detailed.gjs
 git add tests/integration/components/rental/detailed-test.gjs
 ```
@@ -330,7 +330,7 @@ We can use the `beforeEach` hook to share some boilerplate code, which allows us
 > As its name implies, the `beforeEach` hook runs *once* before each `test` function is executed. This hook is the ideal place to set up anything that might be needed by all test cases in the file. On the other hand, if you need to do any cleanup after your tests, there is an `afterEach` hook!
 
 ```run:command hidden=true cwd=super-rentals
-ember test --path dist
+pnpm test
 git add app/components/rental/detailed.gjs
 git add tests/integration/components/rental/detailed-test.gjs
 ```
@@ -386,7 +386,7 @@ wait  .rental.detailed
 And if we run our tests now...
 
 ```run:command hidden=true cwd=super-rentals
-ember test --path dist
+pnpm test
 git add app/templates/rental.gjs
 git add tests/acceptance/super-rentals-test.js
 ```

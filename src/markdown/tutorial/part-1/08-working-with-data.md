@@ -89,7 +89,7 @@ wait  .rentals li:nth-of-type(3) article.rental
 Awesome!
 
 ```run:command hidden=true cwd=super-rentals
-ember test --path dist
+pnpm test
 git add app/routes/index.js
 git add app/templates/index.gjs
 ```
@@ -208,7 +208,7 @@ Therefore, in our `<Rental>` component's test, we will have to feed the data int
 Notice that we also need to update the invocation of the `<Rental>` component in the `render` function call to also have a `@rental` argument passed into it. If we run our tests now, they should all pass!
 
 ```run:command hidden=true cwd=super-rentals
-ember test --path dist
+pnpm test
 git add app/components/rental.gjs
 git add app/templates/index.gjs
 git add tests/integration/components/rental-test.gjs
@@ -379,7 +379,7 @@ Hooray! Finally we're seeing different rental properties in our list. And we got
 Better yet, all of our tests are still passing too!
 
 ```run:command hidden=true cwd=super-rentals
-ember test --path dist
+pnpm test
 git add app/routes/index.js
 git add app/templates/index.gjs
 ```
