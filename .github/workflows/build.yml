@@ -59,9 +59,9 @@ jobs:
       - name: Install dependencies (pnpm)
         run: |
           if [[ "$EMBER_RELEASE_CHANNEL" == "beta" ]]; then
-            pnpm upgrade ember-cli@beta
+            pnpm install --save-dev ember-cli@beta @ember/app-blueprint@beta
           else
-            pnpm upgrade ember-cli
+            pnpm install --save-dev ember-cli@latest
           fi
 
           pnpm install
