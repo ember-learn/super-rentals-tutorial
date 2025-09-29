@@ -65,6 +65,7 @@ Let's open the generated test file and replace the boilerplate test with our own
  import { setupApplicationTest } from 'super-rentals/tests/helpers';
 @@ -7,6 +7,12 @@
 
+-fail!!!
 -  test('visiting /super-rentals', async function (assert) {
 -    await visit('/super-rentals');
 -
