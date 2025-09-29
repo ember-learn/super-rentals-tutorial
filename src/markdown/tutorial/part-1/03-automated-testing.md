@@ -107,7 +107,7 @@ pnpm test
 git add tests/acceptance/super-rentals-test.js
 ```
 
-We can put our automated test into motion by running the *[test server][TODO: link to test server]* using the `ember test --server` command, or `ember t -s` for short. This server behaves much like the development server, but it is explicitly running for our tests. It may automatically open a browser window and take you to the test UI, or you can open `http://localhost:7357/` yourself.
+We can put our automated test into motion by running the development server using the `npm start` command and navigating to `http://localhost:4200/tests` in your browser.
 
 If you watch really carefully, you can see our test robot roaming around our app and clicking links:
 
