@@ -32,14 +32,6 @@ If a version number is shown, you're ready to go.
 
 We can create a new project using Ember CLI's `new` command. It follows the pattern `ember new <project-name>`. In our case, the project name would be `super-rentals`. We will also include a `--lang en` option. This sets our app's primary language to English and improves the website's [accessibility](../../../accessibility/application-considerations/).
 
-```run:ignore
-Hack: make an empty package.json to convince ember-cli we are really not in an Ember project. Otherwise, we will get the "You cannot use the new command inside an ember-cli project." error when running `ember new`.
-```
-
-```run:file:create hidden=true filename=package.json
-{}
-```
-
 ```run:command
 # We are supposed to (?) use NPM for the guides, but pnpm works better
 # for our setup, so we pass the `--pnpm` flag but change the output to
@@ -52,16 +44,6 @@ ember new super-rentals --lang en --strict --pnpm \
 
 #[cfg(not(all(ci, unix)))]
 ember new super-rentals --lang en --strict --pnpm
-```
-
-```run:command hidden=true
-# Clean up the hack above
-
-#[cfg(unix)]
-rm package.json
-
-#[cfg(windows)]
-del package.json
 ```
 
 ```run:file:patch hidden=true cwd=super-rentals filename=index.html
