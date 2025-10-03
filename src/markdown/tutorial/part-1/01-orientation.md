@@ -97,9 +97,9 @@ git add package.json
 @@ -22,2 +22,9 @@ setupDeprecationWorkflow({
      /* { handler: 'silence', matchId: 'template-action' }, */
 +    /**
-+     * This is to account for a deprecation that shipped in ember-cli 6.4
-+     * with ember-data v5.6 which needs a blueprint update to avoid the
-+     * deprecation that is otherwise irrelevant for tutorial purposes.
++     * TODO: actually fix these deprecations
++     * this change to ember-cli-deprecation-workflow is hidden so people wont
++     * see this in the tutorial.
 +     */
 +    { handler: 'silence', matchId: 'ember-data:deprecate-legacy-imports' },
 +    { handler: 'silence', matchId: 'warp-drive.deprecate-tracking-package' },
