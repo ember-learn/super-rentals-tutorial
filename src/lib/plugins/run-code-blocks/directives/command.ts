@@ -57,6 +57,8 @@ export default async function command(node: Code, options: Options): Promise<Opt
     if (args.captureOutput) {
       output.push(stdout);
     }
+
+    console.log(stdout)
   }
 
   if (args.hidden) {
