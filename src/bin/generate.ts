@@ -109,6 +109,26 @@ async function main() {
 }
 
 main().catch(error => {
+   if (typeof error === 'string') {
+    github.setOutput('error', error);
+  } else if ('message' in error && typeof error.message === 'string') {
+    if ('stack' in error && typeof error.stack === 'string') {
+      if (error.stack.includes(error.message)) {
+        github.setOutput('error', error.stack);
+      } else {
+        github.setOutput('error', error.message + '\n' + error.stack);
+      }
+    } else {
+      github.setOutput('error', error.message);
+    }
+  } else {
+    try {
+      github.setOutput('error', JSON.stringify(error));
+    } catch {
+      // ignore
+    }
+  }
+  
   console.error(error);
   process.exit(1);
 });
