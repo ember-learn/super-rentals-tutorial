@@ -1,6 +1,6 @@
 <!--lint disable no-undefined-references-->
 
-```run:server:start hidden=true cwd=super-rentals expect="Serving on http://localhost:4200/"
+```run:server:start hidden=true cwd=super-rentals expect="Local:   http://localhost:4200/"
 npm start
 ```
 
@@ -85,7 +85,7 @@ Model classes in EmberData are no different than any other classes we've worked 
 Attributes declared with the `@attr` decorator work with the auto-track feature (which we learned about [in a previous chapter](../../part-1/reusable-components/)). Therefore, we are free to reference any model attributes in our getter (`this.category`), and Ember will know when to invalidate its result.
 
 ```run:command hidden=true cwd=super-rentals
-ember test --path dist
+pnpm test
 git add app/models/rental.js
 ```
 
@@ -157,33 +157,10 @@ It is worth pointing out that EmberData provides a `store` *[service](../../../s
 export { default } from 'ember-data/store';
 ```
 
-```run:file:patch hidden=true lang=js cwd=super-rentals filename=app/app.js
-@@ -6,2 +6,15 @@
-
-+/* This is to account for a deprecation that shipped in ember-cli 6.4
-+   with ember-data v5.6 which needs a blueprint update to avoid the
-+   deprecation that is otherwise irrelevant for tutorial purposes.
-+*/
-+import { registerDeprecationHandler } from '@ember/debug';
-+registerDeprecationHandler((message, options, next) => {
-+  if (message.includes('Using WarpDrive with EmberJS requires')) {
-+    return;
-+  } else {
-+    next(message, options);
-+  }
-+});
-+
- if (macroCondition(isDevelopingApp())) {
-```
-
-```run:command hidden=true cwd=super-rentals
-git add app/app.js
-```
-
 Running the tests in the browser confirms that everything is working as intended:
 
 ```run:command hidden=true cwd=super-rentals
-ember test --path dist
+pnpm test
 git add app/services/store.js
 git add tests/unit/models/rental-test.js
 ```
@@ -295,14 +272,12 @@ Let's start customizing the things that didn't work for us by default. Specifica
 The first thing we want to do is have our builder respect a configurable default host and/or namespace. Adding a namespace prefix happens to be pretty common across Ember apps, so EmberData provides a global config mechanism for host and namespace. Typically you will want to do this either in your store file or app file.
 
 ```run:file:patch lang=js cwd=super-rentals filename=app/app.js
-@@ -5,2 +5,7 @@
- import { importSync, isDevelopingApp, macroCondition } from '@embroider/macros';
+@@ -7,0 +8,5 @@ import setupInspector from '@embroider/legacy-inspector-support/ember-source-4.1
 +import { setBuildURLConfig } from '@ember-data/request-utils';
 +
 +setBuildURLConfig({
 +  namespace: 'api',
 +});
-
 ```
 
 Adding the `.json` extension is a bit less common, and doesn't have a declarative configuration API of its own. We could just modify request options directly in place of use, but that would be a bit messy. Instead, let's create a handler to do this for us.
@@ -356,7 +331,7 @@ Lastly, let's update our `store` service to use the new `RequestManager` we crea
 With our new EmberData configuration in place, all our tests should pass again.
 
 ```run:command hidden=true cwd=super-rentals
-ember test --path dist
+pnpm test
 git add app/app.js
 git add app/routes/index.js
 git add app/routes/rental.js

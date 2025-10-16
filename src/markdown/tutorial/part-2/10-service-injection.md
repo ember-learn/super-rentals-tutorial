@@ -1,6 +1,6 @@
 <!--lint disable no-undefined-references-->
 
-```run:server:start hidden=true cwd=super-rentals expect="Serving on http://localhost:4200/"
+```run:server:start hidden=true cwd=super-rentals expect="Local:   http://localhost:4200/"
 npm start
 ```
 
@@ -52,7 +52,7 @@ ember generate component share-button -gc
 ```
 
 ```run:command hidden=true cwd=super-rentals
-ember test --path dist
+pnpm test
 git add app/components/share-button.gjs
 git add tests/integration/components/share-button-test.gjs
 ```
@@ -150,7 +150,7 @@ wait  .share.button
 > Feel free to try sending the tweet! However, keep in mind that your followers cannot access your local server at `http://localhost:4200/`.
 
 ```run:command hidden=true cwd=super-rentals
-ember test --path dist
+pnpm test
 git add app/components/rental/detailed.gjs
 git add app/components/share-button.gjs
 git add tests/acceptance/super-rentals-test.js
@@ -177,7 +177,7 @@ To be sure, let's add some tests! Let's start with an acceptance test:
 +
 +    assert.strictEqual(
 +      tweetURL.searchParams.get('url'),
-+      `${window.location.origin}/rentals/grand-old-mansion`,
++      `${window.location.origin}/rentals/grand-old-mansion`
 +    );
    });
 ```
@@ -231,7 +231,7 @@ Here, we added the `@service router;` declaration to our component class. This i
 With this change, everything is now working the way we intended.
 
 ```run:command hidden=true cwd=super-rentals
-ember test --path dist
+pnpm test
 git add app/components/share-button.gjs
 git add tests/acceptance/super-rentals-test.js
 ```
@@ -322,7 +322,7 @@ This is a pretty common testing technique called *mocking* or *stubbing*. Our `M
 By using service injections and mocks, Ember allows us to build *[loosely coupled][TODO: link to loosely coupled]* components that can each be tested in isolation, while acceptance tests provide end-to-end coverage that ensures that these components do indeed work well together.
 
 ```run:command hidden=true cwd=super-rentals
-ember test --path dist
+pnpm test
 git add tests/integration/components/share-button-test.gjs
 ```
 
@@ -418,7 +418,7 @@ The main goal here is to test the key functionalities of the component individua
 With that, everything should be good to go, and our `<ShareButton>` component should now work everywhere!
 
 ```run:command hidden=true cwd=super-rentals
-ember test --path dist
+pnpm test
 git add tests/integration/components/share-button-test.gjs
 ```
 

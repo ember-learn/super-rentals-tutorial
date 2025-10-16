@@ -1,6 +1,6 @@
 <!--lint disable no-undefined-references-->
 
-```run:server:start hidden=true cwd=super-rentals expect="Serving on http://localhost:4200/"
+```run:server:start hidden=true cwd=super-rentals expect="Local:   http://localhost:4200/"
 npm start
 ```
 
@@ -103,11 +103,11 @@ Finally, we asserted that clicking on the link should bring us to the `/about` U
 > Here, we are writing the tests in a framework called QUnit, which is where the functions `module`, `test` and `assert` come from. We also have additional helpers like `click`, `visit`, and `currentURL` provided by the `@ember/test-helpers` package. You can tell what comes from which package based on the `import` paths at the top of the file. Knowing this will be helpful when you need to search for documentation on the Internet or ask for help.
 
 ```run:command hidden=true cwd=super-rentals
-ember test --path dist
+pnpm test
 git add tests/acceptance/super-rentals-test.js
 ```
 
-We can put our automated test into motion by running the *[test server][TODO: link to test server]* using the `ember test --server` command, or `ember t -s` for short. This server behaves much like the development server, but it is explicitly running for our tests. It may automatically open a browser window and take you to the test UI, or you can open `http://localhost:7357/` yourself.
+We can put our automated test into motion by running the development server using the `npm start` command and navigating to `http://localhost:4200/tests` in your browser.
 
 If you watch really carefully, you can see our test robot roaming around our app and clicking links:
 
@@ -142,7 +142,7 @@ Don't forget to put that line back in when you are done!
 
 ```run:command hidden=true cwd=super-rentals
 git checkout app/templates/index.gjs
-ember test --path dist
+pnpm test
 ```
 
 ## Practicing the Testing Workflow
@@ -187,7 +187,7 @@ wait  #qunit-banner.qunit-pass
 ```
 
 ```run:command hidden=true cwd=super-rentals
-ember test --path dist
+pnpm test
 git add tests/acceptance/super-rentals-test.js
 ```
 

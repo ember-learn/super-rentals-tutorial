@@ -1,5 +1,6 @@
 import { ChildProcess, spawn } from 'child_process';
 import { Option, assert } from 'ts-std';
+import { stripVTControlCharacters } from 'node:util';
 
 const WINDOWS = process.platform === 'win32';
 
@@ -121,7 +122,7 @@ export default class Server {
 
       process.stdout.on('data', chunk => {
         assert(this.process === null || this.process === process, `this.process was reassigned`);
-        this._stdout.push(chunk);
+        this._stdout.push(stripVTControlCharacters(chunk.toString()));
 
         if (expect && this.status === Status.Starting) {
           if (this.stdout!.includes(expect)) {
@@ -132,7 +133,7 @@ export default class Server {
 
       process.stderr.on('data', chunk => {
         assert(this.process === null || this.process === process, `this.process was reassigned`);
-        this._stderr.push(chunk);
+        this._stderr.push(stripVTControlCharacters(chunk.toString()));
       });
 
       process.on('exit', (code, signal) => {

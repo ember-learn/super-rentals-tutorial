@@ -1,6 +1,6 @@
 <!--lint disable no-undefined-references-->
 
-```run:server:start hidden=true cwd=super-rentals expect="Serving on http://localhost:4200/"
+```run:server:start hidden=true cwd=super-rentals expect="Local:   http://localhost:4200/"
 npm start
 ```
 
@@ -53,7 +53,7 @@ Ember optionally allows us to associate JavaScript code with a component for exa
 ```
 
 ```run:command hidden=true cwd=super-rentals
-ember test --path dist
+pnpm test
 git add app/components/rental/image.gjs
 ```
 
@@ -80,7 +80,7 @@ Ember will create an *[instance][TODO: link to instance]* of the class whenever 
 ```
 
 ```run:command hidden=true cwd=super-rentals
-ember test --path dist
+pnpm test
 git add app/components/rental/image.gjs
 ```
 
@@ -113,7 +113,7 @@ Let's update our template to use this state we just added:
 In the component's template section, we have access to the component's JavaScript instance variables. The `{{#if ...}}...{{else}}...{{/if}}` *[conditionals](../../../components/conditional-content/)* syntax allows us to render different content based on a condition (in this case, the value of the instance variable `this.isLarge`). Combining these two features, we can render either the small or the large version of the image accordingly.
 
 ```run:command hidden=true cwd=super-rentals
-ember test --path dist
+pnpm test
 git add app/components/rental/image.gjs
 ```
 
@@ -154,7 +154,7 @@ Since this pattern of initializing instance variables in the constructor is pret
 This does exactly the same thing as before, but it's much shorter and less to type!
 
 ```run:command hidden=true cwd=super-rentals
-ember test --path dist
+pnpm test
 git add app/components/rental/image.gjs
 ```
 
@@ -181,7 +181,7 @@ Let's modify our class to add a *[method](../../../in-depth-topics/native-classe
 ```
 
 ```run:command hidden=true cwd=super-rentals
-ember test --path dist
+pnpm test
 git add app/components/rental/image.gjs
 ```
 
@@ -253,7 +253,7 @@ wait  .rentals li:first-of-type article.rental .image.large img
 ```
 
 ```run:command hidden=true cwd=super-rentals
-ember test --path dist
+pnpm test
 git add app/components/rental/image.gjs
 ```
 
@@ -297,7 +297,7 @@ Finally, let's write a test for this new behavior:
 ```
 
 ```run:command hidden=true cwd=super-rentals
-ember test --path dist
+pnpm test
 git add tests/integration/components/rental/image-test.gjs
 ```
 
@@ -339,7 +339,7 @@ These changes are buried deep within the large amount of duplicated code. We can
 The expression version of `{{if}}` takes two arguments. The first argument is the condition. The second argument is the expression that should be evaluated if the condition is true.
 
 ```run:command hidden=true cwd=super-rentals
-ember test --path dist
+pnpm test
 git add app/components/rental/image.gjs
 ```
 
@@ -362,7 +362,7 @@ Whether or not this is an improvement in the clarity of our code is mostly a mat
 Run the test suite one last time to confirm our refactor didn't break anything unexpectedly, and we will be ready for the next challenge!
 
 ```run:command hidden=true cwd=super-rentals
-ember test --path dist
+pnpm test
 git add app/components/rental/image.gjs
 ```
 
