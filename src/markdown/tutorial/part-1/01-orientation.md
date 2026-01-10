@@ -191,7 +191,7 @@ As text on the welcome page pointed out, the source code for the page is located
 -  {{outlet}}
 -
 -  {{! The following component displays Ember's default welcome message. }}
--  <WelcomePage />
+-  <WelcomePage @extension="gjs" />
 -  {{! Feel free to remove this! }}
 +  Hello World!!!
  </template>
