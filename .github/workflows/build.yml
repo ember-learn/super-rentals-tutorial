@@ -20,6 +20,7 @@ jobs:
         channel:
           - release
           - beta
+          - alpha
     steps:
       - name: Set up Git
         run: |
@@ -60,6 +61,8 @@ jobs:
         run: |
           if [[ "$EMBER_RELEASE_CHANNEL" == "beta" ]]; then
             pnpm install --save-dev ember-cli@beta @ember/app-blueprint@beta
+          elif [[ "$EMBER_RELEASE_CHANNEL" == "alpha" ]]; then
+            pnpm install --save-dev ember-cli@alpha @ember/app-blueprint@alpha
           else
             pnpm install --save-dev ember-cli@latest
           fi
