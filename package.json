@@ -17,7 +17,7 @@
     "@types/unist": "^2.0.3",
     "@types/vfile": "^4.0.0",
     "chalk": "^2.4.2",
-    "ember-cli": "*",
+    "ember-cli": "6.10.0-beta.1",
     "ember-dictionary": "^0.2.3",
     "glob": "^8.0.3",
     "image-size": "^1.0.2",

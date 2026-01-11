@@ -47,7 +47,7 @@ EmberData is built around the idea of organizing your app's data into *[model ob
 Enough talking, why don't we give that a try!
 
 ```run:file:create lang=js cwd=super-rentals filename=app/models/rental.js
-import Model, { attr } from '@ember-data/model';
+import Model, { attr } from '@warp-drive/legacy/model';
 
 const COMMUNITY_CATEGORIES = ['Condo', 'Townhouse', 'Apartment'];
 
@@ -154,7 +154,21 @@ This model test is also known as a *[unit test](../../../testing/testing-models/
 It is worth pointing out that EmberData provides a `store` *[service](../../../services/)*, also known as the EmberData store. In our test, we used the `this.owner.lookup('service:store')` API to get access to the EmberData store. The store provides a `createRecord` method to instantiate our model object for us. To make this `store` service available, we must add the following file:
 
 ```run:file:create lang=js cwd=super-rentals filename=app/services/store.js
-export { default } from 'ember-data/store';
+import { useLegacyStore } from '@warp-drive/legacy';
+import { JSONAPICache } from '@warp-drive/json-api';
+
+const Store = useLegacyStore({
+  linksMode: true,
+  cache: JSONAPICache,
+  handlers: [
+    // -- your handlers here
+  ],
+  schemas: [
+    // -- your schemas here
+  ],
+});
+
+export default Store;
 ```
 
 Running the tests in the browser confirms that everything is working as intended:
@@ -180,7 +194,7 @@ Alright, now that we have our model set up, it's time to refactor our route hand
 -
 -const COMMUNITY_CATEGORIES = ['Condo', 'Townhouse', 'Apartment'];
 +import { service } from '@ember/service';
-+import { query } from '@ember-data/json-api/request';
++import { query } from '@warp-drive/json-api/request';
 
  export default class IndexRoute extends Route {
 -  async model() {
@@ -212,7 +226,7 @@ Alright, now that we have our model set up, it's time to refactor our route hand
 -
 -const COMMUNITY_CATEGORIES = ['Condo', 'Townhouse', 'Apartment'];
 +import { service } from '@ember/service';
-+import { findRecord } from '@ember-data/json-api/request';
++import { findRecord } from '@warp-drive/json-api/request';
 
  export default class RentalRoute extends Route {
 -  async model(params) {
