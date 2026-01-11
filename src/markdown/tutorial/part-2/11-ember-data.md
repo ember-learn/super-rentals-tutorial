@@ -47,7 +47,7 @@ EmberData is built around the idea of organizing your app's data into *[model ob
 Enough talking, why don't we give that a try!
 
 ```run:file:create lang=js cwd=super-rentals filename=app/models/rental.js
-import Model, { attr } from '@ember-data/model';
+import Model, { attr } from '@warp-drive/legacy/model';
 
 const COMMUNITY_CATEGORIES = ['Condo', 'Townhouse', 'Apartment'];
 
@@ -151,17 +151,42 @@ The generator created some boilerplate code for us, which serves as a pretty goo
 
 This model test is also known as a *[unit test](../../../testing/testing-models/)*. Unlike any of the other tests that we've written thus far, this test doesn't actually *render* anything. It just instantiates the rental model object and tests the model object directly, manipulating its attributes and asserting their value.
 
-It is worth pointing out that EmberData provides a `store` *[service](../../../services/)*, also known as the EmberData store. In our test, we used the `this.owner.lookup('service:store')` API to get access to the EmberData store. The store provides a `createRecord` method to instantiate our model object for us. To make this `store` service available, we must add the following file:
+It is worth pointing out that EmberData provides a `store` *[service](../../../services/)*, also known as the EmberData store. In our test, we used the `this.owner.lookup('service:store')` API to get access to the EmberData store. The store provides a `createRecord` method to instantiate our model object for us. 
 
-```run:file:create lang=js cwd=super-rentals filename=app/services/store.js
-export { default } from 'ember-data/store';
+This is the store that is generated for us as part of the default blueprint: 
+
+```js { data-filename="app/services/store.js" }
+import { useLegacyStore } from '@warp-drive/legacy';
+import { JSONAPICache } from '@warp-drive/json-api';
+
+const Store = useLegacyStore({
+  linksMode: true,
+  cache: JSONAPICache,
+  handlers: [
+    // -- your handlers here
+  ],
+  schemas: [
+    // -- your schemas here
+  ],
+});
+
+export default Store;
+```
+
+TODO: maybe fix this upstream or explain why we need to turn off `linksMode` (whatever that is)
+
+```run:file:patch lang=js cwd=super-rentals filename=app/services/store.js
+@@ -4,3 +4,3 @@ import { JSONAPICache } from '@warp-drive/json-api';
+ const Store = useLegacyStore({
+-  linksMode: true,
++  linksMode: false,
+   cache: JSONAPICache,
 ```
 
 Running the tests in the browser confirms that everything is working as intended:
 
 ```run:command hidden=true cwd=super-rentals
 pnpm test
-git add app/services/store.js
 git add tests/unit/models/rental-test.js
 ```
 
@@ -180,7 +205,7 @@ Alright, now that we have our model set up, it's time to refactor our route hand
 -
 -const COMMUNITY_CATEGORIES = ['Condo', 'Townhouse', 'Apartment'];
 +import { service } from '@ember/service';
-+import { query } from '@ember-data/json-api/request';
++import { query } from '@warp-drive/utilities/json-api';
 
  export default class IndexRoute extends Route {
 -  async model() {
@@ -212,7 +237,7 @@ Alright, now that we have our model set up, it's time to refactor our route hand
 -
 -const COMMUNITY_CATEGORIES = ['Condo', 'Townhouse', 'Apartment'];
 +import { service } from '@ember/service';
-+import { findRecord } from '@ember-data/json-api/request';
++import { findRecord } from '@warp-drive/utilities/json-api';
 
  export default class RentalRoute extends Route {
 -  async model(params) {
@@ -242,7 +267,7 @@ Wow... that removed a lot of code! This is all possible thanks to the power of c
 
 ## The EmberData Store
 
-As mentioned above, EmberData provides a `store` service, which we can inject into our route using the `@service store;` declaration, making the EmberData store available as `this.store`. It provides the `request` method for making fetch requests using `RequestManager`. As its name implies: the `RequestManager` is request centric. Instead of answering questions about specific records or types of records, we ask it about the status of a specific request. To initiate a request, we use the `request` method on the store, passing in a request object. The request object is created using builders from `@ember-data/json-api/request`. Specifically, the [`findRecord` builder](../../../models/finding-records/#toc_retrieving-a-single-record) takes a model type (`rental` in our case) and a model ID (for us, that would be `params.rental_id` from the URL) as arguments and builds fetch options for a single record. On the other hand, the [`query` builder](../../../models/finding-records/#toc_retrieving-multiple-records) takes the model type as an argument and builds fetch options to query for all records of that type.
+As mentioned above, EmberData provides a `store` service, which we can inject into our route using the `@service store;` declaration, making the EmberData store available as `this.store`. It provides the `request` method for making fetch requests using `RequestManager`. As its name implies: the `RequestManager` is request centric. Instead of answering questions about specific records or types of records, we ask it about the status of a specific request. To initiate a request, we use the `request` method on the store, passing in a request object. The request object is created using builders from `@warp-drive/utilities/json-api`. Specifically, the [`findRecord` builder](../../../models/finding-records/#toc_retrieving-a-single-record) takes a model type (`rental` in our case) and a model ID (for us, that would be `params.rental_id` from the URL) as arguments and builds fetch options for a single record. On the other hand, the [`query` builder](../../../models/finding-records/#toc_retrieving-multiple-records) takes the model type as an argument and builds fetch options to query for all records of that type.
 
 EmberData can do many things, and in default setup it provides caching. EmberData's store caches server responses, allowing instant access to previously fetched data. If the data is already cached, you don't need to wait for the server to respond again. If not, the store fetches it for you.
 
@@ -273,7 +298,7 @@ The first thing we want to do is have our builder respect a configurable default
 
 ```run:file:patch lang=js cwd=super-rentals filename=app/app.js
 @@ -7,0 +8,5 @@ import setupInspector from '@embroider/legacy-inspector-support/ember-source-4.1
-+import { setBuildURLConfig } from '@ember-data/request-utils';
++import { setBuildURLConfig } from '@warp-drive/utilities/json-api';
 +
 +setBuildURLConfig({
 +  namespace: 'api',
@@ -297,35 +322,17 @@ export const JsonSuffixHandler = {
 
 As you can see, the handler appends `.json` to the URL of each request. Pretty simple, right? Then it calls the `next` function with the modified copy of the request object (because it is immutable). This is how we can chain multiple handlers together to build up a request.
 
-The next step that we need to do, is to configure `RequestManager` to use this handler. Let's create the request-manager service.
-
-```run:file:create lang=js cwd=super-rentals filename=app/services/request-manager.js
-import BaseRequestManager from '@ember-data/request';
-import Fetch from '@ember-data/request/fetch';
-import { JsonSuffixHandler } from 'super-rentals/utils/handlers';
-
-export default class RequestManager extends BaseRequestManager {
-  constructor(args) {
-    super(args);
-
-    this.use([JsonSuffixHandler, Fetch]);
-  }
-}
-```
-
-Notice that we are using the `JsonSuffixHandler` we created earlier. We also use the `Fetch` handler, which is a built-in handler that makes the actual fetch request. The `use` method is used to add handlers to the request manager. The order in which handlers are added is important, as they will be executed in the order they were added.
-
-Lastly, let's update our `store` service to use the new `RequestManager` we created.
+The next step that we need to do, is to configure our  `legacyStore` to use this handler. Let's update the store service to add this handler:
 
 ```run:file:patch lang=js cwd=super-rentals filename=app/services/store.js
-@@ -1 +1,6 @@
--export { default } from 'ember-data/store';
-+import BaseStore from 'ember-data/store';
-+import { service } from '@ember/service';
-+
-+export default class Store extends BaseStore {
-+  @service requestManager;
-+}
+@@ -2,2 +2,3 @@ import { useLegacyStore } from '@warp-drive/legacy';
+ import { JSONAPICache } from '@warp-drive/json-api';
++import { JsonSuffixHandler } from 'super-rentals/utils/handlers';
+ 
+@@ -8,2 +9,3 @@ const Store = useLegacyStore({
+     // -- your handlers here
++    JsonSuffixHandler
+   ],
 ```
 
 With our new EmberData configuration in place, all our tests should pass again.
@@ -335,7 +342,6 @@ pnpm test
 git add app/app.js
 git add app/routes/index.js
 git add app/routes/rental.js
-git add app/services/request-manager.js
 git add app/services/store.js
 git add app/utils/handlers.js
 ```
