@@ -34,11 +34,12 @@ Chances are, as we keep working on this app, we will need to add more routes tha
 
 Fortunately, we're not going to do any of that. As it turns out, there's a much better solution here: we can use EmberData! As its name implies, [EmberData](../../../models/) is a library that helps manage data and *[application state][TODO: link to application state]* in Ember applications.
 
-There's a lot to learn about EmberData, but let's start by uncovering features that help with our immediate problem.
 
 > Zoey says...
 >
-> RequestManager is available starting with the EmberData 4.12 LTS release. EmberData works with multiple versions of Ember, please refer to the Compatibility section of the [EmberData README](https://github.com/emberjs/data/blob/main/README.md#compatibility) while doing your application upgrade.
+> EmberData is in the process of being renamed to WarpDrive. It's not just changing its name though, WarpDrive is now able to be used in multiple different frameworks. You can read more about it in the [WarpDrive Docs](https://warp-drive.io)
+
+There's a lot to learn about EmberData, but let's start by uncovering features that help with our immediate problem.
 
 ## EmberData Models
 
@@ -71,7 +72,7 @@ export default class RentalModel extends Model {
 }
 ```
 
-Here, we created a `RentalModel` class that extends EmberData's `Model` superclass. When fetching the listing data from the server, each individual rental property will be represented by an instance (also known as a *[record](../../../models/finding-records/)*) of our `RentalModel` class.
+Here, we created a `RentalModel` class that extends EmberData's `Model` superclass (which is imported from the `@warp-drive/legacy` package). When fetching the listing data from the server, each individual rental property will be represented by an instance (also known as a *[record](../../../models/finding-records/)*) of our `RentalModel` class.
 
 We used the `@attr` decorator to declare the attributes of a rental property. These attributes correspond directly to the `attributes` data we expect the server to provide in its responses:
 
@@ -160,7 +161,7 @@ import { useLegacyStore } from '@warp-drive/legacy';
 import { JSONAPICache } from '@warp-drive/json-api';
 
 const Store = useLegacyStore({
-  linksMode: true,
+  linksMode: false,
   cache: JSONAPICache,
   handlers: [
     // -- your handlers here
@@ -171,16 +172,6 @@ const Store = useLegacyStore({
 });
 
 export default Store;
-```
-
-TODO: maybe fix this upstream or explain why we need to turn off `linksMode` (whatever that is)
-
-```run:file:patch lang=js cwd=super-rentals filename=app/services/store.js
-@@ -4,3 +4,3 @@ import { JSONAPICache } from '@warp-drive/json-api';
- const Store = useLegacyStore({
--  linksMode: true,
-+  linksMode: false,
-   cache: JSONAPICache,
 ```
 
 Running the tests in the browser confirms that everything is working as intended:
@@ -269,7 +260,7 @@ Wow... that removed a lot of code! This is all possible thanks to the power of c
 
 As mentioned above, EmberData provides a `store` service, which we can inject into our route using the `@service store;` declaration, making the EmberData store available as `this.store`. It provides the `request` method for making fetch requests using `RequestManager`. As its name implies: the `RequestManager` is request centric. Instead of answering questions about specific records or types of records, we ask it about the status of a specific request. To initiate a request, we use the `request` method on the store, passing in a request object. The request object is created using builders from `@warp-drive/utilities/json-api`. Specifically, the [`findRecord` builder](../../../models/finding-records/#toc_retrieving-a-single-record) takes a model type (`rental` in our case) and a model ID (for us, that would be `params.rental_id` from the URL) as arguments and builds fetch options for a single record. On the other hand, the [`query` builder](../../../models/finding-records/#toc_retrieving-multiple-records) takes the model type as an argument and builds fetch options to query for all records of that type.
 
-EmberData can do many things, and in default setup it provides caching. EmberData's store caches server responses, allowing instant access to previously fetched data. If the data is already cached, you don't need to wait for the server to respond again. If not, the store fetches it for you.
+EmberData can do many things, and in the default setup it provides caching. EmberData's store caches server responses, allowing instant access to previously fetched data. If the data is already cached, you don't need to wait for the server to respond again. If not, the store fetches it for you.
 
 That's a lot of theory, but is this going to work in our app? Let's run the tests and find out!
 
