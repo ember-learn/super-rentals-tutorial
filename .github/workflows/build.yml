@@ -22,6 +22,8 @@ jobs:
           - beta
           - alpha
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
       - uses: ./.github/actions/build
         with:
           channel: ${{ matrix.channel }}
