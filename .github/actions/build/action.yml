@@ -1,0 +1,125 @@
+name: 'Build Super Rentals Tutorial'
+description: 'Build the Super Rentals tutorial for a specified Ember release channel'
+inputs:
+  channel:
+    description: 'Ember release channel (release, beta, or alpha)'
+    required: true
+  tomtom-access-token:
+    description: 'TomTom access token for map integration'
+    required: true
+    default: 'gI4oJc3MF9PREfA3SIbN4ak7giIJPYcf'
+  discord-webhook:
+    description: 'Discord webhook URL for failure notifications'
+    required: false
+  event-name:
+    description: 'GitHub event name for conditional notification'
+    required: false
+runs:
+  using: 'composite'
+  steps:
+    - name: Set up Git
+      shell: bash
+      run: |
+        git config --global user.name "Tomster"
+        git config --global user.email "tomster@emberjs.com"
+    - name: Checkout
+      uses: actions/checkout@v4
+    - uses: pnpm/action-setup@v4
+    - name: Set up Node
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+        cache: 'pnpm'
+    - name: Install dependencies (apt-get)
+      shell: bash
+      run: |
+        sudo apt-get update -y
+        sudo apt-get install -y tree
+
+    - name: Disable AppArmor
+      shell: bash
+      # Ubuntu >= 23 has AppArmor enabled by default, which breaks Puppeteer.
+      # See https://github.com/puppeteer/puppeteer/issues/12818 "No usable sandbox!"
+      # this is taken from the solution used in Puppeteer's own CI: https://github.com/puppeteer/puppeteer/pull/13196
+      # The alternative is to pin Ubuntu 22 or to use aa-exec to disable AppArmor for commands that need Puppeteer.
+      # This is also suggested by Chromium https://chromium.googlesource.com/chromium/src/+/main/docs/security/apparmor-userns-restrictions.md
+      run: echo 0 | sudo tee /proc/sys/kernel/apparmor_restrict_unprivileged_userns
+
+    - uses: actions/cache@v4
+      name: Setup cache for puppeteer
+      with:
+        # See .puppeteerrc.cjs, where we set this as the place puppeteer
+        # installs the browser. It needs to be cached the same as our pnpm
+        # packages are because it won't get reinstalled if our modules are
+        # cached.
+        path: .puppeteer-cache
+        key: ${{ runner.os }}-puppeteer-${{ hashFiles('**/pnpm-lock.yaml') }}
+
+    - name: Install dependencies (pnpm)
+      shell: bash
+      run: |
+        if [[ "$EMBER_RELEASE_CHANNEL" == "beta" ]]; then
+          pnpm install --save-dev ember-cli@beta @ember/app-blueprint@beta
+        elif [[ "$EMBER_RELEASE_CHANNEL" == "alpha" ]]; then
+          pnpm install --save-dev ember-cli@alpha @ember/app-blueprint@alpha
+        else
+          pnpm install --save-dev ember-cli@latest
+        fi
+
+        pnpm install
+      env:
+        EMBER_RELEASE_CHANNEL: ${{ inputs.channel }}
+    - name: Lint (markdown source)
+      shell: bash
+      run: pnpm lint:md:src
+    - name: Lint (typescript)
+      shell: bash
+      run: pnpm lint:ts
+    - name: Compile (typescript)
+      shell: bash
+      run: pnpm tsc
+    - name: Generate
+      shell: bash
+      run: pnpm generate
+      env:
+        # This is needed for external PRs to build, since secrets are not
+        # available there. Get your own TomTom token for local development
+        # at: https://developer.tomtom.com
+        TOMTOM_ACCESS_TOKEN: ${{ inputs.tomtom-access-token }}
+    - name: Lint (markdown output)
+      shell: bash
+      run: pnpm lint:md:dist
+    - name: Prune artifacts
+      if: always()
+      shell: bash
+      working-directory: dist/code/super-rentals
+      run: git clean -dfX
+    - name: Upload artifacts (assets)
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: assets (${{ inputs.channel }})
+        path: dist/assets
+    - name: Upload artifacts (markdown)
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: markdown (${{ inputs.channel }})
+        path: dist/markdown
+    - name: Upload artifacts (code)
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: code (${{ inputs.channel }})
+        path: dist/code/super-rentals
+        include-hidden-files: true
+    - name: Notify Discord
+      uses: sarisia/actions-status-discord@v1
+      if: ${{ failure() && inputs.event-name == 'schedule' && inputs.discord-webhook != '' }}
+      with:
+        webhook: ${{ inputs.discord-webhook }}
+        status: "Failure"
+        title: "Super Rentals Tutorial Build ${{ inputs.channel }}"
+        color: 0xcc0000
+        url: "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+        username: GitHub Actions
