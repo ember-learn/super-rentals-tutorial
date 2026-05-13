@@ -152,10 +152,10 @@ By passing in `@model` into the `<Rental>` component as the `@rental` argument, 
 +      @lat={{@rental.location.lat}}
 +      @lng={{@rental.location.lng}}
        @zoom="9"
-@@ -30,3 +30,3 @@ import Map from 'super-rentals/components/map';
-       @height="150"
--      alt="A map of Grand Old Mansion"
-+      alt="A map of {{@rental.title}}"
+@@ -31,3 +31,3 @@ import Map from 'super-rentals/components/map';
+       role="img"
+-      aria-label="A map of Grand Old Mansion"
++      aria-label="A map of {{@rental.title}}"
      />
 ```
 
