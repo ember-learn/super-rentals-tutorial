@@ -77,7 +77,7 @@ async function main() {
       case 'click':
         if (params[1] === 'true') {
           script.push(`  await Promise.all([`);
-          script.push(`    page.waitForNavigation({ waitUtil: 'networkidle0' }),`);
+          script.push(`    page.waitForNavigation({ waitUntil: 'networkidle0' }),`);
           script.push(`    page.click(${js(params[0])})`);
           script.push(`  ]);`);
         } else {
@@ -91,7 +91,15 @@ async function main() {
         script.push(`  await page.evaluate(${js(params[0])});`);
         break;
       case 'visit':
-        script.push(`  await page.goto(${js(params[0])}, { waitUtil: 'networkidle0' });`);
+        script.push(`  for (let _attempt = 0; _attempt < 3; _attempt++) {`);
+        script.push(`    try {`);
+        script.push(`      await page.goto(${js(params[0])}, { waitUntil: 'networkidle0' });`);
+        script.push(`      break;`);
+        script.push(`    } catch (e) {`);
+        script.push(`      if (_attempt === 2) throw e;`);
+        script.push(`      await new Promise(r => setTimeout(r, 2000));`);
+        script.push(`    }`);
+        script.push(`  }`);
         break;
       case 'wait':
         script.push(`  await page.waitForSelector(${js(params[0])});`);
@@ -160,6 +168,7 @@ export default async function screenshot(node: Code, options: Options, vfile: VF
   let path = join(dir, filename) as `${string}.png`;
   let script = compile(node.value, path, args);
 
+  console.log(`\nGenerating screenshot: ${path}\n`)
   console.log(`$ node -\n${script.trimRight()}`);
 
   let p = exec(`node -`);
@@ -173,6 +182,7 @@ export default async function screenshot(node: Code, options: Options, vfile: VF
   let { alt } = args;
   let { position, data } = node;
 
+  console.log(`\nScreenshot generated: ${src}\n`);
   return {
     type: 'image',
     url: src,
