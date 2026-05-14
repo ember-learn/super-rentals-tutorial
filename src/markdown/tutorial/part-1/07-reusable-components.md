@@ -23,7 +23,11 @@ Let's add it to our app:
 
 ```run:command cwd=super-rentals
 #[display(npm install maplibre-gl --save-dev)]
-pnpm add -D maplibre-gl 
+#[cfg(unix)]
+pnpm add -D maplibre-gl 2>&1 | grep -Fv "| Progress:" | grep -Ev "WARN.*deprecated subdependencies found" | grep -Ev "^[[:space:]]*$" | grep -Fv "+26 +++" | grep -Fv "using pnpm"
+
+#[cfg(not(unix))]
+pnpm add -D maplibre-gl
 ```
 
 Now let's generate a new component for our map.
