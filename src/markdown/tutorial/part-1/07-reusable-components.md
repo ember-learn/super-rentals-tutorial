@@ -14,6 +14,7 @@ While adding the map, you will learn about:
 * Overriding HTML attributes in `...attributes`
 * Refactoring with getters and auto-track
 * Getting JavaScript values into the test context
+* Centralizing configuration in `config/environment`
 
 ## Generating a Component with a Component Class
 
@@ -420,6 +421,62 @@ For good measure, we will also add an assertion to the `<Rental>` tests to make 
 pnpm test
 git add app/components/rental.gjs
 git add tests/integration/components/rental-test.gjs
+```
+
+## Pulling the Tile Style URL from Configuration
+
+The `MAP_STYLE` constant is currently hardcoded inside the map component. This works, but a tile server URL is the kind of app-level setting that could reasonably differ between environments — for example, pointing at a self-hosted tile server in production while using OpenFreeMap during development. Ember's convention is to centralize these values in `config/environment.js`, where all environment-specific configuration lives.
+
+Let's move the tile style URL there:
+
+```run:file:patch lang=js cwd=super-rentals filename=config/environment.js
+@@ -40,5 +40,7 @@
+   if (environment === 'production') {
+     // here you can enable a production-specific feature
+   }
+ 
++  ENV.MAP_TILE_STYLE = 'https://tiles.openfreemap.org/styles/liberty';
++
+   return ENV;
+```
+
+Now update `map.gjs` to import `ENV` from `super-rentals/config/environment` and read the URL from there instead of the local constant:
+
+```run:file:patch lang=gjs cwd=super-rentals filename=app/components/map.gjs
+@@ -1,9 +1,8 @@
+ import Component from '@glimmer/component';
+ import { modifier } from 'ember-modifier';
+ import { trustHTML } from '@ember/template';
+ import maplibregl from 'maplibre-gl';
+ import 'maplibre-gl/dist/maplibre-gl.css';
++import ENV from 'super-rentals/config/environment';
+ 
+-const MAP_STYLE = 'https://tiles.openfreemap.org/styles/liberty';
+-
+ const displayMap = modifier((element, [lat, lng, zoom]) => {
+@@ -11,3 +10,3 @@
+     container: element,
+-    style: MAP_STYLE,
++    style: ENV.MAP_TILE_STYLE,
+     center: [lng, lat],
+```
+
+The import path `super-rentals/config/environment` is the standard Ember module 
+path that resolves to the project's `config/environment.js` file. The `ENV` 
+object it exports contains all the values we set there, for the current environment, 
+including our newly added `MAP_TILE_STYLE`. 
+The component is no longer responsible for knowing what the URL for tiles is — 
+it just reads it from the central configuration at startup.
+
+```run:command hidden=true cwd=super-rentals
+pnpm test
+git add config/environment.js
+git add app/components/map.gjs
+```
+
+```run:screenshot width=1024 height=768 retina=true filename=pass-5.png alt="All tests still passing after the refactor"
+visit http://localhost:4200/tests?nocontainer&nolint&deterministic
+wait  #qunit-banner.qunit-pass
 ```
 
 ```run:server:stop
