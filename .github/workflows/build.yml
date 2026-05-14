@@ -27,10 +27,10 @@ jobs:
           git config --global user.name "Tomster"
           git config --global user.email "tomster@emberjs.com"
       - name: Checkout
-        uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - uses: pnpm/action-setup@0e279bb959325dab635dd2c09392533439d90093 # v6.0.8
       - name: Set up Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
         with:
           node-version: '20'
           cache: 'pnpm'
@@ -47,7 +47,7 @@ jobs:
         # This is also suggested by Chromium https://chromium.googlesource.com/chromium/src/+/main/docs/security/apparmor-userns-restrictions.md
         run: echo 0 | sudo tee /proc/sys/kernel/apparmor_restrict_unprivileged_userns
 
-      - uses: actions/cache@v4
+      - uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
         name: Setup cache for puppeteer
         with:
           # See .puppeteerrc.cjs, where we set this as the place puppeteer
@@ -77,12 +77,7 @@ jobs:
       - name: Compile (typescript)
         run: pnpm tsc
       - name: Generate
-        run: pnpm generate
-        env:
-          # This is needed for external PRs to build, since secrets are not
-          # available there. Get your own TomTom token for local development
-          # at: https://developer.tomtom.com
-          TOMTOM_ACCESS_TOKEN: 'gI4oJc3MF9PREfA3SIbN4ak7giIJPYcf'
+        run: pnpm generate  
       - name: Lint (markdown output)
         run: pnpm lint:md:dist
       - name: Prune artifacts
@@ -90,26 +85,26 @@ jobs:
         working-directory: dist/code/super-rentals
         run: git clean -dfX
       - name: Upload artifacts (assets)
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         if: always()
         with:
           name: assets (${{ matrix.channel }})
           path: dist/assets
       - name: Upload artifacts (markdown)
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         if: always()
         with:
           name: markdown (${{ matrix.channel }})
           path: dist/markdown
       - name: Upload artifacts (code)
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         if: always()
         with:
           name: code (${{ matrix.channel }})
           path: dist/code/super-rentals
           include-hidden-files: true
       - name: Notify Discord # This is a step rather than a job because of the matrix
-        uses: sarisia/actions-status-discord@v1
+        uses: sarisia/actions-status-discord@eb045afee445dc055c18d3d90bd0f244fd062708 # v1.16.0
         if: ${{ failure() && github.event_name == 'schedule' }}
         with:
           webhook: ${{ secrets.CORE_META_WEBHOOK }}
@@ -166,7 +161,7 @@ jobs:
           git config --global user.name "Tomster"
           git config --global user.email "tomster@emberjs.com"
       - name: Set up SSH
-        uses: webfactory/ssh-agent@v0.4.1
+        uses: webfactory/ssh-agent@e83874834305fe9a4a2997156cb26c5de65a8555 # v0.10.0
         with:
           ssh-private-key: ${{ secrets.GUIDES_SOURCE_DEPLOY_KEY }}
       - name: Install dependencies
@@ -174,12 +169,12 @@ jobs:
           sudo apt-get update -y
           sudo apt-get install -y zipcmp advancecomp optipng perceptualdiff
       - name: Download artifacts (assets)
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
         with:
           name: assets (release)
           path: assets
       - name: Download artifacts (markdown)
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
         with:
           name: markdown (release)
           path: markdown
@@ -272,7 +267,7 @@ jobs:
 
           git add public/images
       - name: Upload artifacts (perceptualdiff)
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         if: always()
         with:
           name: perceptualdiff (release)
@@ -333,11 +328,11 @@ jobs:
           git config --global user.name "Tomster"
           git config --global user.email "tomster@emberjs.com"
       - name: Set up SSH
-        uses: webfactory/ssh-agent@v0.4.1
+        uses: webfactory/ssh-agent@e83874834305fe9a4a2997156cb26c5de65a8555 # v0.10.0
         with:
           ssh-private-key: ${{ secrets.SUPER_RENTALS_DEPLOY_KEY }}
       - name: Download artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
         with:
           name: code (release)
           path: .
@@ -392,11 +387,11 @@ jobs:
           git config --global user.name "Tomster"
           git config --global user.email "tomster@emberjs.com"
       - name: Set up SSH
-        uses: webfactory/ssh-agent@v0.4.1
+        uses: webfactory/ssh-agent@e83874834305fe9a4a2997156cb26c5de65a8555 # v0.10.0
         with:
           ssh-private-key: ${{ secrets.SUPER_RENTALS_DEPLOY_KEY }}
       - name: Download artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
         with:
           name: code (release)
           path: output

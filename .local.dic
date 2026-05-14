@@ -26,7 +26,6 @@ source-readibility
 Splattributes
 swappable
 syntaxes
-TomTom
 triple-backtick
 unstyled
 untracked
@@ -37,3 +36,10 @@ EmberData
 RequestManager
 centric
 WarpDrive
+MapLibre
+MapLibre 
+GL
+OpenFreeMap
+autotracking
+untrusted
+teardown
