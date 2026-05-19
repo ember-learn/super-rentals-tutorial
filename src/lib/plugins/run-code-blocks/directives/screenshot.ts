@@ -111,18 +111,29 @@ async function main() {
 
   script.push(
 `
-  await page.$$eval('img', async imgs => {
-    for (let img of imgs) {
-      if (!img.complete) {
-        await new Promise((resolve, reject) => {
-          img.onload = resolve;
-          img.onerror = () => reject(\`failed to load \${img.src}\`);
-        });
-      } else if(img.naturalHeight === 0) {
-        return Promise.reject(\`failed to load \${img.src}\`);
+  for (let _attempt = 0; _attempt < 3; _attempt++) {
+    try {
+      await page.$$eval('img', async imgs => {
+        for (let img of imgs) {
+          if (!img.complete) {
+            await new Promise((resolve, reject) => {
+              img.onload = resolve;
+              img.onerror = () => reject(\`failed to load \${img.src}\`);
+            });
+          } else if(img.naturalHeight === 0) {
+            return Promise.reject(\`failed to load \${img.src}\`);
+          }
+        }
+      });
+      break;
+    } catch (e) {
+      if (_attempt === 2 || !/\bExecution context was destroyed\b/.test(String(e))) {
+        throw e;
       }
+
+      await new Promise(r => setTimeout(r, 500));
     }
-  });
+  }
   await page.screenshot(${js(options)});
   await browser.close();
 }
