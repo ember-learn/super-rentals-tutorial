@@ -127,7 +127,7 @@ async function main() {
       });
       break;
     } catch (e) {
-      if (_attempt === 2 || !/\bExecution context was destroyed\b/.test(String(e))) {
+      if (_attempt === 2 || !String(e).includes('Execution context was destroyed')) {
         throw e;
       }
 
