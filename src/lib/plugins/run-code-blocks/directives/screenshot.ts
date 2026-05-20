@@ -57,6 +57,7 @@ function compile(steps: string, path: `${string}.png`, args: Args): string {
 
   let script = [
 `const puppeteer = require('puppeteer');
+const NAVIGATION_TIMEOUT = 120000;
 
 async function main() {
   let browser = await puppeteer.launch();
@@ -77,7 +78,7 @@ async function main() {
       case 'click':
         if (params[1] === 'true') {
           script.push(`  await Promise.all([`);
-          script.push(`    page.waitForNavigation({ waitUntil: 'networkidle0' }),`);
+          script.push(`    page.waitForNavigation({ waitUntil: 'networkidle0', timeout: NAVIGATION_TIMEOUT }),`);
           script.push(`    page.click(${js(params[0])})`);
           script.push(`  ]);`);
         } else {
@@ -93,7 +94,7 @@ async function main() {
       case 'visit':
         script.push(`  for (let _attempt = 0; _attempt < 3; _attempt++) {`);
         script.push(`    try {`);
-        script.push(`      await page.goto(${js(params[0])}, { waitUntil: 'networkidle0' });`);
+        script.push(`      await page.goto(${js(params[0])}, { waitUntil: 'networkidle0', timeout: NAVIGATION_TIMEOUT });`);
         script.push(`      break;`);
         script.push(`    } catch (e) {`);
         script.push(`      if (_attempt === 2) throw e;`);
@@ -102,7 +103,7 @@ async function main() {
         script.push(`  }`);
         break;
       case 'wait':
-        script.push(`  await page.waitForSelector(${js(params[0])});`);
+        script.push(`  await page.waitForSelector(${js(params[0])}, { timeout: NAVIGATION_TIMEOUT });`);
         break;
       default:
         throw new Error(`Unknown action: ${action}`);
