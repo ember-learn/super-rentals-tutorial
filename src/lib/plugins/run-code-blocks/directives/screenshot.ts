@@ -134,7 +134,20 @@ async function main() {
       await new Promise(r => setTimeout(r, 500));
     }
   }
-  await page.screenshot(${js(options)});
+  await page.waitForFunction(() => document.documentElement.clientWidth > 0);
+
+  for (let _attempt = 0; _attempt < 3; _attempt++) {
+    try {
+      await page.screenshot(${js(options)});
+      break;
+    } catch (e) {
+      if (_attempt === 2 || !String(e).includes('Cannot take screenshot with 0 width')) {
+        throw e;
+      }
+
+      await new Promise(r => setTimeout(r, 500));
+    }
+  }
   await browser.close();
 }
 
