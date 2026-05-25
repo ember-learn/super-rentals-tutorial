@@ -77,7 +77,7 @@ async function main() {
       case 'click':
         if (params[1] === 'true') {
           script.push(`  await Promise.all([`);
-          script.push(`    page.waitForNavigation({ waitUntil: 'networkidle0' }),`);
+          script.push(`    page.waitForNavigation({ waitUntil: 'domcontentloaded' }),`);
           script.push(`    page.click(${js(params[0])})`);
           script.push(`  ]);`);
         } else {
@@ -93,7 +93,7 @@ async function main() {
       case 'visit':
         script.push(`  for (let _attempt = 0; _attempt < 3; _attempt++) {`);
         script.push(`    try {`);
-        script.push(`      await page.goto(${js(params[0])}, { waitUntil: 'networkidle0' });`);
+        script.push(`      await page.goto(${js(params[0])}, { waitUntil: 'domcontentloaded' });`);
         script.push(`      break;`);
         script.push(`    } catch (e) {`);
         script.push(`      if (_attempt === 2) throw e;`);
