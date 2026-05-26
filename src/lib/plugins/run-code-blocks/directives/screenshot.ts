@@ -141,7 +141,12 @@ async function main() {
       await page.screenshot(${js(options)});
       break;
     } catch (e) {
-      if (_attempt === 2 || !String(e).includes('Cannot take screenshot with 0 width')) {
+      let shouldRetry =
+        String(e).includes('Cannot take screenshot with 0 width') ||
+        String(e).includes('Cannot find context with specified id') ||
+        String(e).includes('Execution context was destroyed');
+
+      if (_attempt === 2 || !shouldRetry) {
         throw e;
       }
 
