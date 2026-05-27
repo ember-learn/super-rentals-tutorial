@@ -61,6 +61,7 @@ function compile(steps: string, path: `${string}.png`, args: Args): string {
 async function main() {
   let browser = await puppeteer.launch();
   let page = await browser.newPage();
+  page.setDefaultNavigationTimeout(120000);
   await page.setViewport(${js(viewport)});
 `
   ];
@@ -77,7 +78,7 @@ async function main() {
       case 'click':
         if (params[1] === 'true') {
           script.push(`  await Promise.all([`);
-          script.push(`    page.waitForNavigation({ waitUntil: 'networkidle0' }),`);
+          script.push(`    page.waitForNavigation({ waitUntil: 'domcontentloaded', timeout: 120000 }),`);
           script.push(`    page.click(${js(params[0])})`);
           script.push(`  ]);`);
         } else {
@@ -93,7 +94,7 @@ async function main() {
       case 'visit':
         script.push(`  for (let _attempt = 0; _attempt < 3; _attempt++) {`);
         script.push(`    try {`);
-        script.push(`      await page.goto(${js(params[0])}, { waitUntil: 'networkidle0' });`);
+        script.push(`      await page.goto(${js(params[0])}, { waitUntil: 'domcontentloaded', timeout: 120000 });`);
         script.push(`      break;`);
         script.push(`    } catch (e) {`);
         script.push(`      if (_attempt === 2) throw e;`);
@@ -134,7 +135,25 @@ async function main() {
       await new Promise(r => setTimeout(r, 500));
     }
   }
-  await page.screenshot(${js(options)});
+  await page.waitForFunction(() => document.documentElement.clientWidth > 0);
+
+  for (let _attempt = 0; _attempt < 3; _attempt++) {
+    try {
+      await page.screenshot(${js(options)});
+      break;
+    } catch (e) {
+      let shouldRetry =
+        String(e).includes('Cannot take screenshot with 0 width') ||
+        String(e).includes('Cannot find context with specified id') ||
+        String(e).includes('Execution context was destroyed');
+
+      if (_attempt === 2 || !shouldRetry) {
+        throw e;
+      }
+
+      await new Promise(r => setTimeout(r, 500));
+    }
+  }
   await browser.close();
 }
 
