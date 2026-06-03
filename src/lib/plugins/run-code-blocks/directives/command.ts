@@ -52,13 +52,35 @@ export default async function command(node: Code, options: Options): Promise<Opt
       output.push(`$ ${display}`);
     }
 
-    let { stdout } = await exec(cmd, { cwd });
+    try {
+      let { stdout, stderr } = await exec(cmd, { cwd });
 
-    if (args.captureOutput) {
-      output.push(stdout);
+      if (args.captureOutput) {
+        if (stdout) {
+          output.push(stdout);
+        }
+
+        if (stderr) {
+          output.push(stderr);
+        }
+      }
+
+      console.log(stdout);
+    } catch (error) {
+      if (args.captureOutput && typeof error === 'object' && error) {
+        let { stdout, stderr } = error as { stdout?: string, stderr?: string };
+
+        if (stdout) {
+          output.push(stdout);
+        }
+
+        if (stderr) {
+          output.push(stderr);
+        }
+      }
+
+      throw error;
     }
-
-    console.log(stdout)
   }
 
   if (args.hidden) {
