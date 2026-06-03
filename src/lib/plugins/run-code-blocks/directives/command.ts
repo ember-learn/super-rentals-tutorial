@@ -17,6 +17,15 @@ interface Args {
   captureOutput?: boolean;
 }
 
+interface CommandError {
+  stdout?: string;
+  stderr?: string;
+}
+
+function isCommandError(error: unknown): error is CommandError {
+  return typeof error === 'object' && error !== null && ('stdout' in error || 'stderr' in error);
+}
+
 export default async function command(node: Code, options: Options): Promise<Option<Code>> {
   let args = parseArgs<Args>(node, [
     optional('lang', String, 'shell'),
@@ -66,9 +75,12 @@ export default async function command(node: Code, options: Options): Promise<Opt
       }
 
       console.log(stdout);
+      if (stderr) {
+        console.error(stderr);
+      }
     } catch (error) {
-      if (args.captureOutput && typeof error === 'object' && error) {
-        let { stdout, stderr } = error as { stdout?: string, stderr?: string };
+      if (args.captureOutput && isCommandError(error)) {
+        let { stdout, stderr } = error;
 
         if (stdout) {
           output.push(stdout);
