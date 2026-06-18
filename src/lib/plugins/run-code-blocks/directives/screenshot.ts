@@ -57,11 +57,12 @@ function compile(steps: string, path: `${string}.png`, args: Args): string {
 
   let script = [
 `const puppeteer = require('puppeteer');
+const NAVIGATION_TIMEOUT = 180000;
 
 async function main() {
   let browser = await puppeteer.launch();
   let page = await browser.newPage();
-  page.setDefaultNavigationTimeout(120000);
+  page.setDefaultNavigationTimeout(NAVIGATION_TIMEOUT);
   await page.setViewport(${js(viewport)});
 `
   ];
@@ -94,10 +95,18 @@ async function main() {
       case 'visit':
         script.push(`  for (let _attempt = 0; _attempt < 3; _attempt++) {`);
         script.push(`    try {`);
-        script.push(`      await page.goto(${js(params[0])}, { waitUntil: 'domcontentloaded', timeout: 120000 });`);
+        script.push(`      await page.goto(${js(params[0])}, { waitUntil: 'domcontentloaded', timeout: NAVIGATION_TIMEOUT });`);
         script.push(`      break;`);
         script.push(`    } catch (e) {`);
-        script.push(`      if (_attempt === 2) throw e;`);
+        script.push(`      let shouldRetry =`);
+        script.push(`        String(e).includes('Navigation timeout') ||`);
+        script.push(`        String(e).includes('net::ERR_CONNECTION_REFUSED') ||`);
+        script.push(`        String(e).includes('net::ERR_CONNECTION_RESET');`);
+        script.push(`      if (_attempt === 2 || !shouldRetry) throw e;`);
+        script.push(`      await page.close().catch(() => {});`);
+        script.push(`      page = await browser.newPage();`);
+        script.push(`      page.setDefaultNavigationTimeout(NAVIGATION_TIMEOUT);`);
+        script.push(`      await page.setViewport(${js(viewport)});`);
         script.push(`      await new Promise(r => setTimeout(r, 2000));`);
         script.push(`    }`);
         script.push(`  }`);
