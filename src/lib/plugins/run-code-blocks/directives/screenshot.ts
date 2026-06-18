@@ -58,7 +58,7 @@ function compile(steps: string, path: `${string}.png`, args: Args): string {
   let script = [
 `const puppeteer = require('puppeteer');
 const NAVIGATION_TIMEOUT = 180000;
-const MAX_NAVIGATION_RETRIES = 8;
+const MAX_NAVIGATION_RETRIES = 6;
 const RETRYABLE_NAVIGATION_ERRORS = [
   'Navigation timeout',
   'net::ERR_CONNECTION_REFUSED',

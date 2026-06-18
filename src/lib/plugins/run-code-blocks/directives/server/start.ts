@@ -21,7 +21,7 @@ interface Args {
   captureOutput?: boolean;
 }
 
-function extractURL(expect: Option<string>): Option<string> {
+function extractURL(expect: Option<string> | undefined): Option<string> {
   if (!expect) {
     return null;
   }
@@ -29,7 +29,11 @@ function extractURL(expect: Option<string>): Option<string> {
   let match = expect.match(/https?:\/\/[^\s"']+/);
 
   if (match) {
-    return match[0]!;
+    try {
+      return new URL(match[0]!).toString();
+    } catch {
+      return null;
+    }
   } else {
     return null;
   }
