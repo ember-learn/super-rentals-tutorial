@@ -58,6 +58,11 @@ function compile(steps: string, path: `${string}.png`, args: Args): string {
   let script = [
 `const puppeteer = require('puppeteer');
 const NAVIGATION_TIMEOUT = 180000;
+const RETRYABLE_NAVIGATION_ERRORS = [
+  'Navigation timeout',
+  'net::ERR_CONNECTION_REFUSED',
+  'net::ERR_CONNECTION_RESET'
+];
 
 async function main() {
   let browser = await puppeteer.launch();
@@ -99,10 +104,7 @@ async function main() {
         script.push(`      break;`);
         script.push(`    } catch (e) {`);
         script.push(`      let message = e instanceof Error ? e.message : String(e);`);
-        script.push(`      let shouldRetry =`);
-        script.push(`        message.includes('Navigation timeout') ||`);
-        script.push(`        message.includes('net::ERR_CONNECTION_REFUSED') ||`);
-        script.push(`        message.includes('net::ERR_CONNECTION_RESET');`);
+        script.push(`      let shouldRetry = RETRYABLE_NAVIGATION_ERRORS.some(pattern => message.includes(pattern));`);
         script.push(`      if (_attempt === 2 || !shouldRetry) throw e;`);
         script.push(`      try {`);
         script.push(`        await page.close();`);
