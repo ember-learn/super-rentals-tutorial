@@ -57,11 +57,24 @@ function compile(steps: string, path: `${string}.png`, args: Args): string {
 
   let script = [
 `const puppeteer = require('puppeteer');
+const NAVIGATION_TIMEOUT = 180000;
+const MAX_NAVIGATION_RETRIES = 6;
+const RETRYABLE_NAVIGATION_ERRORS = [
+  'Navigation timeout',
+  'net::ERR_CONNECTION_REFUSED',
+  'net::ERR_CONNECTION_RESET',
+  'net::ERR_ABORTED',
+  'ERR_HTTP_RESPONSE_CODE_FAILURE'
+];
+
+function retryDelay(attempt) {
+  return Math.min(500 * Math.pow(2, attempt), 5000);
+}
 
 async function main() {
   let browser = await puppeteer.launch();
   let page = await browser.newPage();
-  page.setDefaultNavigationTimeout(120000);
+  page.setDefaultNavigationTimeout(NAVIGATION_TIMEOUT);
   await page.setViewport(${js(viewport)});
 `
   ];
@@ -92,13 +105,24 @@ async function main() {
         script.push(`  await page.evaluate(${js(params[0])});`);
         break;
       case 'visit':
-        script.push(`  for (let _attempt = 0; _attempt < 3; _attempt++) {`);
+        script.push(`  for (let _attempt = 0; _attempt < MAX_NAVIGATION_RETRIES; _attempt++) {`);
         script.push(`    try {`);
-        script.push(`      await page.goto(${js(params[0])}, { waitUntil: 'domcontentloaded', timeout: 120000 });`);
+        script.push(`      await page.goto(${js(params[0])}, { waitUntil: 'domcontentloaded', timeout: NAVIGATION_TIMEOUT });`);
         script.push(`      break;`);
         script.push(`    } catch (e) {`);
-        script.push(`      if (_attempt === 2) throw e;`);
-        script.push(`      await new Promise(r => setTimeout(r, 2000));`);
+        script.push(`      let message = e instanceof Error ? e.message : String(e);`);
+        script.push(`      let shouldRetry = RETRYABLE_NAVIGATION_ERRORS.some(pattern => message.includes(pattern));`);
+        script.push(`      if (_attempt === MAX_NAVIGATION_RETRIES - 1 || !shouldRetry) throw e;`);
+        script.push(`      try {`);
+        script.push(`        await page.close();`);
+        script.push(`      } catch (closeError) {`);
+        script.push(`        let closeMessage = closeError instanceof Error ? closeError.message : String(closeError);`);
+        script.push(`        if (!closeMessage.includes('Target closed')) throw closeError;`);
+        script.push(`      }`);
+        script.push(`      page = await browser.newPage();`);
+        script.push(`      page.setDefaultNavigationTimeout(NAVIGATION_TIMEOUT);`);
+        script.push(`      await page.setViewport(${js(viewport)});`);
+        script.push(`      await new Promise(r => setTimeout(r, retryDelay(_attempt)));`);
         script.push(`    }`);
         script.push(`  }`);
         break;
