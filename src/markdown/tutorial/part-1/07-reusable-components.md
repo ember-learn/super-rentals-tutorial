@@ -60,7 +60,7 @@ Let's update our component to render an interactive map:
 @@ -1,7 +1,27 @@
  import Component from '@glimmer/component';
 +import { modifier } from 'ember-modifier';
-+import maplibregl from 'maplibre-gl';
++import * as maplibregl from 'maplibre-gl';
 +import 'maplibre-gl/dist/maplibre-gl.css';
 +
 +const MAP_STYLE = 'https://tiles.openfreemap.org/styles/liberty';
@@ -90,7 +90,7 @@ Let's update our component to render an interactive map:
 
 There is a lot going on here! Let's work through it piece by piece.
 
-First, we have imports for `modifier` from `ember-modifier`, `maplibregl` from `maplibre-gl`, and the MapLibre CSS file. The CSS provides the map controls and visual elements that MapLibre renders — without it, the map buttons and overlays won't look right.
+First, we have imports for `modifier` from `ember-modifier`, `maplibregl` from `maplibre-gl`, and the MapLibre CSS file. The `import * as maplibregl` syntax collects everything the library exports into a single `maplibregl` object, which is how MapLibre's own documentation recommends importing it. The CSS provides the map controls and visual elements that MapLibre renders — without it, the map buttons and overlays won't look right.
 
 Next, we define a `MAP_STYLE` constant pointing to [OpenFreeMap](https://openfreemap.org/), an open-source tile server that provides free map tiles with no API key required.
 
@@ -192,7 +192,7 @@ To safely set a computed style string that we control, we use `trustHTML` from `
  import Component from '@glimmer/component';
  import { modifier } from 'ember-modifier';
 +import { trustHTML } from '@ember/template';
- import maplibregl from 'maplibre-gl';
+ import * as maplibregl from 'maplibre-gl';
  import 'maplibre-gl/dist/maplibre-gl.css';
 @@ -21,5 +22,10 @@
  export default class Map extends Component {
@@ -447,7 +447,7 @@ Now update `map.gjs` to import `ENV` from `super-rentals/config/environment` and
  import Component from '@glimmer/component';
  import { modifier } from 'ember-modifier';
  import { trustHTML } from '@ember/template';
- import maplibregl from 'maplibre-gl';
+ import * as maplibregl from 'maplibre-gl';
  import 'maplibre-gl/dist/maplibre-gl.css';
 +import ENV from 'super-rentals/config/environment';
  
