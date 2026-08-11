@@ -208,11 +208,7 @@ Finally, we added the `@action` decorator to our method. This indicates to Ember
 With that, it's time to wire this up in the template section:
 
 ```run:file:patch lang=gjs cwd=super-rentals filename=app/components/rental/image.gjs
-@@ -3,2 +3,3 @@ import { tracked } from '@glimmer/tracking';
- import { action } from '@ember/object';
-+import { on } from '@ember/modifier';
- 
-@@ -13,11 +14,11 @@ export default class RentalImage extends Component {
+@@ -13,11 +13,11 @@ export default class RentalImage extends Component {
      {{#if this.isLarge}}
 -      <div class="image large">
 +      <button type="button" class="image large" {{on "click" this.toggleSize}}>
@@ -234,7 +230,7 @@ We changed two things here.
 
 First, since we wanted to make our component interactive, we switched the containing tag from `<div>` to `<button>` (this is important for accessibility reasons). By using the correct semantic tag, we will also get focusability and keyboard interaction handling "for free".
 
-Next, we used the `{{on}}` *[modifier](../../../components/template-lifecycle-dom-and-modifiers/#toc_event-handlers)* to attach `this.toggleSize` as a click handler on the button. The `{{on}}` modifier is imported from the `@ember/modifier` package, which is part of Ember.
+Next, we used the `{{on}}` *[modifier](../../../components/template-lifecycle-dom-and-modifiers/#toc_event-handlers)* to attach `this.toggleSize` as a click handler on the button. The `{{on}}` modifier is a built-in keyword in Ember.
 
 With that, we have created our first *[interactive][TODO: link to interactive]* component. Go ahead and try it in the browser!
 

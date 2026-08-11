@@ -246,13 +246,12 @@ wait  #qunit-banner.qunit-pass
 Now that we have our component all set up, we can finally wire up our search box and store our search query! Let's create a component class to store our query state and handle events from the `form` element and wire up our query state in the component template:
 
 ```run:file:patch lang=gjs cwd=super-rentals filename=app/components/rentals.gjs
-@@ -1,2 +1,5 @@
+@@ -1,2 +1,4 @@
  import Component from '@glimmer/component';
 +import { tracked } from '@glimmer/tracking';
 +import { action } from '@ember/object';
-+import { on } from '@ember/modifier';
  import Rental from 'super-rentals/components/rental';
-@@ -4,9 +7,24 @@ import Rental from 'super-rentals/components/rental';
+@@ -4,9 +6,24 @@ import Rental from 'super-rentals/components/rental';
  export default class Rentals extends Component {
 +  @tracked query = '';
 +
@@ -323,11 +322,11 @@ In our component template, we are not actually *rendering* anything. Instead, we
 Well, in order to answer this question, let's look at how the data that we're yielding is being used in the `<Rentals>` component.
 
 ```run:file:patch lang=gjs cwd=super-rentals filename=app/components/rentals.gjs
-@@ -5,2 +5,3 @@ import { on } from '@ember/modifier';
+@@ -4,2 +4,3 @@ import { action } from '@ember/object';
  import Rental from 'super-rentals/components/rental';
 +import RentalsFilter from 'super-rentals/components/rentals/filter';
  
-@@ -32,5 +33,7 @@ export default class Rentals extends Component {
+@@ -31,5 +32,7 @@ export default class Rentals extends Component {
        <ul class="results">
 -        {{#each @rentals as |rental|}}
 -          <li><Rental @rental={{rental}} /></li>
