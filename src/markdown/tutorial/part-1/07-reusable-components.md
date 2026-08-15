@@ -23,12 +23,12 @@ We will use [MapLibre GL JS](https://maplibre.org/), an open-source mapping libr
 Let's add it to our app:
 
 ```run:command cwd=super-rentals
-#[display(npm install maplibre-gl --save-dev)]
+#[display(npm install maplibre-gl@6 --save-dev)]
 #[cfg(unix)]
-pnpm add -D maplibre-gl 2>&1 | grep -Fv "| Progress:" | grep -Ev "WARN.*deprecated subdependencies found" | grep -Ev "^[[:space:]]*$" | grep -Fv "+26 +++" | grep -Fv "using pnpm"
+pnpm add -D maplibre-gl@6 2>&1 | grep -Fv "| Progress:" | grep -Ev "WARN.*deprecated subdependencies found" | grep -Ev "^[[:space:]]*$" | grep -Fv "+26 +++" | grep -Fv "using pnpm"
 
 #[cfg(not(unix))]
-pnpm add -D maplibre-gl
+pnpm add -D maplibre-gl@6
 ```
 
 Now let's generate a new component for our map.
@@ -57,23 +57,23 @@ git add tests/integration/components/map-test.gjs
 Let's update our component to render an interactive map:
 
 ```run:file:patch lang=gjs cwd=super-rentals filename=app/components/map.gjs
-@@ -1,7 +1,27 @@
+@@ -1,7 +1,28 @@
  import Component from '@glimmer/component';
 +import { modifier } from 'ember-modifier';
-+import * as maplibregl from 'maplibre-gl';
++import { Map as MapLibreGLMap, Marker } from 'maplibre-gl';
 +import 'maplibre-gl/dist/maplibre-gl.css';
 +
 +const MAP_STYLE = 'https://tiles.openfreemap.org/styles/liberty';
 +
 +const displayMap = modifier((element, [lat, lng, zoom]) => {
-+  const map = new maplibregl.Map({
++  const map = new MapLibreGLMap({
 +    container: element,
 +    style: MAP_STYLE,
 +    center: [lng, lat],
 +    zoom,
 +  });
 +
-+  new maplibregl.Marker().setLngLat([lng, lat]).addTo(map);
++  new Marker().setLngLat([lng, lat]).addTo(map);
 +
 +  return () => map.remove();
 +});
@@ -83,6 +83,7 @@ Let's update our component to render an interactive map:
 -    {{yield}}
 +    <div class="map"
 +      {{displayMap @lat @lng @zoom}}
++      style="width: 500px; height: 500px;"
 +    ></div>
    </template>
  }
@@ -90,13 +91,13 @@ Let's update our component to render an interactive map:
 
 There is a lot going on here! Let's work through it piece by piece.
 
-First, we have imports for `modifier` from `ember-modifier`, `maplibregl` from `maplibre-gl`, and the MapLibre CSS file. The `import * as maplibregl` syntax collects everything the library exports into a single `maplibregl` object, which is how MapLibre's own documentation recommends importing it. The CSS provides the map controls and visual elements that MapLibre renders — without it, the map buttons and overlays won't look right.
+First, we have imports for `modifier` from `ember-modifier`, `Map` (aliased as `MapLibreGLMap` so as not to conflict with the component class name) and `Marker` from `maplibre-gl`, and the MapLibre CSS file. The CSS provides the map controls and visual elements that MapLibre renders — without it, the map buttons and overlays won't look right.
 
 Next, we define a `MAP_STYLE` constant pointing to [OpenFreeMap](https://openfreemap.org/), an open-source tile server that provides free map tiles with no API key required.
 
 The heart of this component is `displayMap`, a custom *[modifier](../../../components/template-lifecycle-dom-and-modifiers/)* created with the `modifier()` function from `ember-modifier`. A modifier is a way to run JavaScript code that directly interacts with a specific DOM element. When Ember renders `<div {{displayMap ...}}>`, our modifier function is called with two arguments: the DOM element itself, and an array of any positional arguments passed in the template. Here we use destructuring — `[lat, lng, zoom]` — to unpack that array directly in the function signature.
 
-Inside the modifier, we use `maplibregl` exactly as we would in plain JavaScript: instantiate a `new maplibregl.Map()`, pass it the container element, the OpenFreeMap style URL, and the coordinates, then add a `Marker` at the same position to visually pin the location. No Ember-specific APIs are needed — it is just regular JavaScript library usage.
+Inside the modifier, we use `maplibregl` exactly as we would in plain JavaScript: instantiate a `new MapLibreGLMap()`, pass it the container element, the OpenFreeMap style URL, and the coordinates, then add a `Marker` at the same position to visually pin the location. No Ember-specific APIs are needed — it is just regular JavaScript library usage.
 
 Finally, the modifier returns a *cleanup function*, `() => map.remove()`. Ember automatically calls this function when the element is removed from the DOM — for instance, when the user navigates to a different page. Returning a cleanup function is how modifiers signal to Ember what teardown work needs to happen.
 
@@ -168,7 +169,7 @@ wait  #qunit-banner.qunit-pass
 
 ## Sizing the Map with inline styles
 
-Our map renders, but it does not have a defined size yet. We want the caller to be able to pass `@width` and `@height` arguments to control the map's dimensions.
+Our map renders, but it is a fixed size. We want the caller to be able to pass `@width` and `@height` arguments to control the map's dimensions.
 
 The natural way to set a size is through an inline `style` attribute. You might try:
 
@@ -192,9 +193,9 @@ To safely set a computed style string that we control, we use `trustHTML` from `
  import Component from '@glimmer/component';
  import { modifier } from 'ember-modifier';
 +import { trustHTML } from '@ember/template';
- import * as maplibregl from 'maplibre-gl';
+ import { Map as MapLibreGLMap, Marker } from 'maplibre-gl';
  import 'maplibre-gl/dist/maplibre-gl.css';
-@@ -21,5 +22,10 @@
+@@ -21,6 +22,10 @@
  export default class Map extends Component {
 +  get mapSize() {
 +    return trustHTML(`width: ${this.args.width}px; height: ${this.args.height}px;`);
@@ -203,6 +204,7 @@ To safely set a computed style string that we control, we use `trustHTML` from `
    <template>
      <div class="map"
        {{displayMap @lat @lng @zoom}}
+-      style="width: 500px; height: 500px;"
 +      style={{this.mapSize}}
      ></div>
 ```
@@ -447,7 +449,7 @@ Now update `map.gjs` to import `ENV` from `super-rentals/config/environment` and
  import Component from '@glimmer/component';
  import { modifier } from 'ember-modifier';
  import { trustHTML } from '@ember/template';
- import * as maplibregl from 'maplibre-gl';
+ import { Map as MapLibreGLMap, Marker } from 'maplibre-gl';
  import 'maplibre-gl/dist/maplibre-gl.css';
 +import ENV from 'super-rentals/config/environment';
  
