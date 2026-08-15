@@ -143,8 +143,18 @@ Let's write some initial tests to make sure the component renders correctly:
  });
 ```
 
+```run:file:patch hidden=true lang=js cwd=super-rentals filename=testem.cjs
+@@ -15,5 +15,4 @@
+           '--headless',
+           '--disable-dev-shm-usage',
+-          '--disable-software-rasterizer',
+           '--mute-audio',
+           '--remote-debugging-port=0',
+```
+
 ```run:command hidden=true cwd=super-rentals
 pnpm test
+git add testem.cjs
 git add app/components/map.gjs
 git add tests/integration/components/map-test.gjs
 ```
