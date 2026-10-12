@@ -138,8 +138,8 @@ async function main() {
 `
   for (let _attempt = 0; _attempt < 3; _attempt++) {
     try {
-      await page.$$eval('img', async imgs => {
-        for (let img of imgs) {
+      await page.evaluate(async () => {
+        for (let img of document.querySelectorAll('img')) {
           if (!img.complete) {
             await new Promise((resolve, reject) => {
               img.onload = resolve;
@@ -152,7 +152,11 @@ async function main() {
       });
       break;
     } catch (e) {
-      if (_attempt === 2 || !String(e).includes('Execution context was destroyed')) {
+      let shouldRetry =
+        String(e).includes('Cannot find context with specified id') ||
+        String(e).includes('Execution context was destroyed');
+
+      if (_attempt === 2 || !shouldRetry) {
         throw e;
       }
 
