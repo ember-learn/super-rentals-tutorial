@@ -6,7 +6,12 @@ on:
       - main
   schedule:
     - cron: '0 0 * * *'
-  workflow_dispatch: {}
+  workflow_dispatch:
+    inputs:
+      ember-source:
+        description: 'ember-source for the main channel: a full ember.js commit SHA or a tarball URL. Empty uses the latest build of main.'
+        required: false
+        type: string
 
 jobs:
   build:
@@ -74,10 +79,25 @@ jobs:
       - name: Find the ember-source build of main
         if: matrix.channel == 'main'
         run: |
-          # ember.js CI uploads a build of every push to main.
+          # ember.js CI uploads a build of every push to main
+          # to canary/shas/<sha>.tgz.
           # canary.json points to the latest one.
-          asset_path=$(curl --fail --silent --show-error https://s3.amazonaws.com/builds.emberjs.com/canary.json | jq --raw-output .assetPath)
-          echo "EMBER_SOURCE_TARBALL=https://s3.amazonaws.com/builds.emberjs.com${asset_path}" >> "$GITHUB_ENV"
+          if [[ "$EMBER_SOURCE_INPUT" =~ ^https?:// ]]; then
+            tarball="$EMBER_SOURCE_INPUT"
+          elif [[ "$EMBER_SOURCE_INPUT" =~ ^[0-9a-f]{40}$ ]]; then
+            tarball="https://s3.amazonaws.com/builds.emberjs.com/canary/shas/${EMBER_SOURCE_INPUT}.tgz"
+          elif [[ -z "$EMBER_SOURCE_INPUT" ]]; then
+            asset_path=$(curl --fail --silent --show-error https://s3.amazonaws.com/builds.emberjs.com/canary.json | jq --raw-output .assetPath)
+            tarball="https://s3.amazonaws.com/builds.emberjs.com${asset_path}"
+          else
+            echo "::error::The ember-source input must be a full commit SHA or a URL: $EMBER_SOURCE_INPUT"
+            exit 1
+          fi
+
+          curl --fail --silent --show-error --head "$tarball" > /dev/null
+          echo "EMBER_SOURCE_TARBALL=$tarball" >> "$GITHUB_ENV"
+        env:
+          EMBER_SOURCE_INPUT: ${{ inputs.ember-source }}
       - name: Lint (markdown source)
         run: pnpm lint:md:src
       - name: Lint (typescript)
