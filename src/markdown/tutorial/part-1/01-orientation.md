@@ -91,6 +91,7 @@ ember new super-rentals --lang en --strict --pnpm
 ```run:command hidden=true cwd=super-rentals
 pnpm i --save-dev concurrently
 git add package.json
+git add pnpm-lock.yaml
 ```
 
 ```run:file:patch hidden=true lang=js cwd=super-rentals filename=app/deprecation-workflow.js

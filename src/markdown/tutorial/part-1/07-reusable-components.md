@@ -48,6 +48,7 @@ However, in the case of our `<Map>` component, we are pretty sure that we are go
 ```run:command hidden=true cwd=super-rentals
 pnpm test
 git add package.json
+git add pnpm-lock.yaml
 git add app/components/map.gjs
 git add tests/integration/components/map-test.gjs
 ```
