@@ -10,10 +10,15 @@ on:
 
 jobs:
   build:
-    name: Build (${{ matrix.channel }})
+    name: Build (${{ matrix.channel }}${{ matrix.all-deprecations && ', all deprecations' || '' }})
     runs-on: ubuntu-latest
+    # Deprecations that ember-source does not enable yet must not block
+    # the deploy jobs.
+    continue-on-error: ${{ matrix.all-deprecations }}
     env:
       CI: 'true'
+      BUILD_NAME: ${{ matrix.channel }}${{ matrix.all-deprecations && ', all deprecations' || '' }}
+      EMBER_ALL_DEPRECATIONS_ENABLED: ${{ matrix.all-deprecations }}
     strategy:
       fail-fast: false
       matrix:
@@ -21,6 +26,9 @@ jobs:
           - release
           - beta
           - alpha
+        all-deprecations:
+          - false
+          - true
     steps:
       - name: Set up Git
         run: |
@@ -88,24 +96,24 @@ jobs:
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         if: always()
         with:
-          name: assets (${{ matrix.channel }})
+          name: assets (${{ env.BUILD_NAME }})
           path: dist/assets
       - name: Upload artifacts (markdown)
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         if: always()
         with:
-          name: markdown (${{ matrix.channel }})
+          name: markdown (${{ env.BUILD_NAME }})
           path: dist/markdown
       - name: Upload artifacts (code)
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         if: always()
         with:
-          name: code (${{ matrix.channel }})
+          name: code (${{ env.BUILD_NAME }})
           path: dist/code/super-rentals
           include-hidden-files: true
       - name: Notify Discord # This is a step rather than a job because of the matrix
         uses: sarisia/actions-status-discord@eb045afee445dc055c18d3d90bd0f244fd062708 # v1.16.0
-        if: ${{ failure() && github.event_name == 'schedule' }}
+        if: ${{ failure() && github.event_name == 'schedule' && !matrix.all-deprecations }}
         with:
           webhook: ${{ secrets.CORE_META_WEBHOOK }}
           status: "Failure"

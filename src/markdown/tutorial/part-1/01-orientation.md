@@ -77,6 +77,14 @@ ember new super-rentals --lang en --strict --pnpm
        EXTEND_PROTOTYPES: false,
 ```
 
+```run:command hidden=true cwd=super-rentals
+#[cfg(all-deprecations)]
+sed -i 's/^\( *\)RAISE_ON_DEPRECATION: true,$/&\n\1_ALL_DEPRECATIONS_ENABLED: true,/' config/environment.js
+
+#[cfg(all-deprecations)]
+grep -q '_ALL_DEPRECATIONS_ENABLED: true,' config/environment.js
+```
+
 ```run:file:create hidden=true cwd=super-rentals filename=public/_redirects
 /* /index.html 200
 ```
