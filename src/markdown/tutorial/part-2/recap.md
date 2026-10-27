@@ -19,11 +19,11 @@ There was a lot of concepts to cover in part two. To recap, here is what you lea
 
 <h3><a href="../ember-data/">Chapter 11</a></h3>
 
-* EmberData models
-* Testing models
-* Loading models in routes
-* The EmberData store
-* Working with adapters and serializers
+* WarpDrive schemas and derived fields
+* Testing schemas
+* Loading records in routes
+* The WarpDrive store
+* Working with request builders and handlers
 
 <h3><a href="../provider-components/">Chapter 12</a></h3>
 
