@@ -4,7 +4,7 @@
 npm start
 ```
 
-In this chapter, we will work on removing some code duplication in our route handlers, by switching to using EmberData to manage our data. The end result looks exactly the same as before:
+In this chapter, we will work on removing some code duplication in our route handlers, by switching to using WarpDrive to manage our data. The end result looks exactly the same as before:
 
 ![The Super Rentals app by the end of the chapter](/images/tutorial/part-2/ember-data/homepage@2x.png)
 
@@ -13,10 +13,10 @@ During this refactor, you will learn about:
 * WarpDrive schemas and derived fields
 * Testing schemas
 * Loading records in routes
-* The EmberData Store and RequestManager
+* The WarpDrive Store and RequestManager
 * Working with Request builders and handlers
 
-## What is EmberData?
+## What is WarpDrive?
 
 Now that we've added some features, it's time to do some clean up again!
 
@@ -32,18 +32,18 @@ This duplication incurred a bit of *[technical debt][TODO: link to technical deb
 
 Chances are, as we keep working on this app, we will need to add more routes that fetch data from the server. Since all of our server's API endpoints follow the [JSON:API](https://jsonapi.org/) format, we'd have to keep copying this boilerplate for every single new route we add to the app!
 
-Fortunately, we're not going to do any of that. As it turns out, there's a much better solution here: we can use EmberData! As its name implies, [EmberData](../../../models/) is a library that helps manage data and *[application state][TODO: link to application state]* in Ember applications.
+Fortunately, we're not going to do any of that. As it turns out, there's a much better solution here: we can use WarpDrive! [WarpDrive](../../../models/) is a library that helps manage data and *[application state][TODO: link to application state]* in Ember applications.
 
 
 > Zoey says...
 >
-> EmberData is in the process of being renamed to WarpDrive. It's not just changing its name though, WarpDrive is now able to be used in multiple different frameworks. You can read more about it in the [WarpDrive Docs](https://warp-drive.io)
+> WarpDrive used to be called EmberData, and you will still see that name in older guides and addons. WarpDrive also works with other frameworks, not only Ember. You can read more about it in the [WarpDrive Docs](https://warp-drive.io)
 
-There's a lot to learn about EmberData, but let's start by uncovering features that help with our immediate problem.
+There's a lot to learn about WarpDrive, but let's start by uncovering features that help with our immediate problem.
 
 ## WarpDrive Schemas
 
-EmberData is built around the idea of organizing your app's data into *records*. Each record has a *type*, and a *[schema](https://warp-drive.io/guides/the-manual/schemas/)* that describes the fields of that type. Records represent units of information that our application presents to the user. For example, the rental property data we have been working with would be a good candidate.
+WarpDrive is built around the idea of organizing your app's data into *records*. Each record has a *type*, and a *[schema](https://warp-drive.io/guides/the-manual/schemas/)* that describes the fields of that type. Records represent units of information that our application presents to the user. For example, the rental property data we have been working with would be a good candidate.
 
 Enough talking, why don't we give that a try!
 
@@ -174,7 +174,7 @@ module('Unit | Schema | rental', function (hooks) {
 
 This test is also known as a *[unit test](../../../testing/testing-models/)*. Unlike any of the other tests that we've written thus far, this test doesn't actually *render* anything. It just creates a rental record and tests the record directly, changing its fields and asserting the value of `type`.
 
-In our test, we used the `this.owner.lookup('service:store')` API to get access to the EmberData store. The store provides a `createRecord` method to create a new record for us. We can change the fields of a record that we created this way. Records that the store loads from the server cannot be changed directly, which keeps them the same as the data on the server.
+In our test, we used the `this.owner.lookup('service:store')` API to get access to the WarpDrive store. The store provides a `createRecord` method to create a new record for us. We can change the fields of a record that we created this way. Records that the store loads from the server cannot be changed directly, which keeps them the same as the data on the server.
 
 Running the tests in the browser confirms that everything is working as intended:
 
@@ -190,7 +190,7 @@ wait  #qunit-banner.qunit-pass
 
 ## Loading Records in Routes
 
-Alright, now that we have our schema set up, it's time to refactor our route handlers to use EmberData and remove the duplication!
+Alright, now that we have our schema set up, it's time to refactor our route handlers to use WarpDrive and remove the duplication!
 
 ```run:file:patch lang=js cwd=super-rentals filename=app/routes/index.js
 @@ -1,22 +1,11 @@
@@ -258,11 +258,11 @@ Alright, now that we have our schema set up, it's time to refactor our route han
 
 Wow... that removed a lot of code! This is all possible thanks to the power of conventions!
 
-## The EmberData Store
+## The WarpDrive Store
 
-As mentioned above, EmberData provides a `store` service, which we can inject into our route using the `@service store;` declaration, making the EmberData store available as `this.store`. It provides the `request` method for making fetch requests using `RequestManager`. As its name implies: the `RequestManager` is request centric. Instead of answering questions about specific records or types of records, we ask it about the status of a specific request. To initiate a request, we use the `request` method on the store, passing in a request object. The request object is created using builders from `@warp-drive/utilities/json-api`. Specifically, the [`findRecord` builder](../../../models/finding-records/#toc_retrieving-a-single-record) takes a type (`rental` in our case) and an ID (for us, that would be `params.rental_id` from the URL) as arguments and builds fetch options for a single record. On the other hand, the [`query` builder](../../../models/finding-records/#toc_retrieving-multiple-records) takes the type as an argument and builds fetch options to query for all records of that type.
+As mentioned above, WarpDrive provides a `store` service, which we can inject into our route using the `@service store;` declaration, making the WarpDrive store available as `this.store`. It provides the `request` method for making fetch requests using `RequestManager`. As its name implies: the `RequestManager` is request centric. Instead of answering questions about specific records or types of records, we ask it about the status of a specific request. To initiate a request, we use the `request` method on the store, passing in a request object. The request object is created using builders from `@warp-drive/utilities/json-api`. Specifically, the [`findRecord` builder](../../../models/finding-records/#toc_retrieving-a-single-record) takes a type (`rental` in our case) and an ID (for us, that would be `params.rental_id` from the URL) as arguments and builds fetch options for a single record. On the other hand, the [`query` builder](../../../models/finding-records/#toc_retrieving-multiple-records) takes the type as an argument and builds fetch options to query for all records of that type.
 
-EmberData can do many things, and in the default setup it provides caching. EmberData's store caches server responses, allowing instant access to previously fetched data. If the data is already cached, you don't need to wait for the server to respond again. If not, the store fetches it for you.
+WarpDrive can do many things, and in the default setup it provides caching. WarpDrive's store caches server responses, allowing instant access to previously fetched data. If the data is already cached, you don't need to wait for the server to respond again. If not, the store fetches it for you.
 
 That's a lot of theory, but is this going to work in our app? Let's run the tests and find out!
 
@@ -278,7 +278,7 @@ Looking at the failure messages, the problem appears to be that the store went t
 * When building the `query('rental')` request, the resulted `url` in request options was `/rentals`, instead of `/api/rentals.json`.
 * When building the `findRecord('rental', 'grand-old-mansion')` request, the resulted `url` in request options was `/rentals/grand-old-mansion`, instead of `/api/rentals/grand-old-mansion.json`.
 
-Hm, okay, so we have to teach EmberData to fetch data from the correct location. But how does EmberData know how to fetch data from our server in the first place?
+Hm, okay, so we have to teach WarpDrive to fetch data from the correct location. But how does WarpDrive know how to fetch data from our server in the first place?
 
 ## Working with Request builders and Handlers
 
@@ -287,7 +287,7 @@ Let's start customizing the things that didn't work for us by default. Specifica
 * Our resource URLs have an extra `/api` *namespace* prefix.
 * Our resource URLs have a `.json` extension at the end.
 
-The first thing we want to do is have our builder respect a configurable default host and/or namespace. Adding a namespace prefix happens to be pretty common across Ember apps, so EmberData provides a global config mechanism for host and namespace. Typically you will want to do this either in your store file or app file.
+The first thing we want to do is have our builder respect a configurable default host and/or namespace. Adding a namespace prefix happens to be pretty common across Ember apps, so WarpDrive provides a global config mechanism for host and namespace. Typically you will want to do this either in your store file or app file.
 
 ```run:file:patch lang=js cwd=super-rentals filename=app/app.js
 @@ -7,0 +8,5 @@ import setupInspector from '@embroider/legacy-inspector-support/ember-source-4.1
@@ -328,7 +328,7 @@ The next step that we need to do, is to configure our store to use this handler.
    ],
 ```
 
-With our new EmberData configuration in place, all our tests should pass again.
+With our new WarpDrive configuration in place, all our tests should pass again.
 
 ```run:command hidden=true cwd=super-rentals
 pnpm test

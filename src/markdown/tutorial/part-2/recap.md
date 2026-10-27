@@ -22,7 +22,7 @@ There was a lot of concepts to cover in part two. To recap, here is what you lea
 * WarpDrive schemas and derived fields
 * Testing schemas
 * Loading records in routes
-* The EmberData store
+* The WarpDrive store
 * Working with request builders and handlers
 
 <h3><a href="../provider-components/">Chapter 12</a></h3>
