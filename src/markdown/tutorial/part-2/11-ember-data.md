@@ -87,7 +87,7 @@ We used `field` entries to declare the attributes of a rental property. These at
 
 We can access these attributes on a rental record using standard dot notation, such as `rental.title` or `rental.location.lat`. In addition to the fields we declared here, there will always be an *id* field as well, which is used to uniquely identify the record and can be accessed using `rental.id`.
 
-Since a schema does not contain code, we cannot add a getter to it the way we would with a class. Instead, we declared `type` as a `derived` field. When we read `rental.type`, EmberData calls the `rentalType` *[derivation](https://warp-drive.io/guides/the-manual/schemas/derivations)* function with the record and returns its result. We took advantage of this feature to move our `type` logic (which is a major source of unnecessary duplication in our route handlers) into one place. Once we have everything working here, we will go back to clean that up.
+The server does not send a `type` for a rental. Instead, `type` is a value that we compute from another field, `category`. In a schema, a value like this is a `derived` field. When we read `rental.type`, WarpDrive calls the `rentalType` *[derivation](https://warp-drive.io/guides/the-manual/schemas/derivations)* function with the record and returns its result. This way, the schema still only describes the shape of our data, and the logic lives in one plain function. We took advantage of this feature to move our `type` logic (which is a major source of unnecessary duplication in our route handlers) into one place. Once we have everything working here, we will go back to clean that up.
 
 The line `rentalType[Type] = 'rental-type';` gives our derivation a name. The derived field uses that name, in its `type: 'rental-type'` option, to find the function.
 
@@ -95,7 +95,7 @@ Fields on a record work with the auto-track feature (which we learned about [in 
 
 ## The Store Service
 
-EmberData provides a `store` *[service](../../../services/)*, also known as the EmberData store. The store needs to know about our schema and our derivation before it can create rental records. The default blueprint generated an `app/services/store.js` file for us. Let's replace its contents:
+WarpDrive provides a `store` *[service](../../../services/)*. The store needs to know about our schema and our derivation before it can create rental records. The default blueprint generated an `app/services/store.js` file for us. Let's replace its contents:
 
 ```run:file:create lang=js cwd=super-rentals filename=app/services/store.js
 import { useRecommendedStore } from '@warp-drive/core';
@@ -356,7 +356,7 @@ visit http://localhost:4200/rentals/grand-old-mansion?deterministic
 wait  .rental.detailed
 ```
 
-EmberData offers many, many features (like managing the *relationships* between different types of records) and there's a lot more we can learn about it. For example, if your backend's have some inconsistencies across different endpoints, EmberData allows you to define request specific handlers and builders! We are just scratching the surface here. If you want to learn more about EmberData, check out [its own dedicated section](../../../models/) in the guides!
+WarpDrive offers many, many features (like managing the *relationships* between different types of records) and there's a lot more we can learn about it. For example, if your backend's have some inconsistencies across different endpoints, WarpDrive allows you to define request specific handlers and builders! We are just scratching the surface here. If you want to learn more about WarpDrive, check out [its own dedicated section](../../../models/) in the guides!
 
 ```run:server:stop
 npm start
