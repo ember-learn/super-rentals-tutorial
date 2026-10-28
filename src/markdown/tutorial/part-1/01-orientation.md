@@ -97,6 +97,12 @@ grep -q '_ALL_DEPRECATIONS_ENABLED: true,' config/environment.js
 ```
 
 ```run:command hidden=true cwd=super-rentals
+# CI sets EMBER_SOURCE_TARBALL to test ember-source builds
+# that are not on npm, for example the latest build of main.
+if [ -n "$EMBER_SOURCE_TARBALL" ]; then pnpm i --save-dev "ember-source@$EMBER_SOURCE_TARBALL"; fi
+```
+
+```run:command hidden=true cwd=super-rentals
 pnpm i --save-dev concurrently
 git add package.json
 ```
