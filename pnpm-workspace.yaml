@@ -1,4 +1,5 @@
-onlyBuiltDependencies:
-  - puppeteer
 packages:
   - .
+
+allowBuilds:
+  puppeteer: true
