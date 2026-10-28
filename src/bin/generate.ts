@@ -61,10 +61,20 @@ async function main() {
 
   let inputPaths = await glob(pattern);
 
+  let cfg: string[] = [];
+
+  if (process.env.CI) {
+    cfg.push('ci');
+  }
+
+  if (process.env.EMBER_ALL_DEPRECATIONS_ENABLED === 'true') {
+    cfg.push('all-deprecations');
+  }
+
   let processor = unified()
     .use(markdown)
     .use(frontmatter)
-    .use(runCodeBlocks, { cfg: process.env.CI ? ['ci'] : [], cwd: codeDir, assets: assetsDir })
+    .use(runCodeBlocks, { cfg, cwd: codeDir, assets: assetsDir })
     .use(todoLinks)
     .use(zoeySays)
     .use(doNotEdit, { repo: 'ember-learn/super-rentals-tutorial' })
