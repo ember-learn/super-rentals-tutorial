@@ -101,24 +101,10 @@ pnpm i --save-dev concurrently
 git add package.json
 ```
 
-```run:file:patch hidden=true lang=js cwd=super-rentals filename=app/deprecation-workflow.js
-@@ -22,2 +22,9 @@ setupDeprecationWorkflow({
-     /* { handler: 'silence', matchId: 'template-action' }, */
-+    /**
-+     * TODO: actually fix these deprecations
-+     * this change to ember-cli-deprecation-workflow is hidden so people wont
-+     * see this in the tutorial.
-+     */
-+    { handler: 'silence', matchId: 'ember-data:deprecate-legacy-imports' },
-+    { handler: 'silence', matchId: 'warp-drive.deprecate-tracking-package' },
-   ],
-```
-
 ```run:command hidden=true cwd=super-rentals
 pnpm test
 git add .prettierignore
 git add index.html
-git add app/deprecation-workflow.js
 git add config/environment.js
 git add public/_redirects
 git add tests/index.html
