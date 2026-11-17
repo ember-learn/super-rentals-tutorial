@@ -32,7 +32,7 @@ This duplication incurred a bit of *[technical debt][TODO: link to technical deb
 
 Chances are, as we keep working on this app, we will need to add more routes that fetch data from the server. Since all of our server's API endpoints follow the [JSON:API](https://jsonapi.org/) format, we'd have to keep copying this boilerplate for every single new route we add to the app!
 
-Fortunately, we're not going to do any of that. As it turns out, there's a much better solution here: we can use WarpDrive! [WarpDrive](https://warp-drive.io/guides/) is a library that helps manage data and *[application state][TODO: link to application state]* in Ember applications.
+Fortunately, we're not going to do any of that. As it turns out, there's a much better solution here: we can use WarpDrive! [WarpDrive](../../../warp-drive/) is a library that helps manage data and *[application state][TODO: link to application state]* in Ember applications.
 
 
 > Zoey says...
@@ -43,7 +43,7 @@ There's a lot to learn about WarpDrive, but let's start by uncovering features t
 
 ## WarpDrive Schemas
 
-WarpDrive is built around the idea of organizing your app's data into *records*. Each record has a *type*, and a *[schema](https://warp-drive.io/guides/the-manual/schemas/)* that describes the fields of that type. Records represent units of information that our application presents to the user. For example, the rental property data we have been working with would be a good candidate.
+WarpDrive is built around the idea of organizing your app's data into *records*. Each record has a *type*, and a *[schema](../../../warp-drive/schemas/)* that describes the fields of that type. Records represent units of information that our application presents to the user. For example, the rental property data we have been working with would be a good candidate.
 
 Enough talking, why don't we give that a try!
 
@@ -78,7 +78,7 @@ export function rentalType(rental) {
 rentalType[Type] = 'rental-type';
 ```
 
-Here, we created a `RentalSchema` for the `rental` type. A schema is plain data: it lists the fields, but it does not contain any code. The `withDefaults` function adds the settings that most schemas need, such as the `id` field. When fetching the listing data from the server, each individual rental property will be represented by a *[record](https://warp-drive.io/guides/the-manual/schemas/resources/)* that follows this schema.
+Here, we created a `RentalSchema` for the `rental` type. A schema is plain data: it lists the fields, but it does not contain any code. The `withDefaults` function adds the settings that most schemas need, such as the `id` field. When fetching the listing data from the server, each individual rental property will be represented by a *[record](../../../warp-drive/#toc_what-are-records)* that follows this schema.
 
 We used `field` entries to declare the attributes of a rental property. These attributes correspond directly to the `attributes` data we expect the server to provide in its responses:
 
@@ -87,7 +87,7 @@ We used `field` entries to declare the attributes of a rental property. These at
 
 We can access these attributes on a rental record using standard dot notation, such as `rental.title` or `rental.location.lat`. In addition to the fields we declared here, there will always be an *id* field as well, which is used to uniquely identify the record and can be accessed using `rental.id`.
 
-The server does not send a `type` for a rental. Instead, `type` is a value that we compute from another field, `category`. In a schema, a value like this is a `derived` field. When we read `rental.type`, WarpDrive calls the `rentalType` *[derivation](https://warp-drive.io/guides/the-manual/schemas/derivations)* function with the record and returns its result. This way, the schema still only describes the shape of our data, and the logic lives in one plain function. We took advantage of this feature to move our `type` logic (which is a major source of unnecessary duplication in our route handlers) into one place. Once we have everything working here, we will go back to clean that up.
+The server does not send a `type` for a rental. Instead, `type` is a value that we compute from another field, `category`. In a schema, a value like this is a `derived` field. When we read `rental.type`, WarpDrive calls the `rentalType` *[derivation](../../../warp-drive/schemas/#toc_derived-fields)* function with the record and returns its result. This way, the schema still only describes the shape of our data, and the logic lives in one plain function. We took advantage of this feature to move our `type` logic (which is a major source of unnecessary duplication in our route handlers) into one place. Once we have everything working here, we will go back to clean that up.
 
 The line `rentalType[Type] = 'rental-type';` gives our derivation a name. The derived field uses that name, in its `type: 'rental-type'` option, to find the function.
 
@@ -173,7 +173,7 @@ module('Unit | Schema | rental', function (hooks) {
 });
 ```
 
-This test is also known as a *[unit test](../../../testing/unit-testing-basics/)*. Unlike any of the other tests that we've written thus far, this test doesn't actually *render* anything. It just creates a rental record and tests the record directly, changing its fields and asserting the value of `type`.
+This test is also known as a *[unit test](../../../testing/testing-warp-drive-data/)*. Unlike any of the other tests that we've written thus far, this test doesn't actually *render* anything. It just creates a rental record and tests the record directly, changing its fields and asserting the value of `type`.
 
 In our test, we used the `this.owner.lookup('service:store')` API to get access to the WarpDrive store. The store provides a `createRecord` method to create a new record for us. We can change the fields of a record that we created this way. Records that the store loads from the server cannot be changed directly, which keeps them the same as the data on the server.
 
@@ -261,7 +261,7 @@ Wow... that removed a lot of code! This is all possible thanks to the power of c
 
 ## The WarpDrive Store
 
-As mentioned above, WarpDrive provides a `store` service, which we can inject into our route using the `@service store;` declaration, making the WarpDrive store available as `this.store`. It provides the `request` method for making fetch requests using `RequestManager`. As its name implies: the `RequestManager` is request centric. Instead of answering questions about specific records or types of records, we ask it about the status of a specific request. To initiate a request, we use the `request` method on the store, passing in a request object. The request object is created using builders from `@warp-drive/utilities/json-api`. Specifically, the [`findRecord` builder](https://warp-drive.io/api/@warp-drive/utilities/json-api/functions/findRecord) takes a type (`rental` in our case) and an ID (for us, that would be `params.rental_id` from the URL) as arguments and builds fetch options for a single record. On the other hand, the [`query` builder](https://warp-drive.io/api/@warp-drive/utilities/json-api/functions/query) takes the type as an argument and builds fetch options to query for all records of that type.
+As mentioned above, WarpDrive provides a `store` service, which we can inject into our route using the `@service store;` declaration, making the WarpDrive store available as `this.store`. It provides the `request` method for making fetch requests using `RequestManager`. As its name implies: the `RequestManager` is request centric. Instead of answering questions about specific records or types of records, we ask it about the status of a specific request. To initiate a request, we use the `request` method on the store, passing in a request object. The request object is created using builders from `@warp-drive/utilities/json-api`. Specifically, the [`findRecord` builder](../../../warp-drive/finding-records/#toc_retrieving-a-single-record) takes a type (`rental` in our case) and an ID (for us, that would be `params.rental_id` from the URL) as arguments and builds fetch options for a single record. On the other hand, the [`query` builder](../../../warp-drive/finding-records/#toc_retrieving-multiple-records) takes the type as an argument and builds fetch options to query for all records of that type.
 
 WarpDrive can do many things, and in the default setup it provides caching. WarpDrive's store caches server responses, allowing instant access to previously fetched data. If the data is already cached, you don't need to wait for the server to respond again. If not, the store fetches it for you.
 
@@ -357,7 +357,7 @@ visit http://localhost:4200/rentals/grand-old-mansion?deterministic
 wait  .rental.detailed
 ```
 
-WarpDrive offers many, many features (like managing the *relationships* between different types of records) and there's a lot more we can learn about it. For example, if your backend's have some inconsistencies across different endpoints, WarpDrive allows you to define request specific handlers and builders! We are just scratching the surface here. If you want to learn more about WarpDrive, check out [the WarpDrive guides](https://warp-drive.io/guides/)!
+WarpDrive offers many, many features (like managing the *relationships* between different types of records) and there's a lot more we can learn about it. For example, if your backend's have some inconsistencies across different endpoints, WarpDrive allows you to define request specific handlers and builders! We are just scratching the surface here. If you want to learn more about WarpDrive, check out [its own dedicated section](../../../warp-drive/) in the guides!
 
 ```run:server:stop
 npm start
