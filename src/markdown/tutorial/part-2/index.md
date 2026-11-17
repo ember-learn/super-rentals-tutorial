@@ -7,8 +7,8 @@ Along the way, we'll also add some new features to our Super Rentals app. By the
 In part two, we'll cover the following concepts:
 * Dynamic segments
 * Ember services
-* EmberData
-* Adapters and serializers
+* WarpDrive
+* Request builders and handlers
 * The provider component pattern
 
 We're going to cover a lot of ground, so let's get learning!
