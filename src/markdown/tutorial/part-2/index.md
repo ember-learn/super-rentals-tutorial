@@ -8,7 +8,7 @@ In part two, we'll cover the following concepts:
 * Dynamic segments
 * Ember services
 * WarpDrive
-* Adapters and serializers
+* Request builders and handlers
 * The provider component pattern
 
 We're going to cover a lot of ground, so let's get learning!

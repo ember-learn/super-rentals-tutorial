@@ -117,8 +117,8 @@ export default Store;
 The `useRecommendedStore` function creates a store class with the recommended defaults. The `cache` option tells the store how to cache the responses from our server, which use the [JSON:API](https://jsonapi.org/) format. The `schemas` and `derivations` options register our rental schema and the derivation that it uses.
 
 ```run:command hidden=true cwd=super-rentals
-# @ember/app-blueprint before 7.6 (ember-cli/ember-app-blueprint#338) installs the legacy package.
-# Remove this line when the release channel is on 7.6.
+# @ember/app-blueprint before 7.5 (ember-cli/ember-app-blueprint#338) installs the legacy package.
+# Remove this line when the release channel is on 7.5.
 if grep -q '"@warp-drive/legacy"' package.json; then pnpm remove @warp-drive/legacy; fi
 pnpm test
 git add app/schemas/rental.js
